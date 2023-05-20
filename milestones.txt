@@ -1,0 +1,5 @@
+19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
+20/5 12:30 -> 7:00 6h
+    make popup that fill data for each personas 12:30 to 3:30 3h
+    add tags in the app 4:00 to 7:00 3h
+    upload files and make operation for them(summerize, select best one from CVs)
