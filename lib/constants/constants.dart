@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class Constants {
   static String lang = 'en';
-  static const String BASE_URL = "https://api.openai.com/v1";
+  static const String CHAT_GPT_URL = "https://api.openai.com/v1";
+  static const String APP_BASE_URL = 'http://10.0.2.2:8000/api';
   static const String CHAT_KEY =
       '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';
 }

@@ -17,7 +17,6 @@ class ChatWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ChatModel chatModel = ChatCubit.instance(context).getChat(chatIndex);
-    log(chatModel.isNewly.toString());
     if (chatModel.chatIndex == 2) {
       return Row(
         children: [

@@ -1,6 +1,9 @@
+import 'package:chatgpt/bloc_observer.dart';
 import 'package:chatgpt/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/providers/models_provider.dart';
+import 'package:chatgpt/screens/chat/chat_history_screen.dart';
+import 'package:chatgpt/shared/network/remote/app_dio_helper.dart';
 import 'package:chatgpt/shared/network/remote/dio_helper.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +16,8 @@ import 'screens/chat_screen.dart';
 
 void main() {
   DioHelper.init();
+  AppDioHelper.init();
+  Bloc.observer = MyBlocObserver();
   runApp(const MyApp());
 }
 
@@ -48,7 +53,7 @@ class MyApp extends StatelessWidget {
               appBarTheme: AppBarTheme(
                 color: cardColor,
               )),
-          home: const ChatScreen(),
+          home: const ChatHistoryScreen(),
         ),
       ),
     );

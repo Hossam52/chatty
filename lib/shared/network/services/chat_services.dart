@@ -17,6 +17,7 @@ class ChatServices {
       {List<ChatModel> previousChats = const [],
       required String message,
       required String modelId}) async {
+    log('Previous ${ChatModel.generatePreviousUserChats(previousChats)}');
     final response = await DioChat.postData(EndPoints.chatCompletionGPT, {
       "model": modelId,
       "messages": ChatModel.generatePreviousUserChats(previousChats),

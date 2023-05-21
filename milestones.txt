@@ -3,3 +3,15 @@
     make popup that fill data for each personas 12:30 to 3:30 3h
     add tags in the app 4:00 to 7:00 3h
     upload files and make operation for them(summerize, select best one from CVs)
+21/5 7.5 h
+make laravel backend for chat history (done) 21/5 from 12:00 am to 03:30am 3.5h
+make the UI for chat history and make every chat has its own messages from 4:15 to 8:30 4:15
+
+
+//Need to be done
+- make each history has it's dependant messages
+- make consideration to add the persona chat item
+- refactor the chat cubit as can
+- rename the chatModel to messageModel
+- add loading bar in home and in conversation
+- split the chat screen to smaller pieces

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/chat_cubit/chat_cubit.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
+import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/providers/chats_provider.dart';
 import 'package:chatgpt/services/services.dart';
 import 'package:chatgpt/shared/network/services/chat_services.dart';
@@ -17,7 +18,8 @@ import '../services/assets_manager.dart';
 import '../widgets/text_widget.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({super.key, required this.chat});
+  final ChatHistoryModel chat;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -31,8 +33,7 @@ class _ChatScreenState extends State<ChatScreen> {
   late FocusNode focusNode;
   @override
   void initState() {
-    ChatCubit.instance(context)
-        .changeSystemRole(PersonasCubit.instance(context).selectedPersona);
+    ChatCubit.instance(context).fetchAllMessages(widget.chat);
     _listScrollController = ScrollController();
     textEditingController = TextEditingController();
     focusNode = FocusNode();
@@ -87,7 +88,10 @@ class _ChatScreenState extends State<ChatScreen> {
             ],
           ),
         ),
-        title: const Text("Chatty"),
+        title: TextWidget(
+          label: "Chatty (${widget.chat.chat_name})",
+          fontSize: 15,
+        ),
         actions: [
           IconButton(
             onPressed: () async {
@@ -101,20 +105,22 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: [
             Flexible(
-              child: BlocBuilder<PersonasCubit, PersonasState>(
-                builder: (context, state) {
-                  return ListView.builder(
-                      reverse: true,
-                      controller: _listScrollController,
-                      itemCount:
-                          chatCubit.getChatList.length, //chatList.length,
-                      itemBuilder: (context, index) {
-                        return ChatWidget(
-                          chatIndex: index,
-                        );
-                      });
-                },
-              ),
+              child: ChatBlocBuilder(builder: (context, state) {
+                return BlocBuilder<PersonasCubit, PersonasState>(
+                  builder: (context, state) {
+                    return ListView.builder(
+                        reverse: true,
+                        controller: _listScrollController,
+                        itemCount:
+                            chatCubit.getChatList.length, //chatList.length,
+                        itemBuilder: (context, index) {
+                          return ChatWidget(
+                            chatIndex: index,
+                          );
+                        });
+                  },
+                );
+              }),
             ),
             if (_isTyping) ...[
               const SpinKitThreeBounce(

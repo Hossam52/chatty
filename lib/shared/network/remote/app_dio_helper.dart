@@ -3,24 +3,21 @@ import 'dart:developer';
 import 'package:chatgpt/constants/constants.dart';
 import 'package:dio/dio.dart';
 
-class DioHelper {
+class AppDioHelper {
   static late Dio dio;
   static init() {
     dio = Dio(
       BaseOptions(
-        baseUrl: Constants.CHAT_GPT_URL,
+        baseUrl: Constants.APP_BASE_URL,
         receiveDataWhenStatusError: true,
         followRedirects: false,
         validateStatus: (status) => true,
         headers: {
           'Content-Type': 'application/json',
           'Accept-Language': Constants.lang,
-          'Authroization': 'Bearer ${Constants.CHAT_KEY}'
         },
       ),
     );
-    dio.options.headers = {'Authorization': 'Bearer ${Constants.CHAT_KEY}'};
-
   }
 
   static Future<Response> getData({

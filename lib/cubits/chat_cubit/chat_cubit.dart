@@ -1,7 +1,11 @@
+import 'dart:core';
 import 'dart:developer';
 
+import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/models/chat_model.dart';
 import 'package:chatgpt/models/static/system_role_model.dart';
+import 'package:chatgpt/screens/chat/chat_history_screen.dart';
+import 'package:chatgpt/shared/network/services/app_services.dart';
 import 'package:chatgpt/shared/network/services/chat_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +22,7 @@ class ChatCubit extends Cubit<ChatStates> {
       BlocProvider.of<ChatCubit>(context);
 
   List<ChatModel> chatList = [];
+  List<ChatHistoryModel> chatsHistory = [];
   List<ChatModel> tags = [];
   List<ChatModel> get getChatList {
     return chatList;
@@ -39,19 +44,54 @@ class ChatCubit extends Cubit<ChatStates> {
     emit(AddUserMessage());
   }
 
+  Future<void> fetchAllChats() async {
+    try {
+      emit(FetchAllChatsLoadingState());
+      final response = await AppServices.getAllChats();
+      print(response);
+      chatsHistory = (response['chats'] as List)
+          .map((e) => ChatHistoryModel.fromJson(e))
+          .toList();
+      emit(FetchAllChatsSuccessState());
+    } catch (e) {
+      print(e.toString());
+      emit(FetchAllChatsErrorState(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  Future<void> fetchAllMessages(ChatHistoryModel chat) async {
+    chatList.clear();
+    try {
+      emit(FetchAllMessagesLoadingState());
+      final response = await AppServices.getAllMessages(chat.id);
+      log(response.toString());
+      chatList.insertAll(0, response);
+      
+      chat.chats.clear();
+      chat.chats.addAll(chatList);
+      emit(FetchAllMessagesSuccessState());
+    } catch (e) {
+      emit(FetchAllMessagesErrorState(error: e.toString()));
+      rethrow;
+    }
+  }
+
   Future<void> sendMessageAndGetAnswers(
       {required String msg, required String chosenModelId}) async {
     try {
       emit(SendMessageLoadingState());
 
       if (chosenModelId.toLowerCase().startsWith("gpt")) {
-        chatList.insertAll(
-            0,
-            await ChatServices.sendMessageGPT(
-              previousChats: chatList,
-              message: msg,
-              modelId: chosenModelId,
-            ));
+        List<ChatModel> chs = [chatList[0]];
+        final chats = await ChatServices.sendMessageGPT(
+          previousChats: chatList,
+          message: msg,
+          modelId: chosenModelId,
+        );
+        chatList.insertAll(0, chats);
+        chs.add(chats[0]);
+        AppServices.sendMessage(3, chs);
         tags = await ChatServices.getConversationTags(
           chats: chatList,
           modelId: chosenModelId,
@@ -69,6 +109,7 @@ class ChatCubit extends Cubit<ChatStates> {
     } catch (e) {
       isGeneratingAssitantMessage = false;
       emit(SendMessageErrorState(error: e.toString()));
+      rethrow;
     }
   }
 

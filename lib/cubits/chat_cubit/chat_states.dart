@@ -24,3 +24,23 @@ class SendMessageErrorState extends ChatStates {
   final String error;
   SendMessageErrorState({required this.error});
 }
+
+//FetchAllMessages online fetch data
+class FetchAllMessagesLoadingState extends ChatStates {}
+
+class FetchAllMessagesSuccessState extends ChatStates {}
+
+class FetchAllMessagesErrorState extends ChatStates {
+  final String error;
+  FetchAllMessagesErrorState({required this.error});
+}
+
+//FetchAllChats online fetch data
+class FetchAllChatsLoadingState extends ChatStates {}
+
+class FetchAllChatsSuccessState extends ChatStates {}
+
+class FetchAllChatsErrorState extends ChatStates {
+  final String error;
+  FetchAllChatsErrorState({required this.error});
+}
