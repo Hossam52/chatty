@@ -1,16 +1,16 @@
 import 'package:chatgpt/shared/network/services/chat_services.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../models/chat_model.dart';
+import '../models/message_model.dart';
 
 class ChatProvider with ChangeNotifier {
-  List<ChatModel> chatList = [];
-  List<ChatModel> get getChatList {
+  List<MessageModel> chatList = [];
+  List<MessageModel> get getChatList {
     return chatList;
   }
 
   void addUserMessage({required String msg}) {
-    chatList.insert(0, ChatModel(msg: msg, chatIndex: 0));
+    chatList.insert(0, MessageModel(msg: msg, chatIndex: 0));
     notifyListeners();
   }
 
@@ -34,7 +34,7 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  ChatModel getChat(int index) {
+  MessageModel getMessage(int index) {
     return chatList[index];
   }
 

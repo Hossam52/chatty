@@ -2,7 +2,7 @@
 
 import 'dart:developer';
 
-import 'package:chatgpt/cubits/chat_cubit/chat_cubit.dart';
+import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/widgets/personas/persona_questions_dialog.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
@@ -47,7 +47,7 @@ class PersonasDropDown extends StatelessWidget {
                 savedData = true;
               }
               if (savedData != null && savedData) {
-                ChatCubit.instance(context)
+                ConversationCubit.instance(context)
                     .changeSystemRole(personasCubit.selectedPersona);
               }
               personasCubit.changeSelected(value);

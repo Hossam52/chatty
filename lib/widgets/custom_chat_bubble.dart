@@ -2,8 +2,8 @@ import 'dart:developer';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/chat_cubit/chat_cubit.dart';
-import 'package:chatgpt/models/chat_model.dart';
+import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
+import 'package:chatgpt/models/message_model.dart';
 import 'package:chatgpt/providers/chats_provider.dart';
 import 'package:chatgpt/providers/models_provider.dart';
 import 'package:flutter/material.dart';
@@ -56,29 +56,29 @@ class SendChatBubble extends StatelessWidget {
 }
 
 class RecieveChatBubble extends StatelessWidget {
-  const RecieveChatBubble({super.key, required this.chatIndex});
-  final int chatIndex;
+  const RecieveChatBubble({super.key, required this.message});
+  final MessageModel message;
   @override
   Widget build(BuildContext context) {
-    final chatModel = ChatCubit.instance(context).getChat(chatIndex);
+    final chatCubit = ConversationCubit.instance(context);
     return _CustomChatBubble(
       bubbleType: BubbleType.receiverBubble,
       color: recieveColor,
-      child: chatModel.isNewly
+      child: message.isNewly
           ? AnimatedTextKit(
               isRepeatingAnimation: false,
               repeatForever: false,
               displayFullTextOnTap: true,
               totalRepeatCount: 1,
               onTap: () {
-                ChatCubit.instance(context).changeToOld(chatIndex);
+                chatCubit.changeToOld();
               },
               onFinished: () {
-                ChatCubit.instance(context).changeToOld(chatIndex);
+                chatCubit.changeToOld();
               },
               animatedTexts: [
                   TyperAnimatedText(
-                    chatModel.msg.trim(),
+                    message.msg.trim(),
                     textStyle: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.w700,
@@ -86,7 +86,7 @@ class RecieveChatBubble extends StatelessWidget {
                   ),
                 ])
           : Text(
-              chatModel.msg.trim(),
+              message.msg.trim(),
               style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,

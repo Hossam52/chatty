@@ -1,4 +1,4 @@
-import 'package:chatgpt/models/chat_model.dart';
+import 'package:chatgpt/models/message_model.dart';
 import 'package:chatgpt/models/models_model.dart';
 import 'package:chatgpt/shared/network/services/chat_services.dart';
 import 'package:flutter/cupertino.dart';

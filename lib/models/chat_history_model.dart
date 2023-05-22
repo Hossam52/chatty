@@ -1,14 +1,12 @@
-import 'package:chatgpt/models/chat_model.dart';
+import 'package:chatgpt/models/message_model.dart';
 
-class ChatHistoryModel {
+class ChatModel {
   final int id;
   final String chat_name;
   final String model;
-  List<ChatModel> chats = [];
+  List<MessageModel> messages = [];
 
-  ChatHistoryModel(
-      {required this.id, required this.chat_name, required this.model});
-  factory ChatHistoryModel.fromJson(Map<String, dynamic> map) =>
-      ChatHistoryModel(
-          id: map['id'], chat_name: map['chat_name'], model: map['model']);
+  ChatModel({required this.id, required this.chat_name, required this.model});
+  factory ChatModel.fromJson(Map<String, dynamic> map) => ChatModel(
+      id: map['id'], chat_name: map['chat_name'], model: map['model']);
 }

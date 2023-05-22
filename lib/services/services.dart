@@ -1,6 +1,8 @@
+import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/widgets/personas/personas_drop_down.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/constants.dart';
 import '../widgets/drop_down.dart';
@@ -16,34 +18,37 @@ class Services {
         ),
         backgroundColor: scaffoldBackgroundColor,
         context: context,
-        builder: (context) {
-          return PersonasBlocBuilder(builder: (context, state) {
-            return Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const _CustomRow(
-                    label: 'Chosen Model:',
-                    child: ModelsDrowDownWidget(),
-                  ),
-                  const _CustomRow(
-                    label: 'Act as:',
-                    child: PersonasDropDown(),
-                  ),
-                  _CustomRow(
-                    label: 'The system message',
-                    child: TextWidget(
-                      fontSize: 13,
-                      label: PersonasCubit.instance(context)
-                          .selectedPersona
-                          .generateContent(),
+        builder: (_) {
+          return BlocProvider.value(
+            value: ConversationCubit.instance(context),
+            child: PersonasBlocBuilder(builder: (context, state) {
+              return Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const _CustomRow(
+                      label: 'Chosen Model:',
+                      child: ModelsDrowDownWidget(),
                     ),
-                  ),
-                ],
-              ),
-            );
-          });
+                    const _CustomRow(
+                      label: 'Act as:',
+                      child: PersonasDropDown(),
+                    ),
+                    _CustomRow(
+                      label: 'The system message',
+                      child: TextWidget(
+                        fontSize: 13,
+                        label: PersonasCubit.instance(context)
+                            .selectedPersona
+                            .generateContent(),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          );
         });
   }
 }

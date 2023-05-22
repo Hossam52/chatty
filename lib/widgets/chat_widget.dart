@@ -1,23 +1,22 @@
 import 'dart:developer';
 
 import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/chat_cubit/chat_cubit.dart';
-import 'package:chatgpt/models/chat_model.dart';
+import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
+import 'package:chatgpt/models/message_model.dart';
 import 'package:chatgpt/services/assets_manager.dart';
 import 'package:chatgpt/widgets/custom_chat_bubble.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 
-class ChatWidget extends StatelessWidget {
-  const ChatWidget({
+class MessageWidget extends StatelessWidget {
+  const MessageWidget({
     super.key,
-    required this.chatIndex,
+    required this.message,
   });
-  final int chatIndex;
+  final MessageModel message;
   @override
   Widget build(BuildContext context) {
-    final ChatModel chatModel = ChatCubit.instance(context).getChat(chatIndex);
-    if (chatModel.chatIndex == 2) {
+    if (message.chatIndex == 2) {
       return Row(
         children: [
           const Expanded(
@@ -29,7 +28,7 @@ class ChatWidget extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextWidget(
-              label: 'Your role changed to ${chatModel.name}',
+              label: 'Your role changed to ${message.name}',
               fontSize: 12,
               fontWeight: FontWeight.w400,
             ),
@@ -45,19 +44,18 @@ class ChatWidget extends StatelessWidget {
     }
     return Directionality(
       textDirection:
-          chatModel.chatIndex == 0 ? TextDirection.rtl : TextDirection.ltr,
+          message.chatIndex == 0 ? TextDirection.rtl : TextDirection.ltr,
       child: Column(
         children: [
           Material(
-            color:
-                chatModel.chatIndex == 0 ? scaffoldBackgroundColor : cardColor,
+            color: message.chatIndex == 0 ? scaffoldBackgroundColor : cardColor,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
-                    chatModel.chatIndex == 0
+                    message.chatIndex == 0
                         ? AssetsManager.userImage
                         : AssetsManager.botImage,
                     height: 30,
@@ -67,13 +65,13 @@ class ChatWidget extends StatelessWidget {
                     width: 8,
                   ),
                   Expanded(
-                    child: chatModel.chatIndex == 0
-                        ? SendChatBubble(msg: chatModel.msg)
+                    child: message.chatIndex == 0
+                        ? SendChatBubble(msg: message.msg)
                         : RecieveChatBubble(
-                            chatIndex: chatIndex,
+                            message: message,
                           ),
                   ),
-                  chatModel.chatIndex == 0
+                  message.chatIndex == 0
                       ? const SizedBox.shrink()
                       : Row(
                           mainAxisAlignment: MainAxisAlignment.end,

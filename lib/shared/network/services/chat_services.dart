@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:chatgpt/models/chat_model.dart';
+import 'package:chatgpt/models/message_model.dart';
 import 'package:chatgpt/models/models_model.dart';
 import 'package:chatgpt/shared/network/endpoints.dart';
 import 'package:chatgpt/shared/network/remote/dio_chat.dart';
@@ -13,24 +13,19 @@ class ChatServices {
         response.data['data'] as List<dynamic>);
   }
 
-  static Future<List<ChatModel>> sendMessageGPT(
-      {List<ChatModel> previousChats = const [],
+  static Future<List<MessageModel>> sendMessageGPT(
+      {List<MessageModel> previousChats = const [],
       required String message,
       required String modelId}) async {
-    log('Previous ${ChatModel.generatePreviousUserChats(previousChats)}');
     final response = await DioChat.postData(EndPoints.chatCompletionGPT, {
       "model": modelId,
-      "messages": ChatModel.generatePreviousUserChats(previousChats),
+      "messages": MessageModel.generatePreviousMessages(previousChats),
     });
-    log({
-      "model": modelId,
-      "messages": ChatModel.generatePreviousUserChats(previousChats),
-    }.toString());
-    List<ChatModel> chatList = [];
+    List<MessageModel> chatList = [];
     if (response.data["choices"].length > 0) {
       chatList = List.generate(
         response.data["choices"].length,
-        (index) => ChatModel.fromJson(
+        (index) => MessageModel.fromJson(
           response.data["choices"][index]["message"],
         ),
       );
@@ -38,7 +33,7 @@ class ChatServices {
     return chatList;
   }
 
-  static Future<List<ChatModel>> sendMessage(
+  static Future<List<MessageModel>> sendMessage(
       {required String message, required String modelId}) async {
     final response = await DioChat.postData(
       EndPoints.chatCompletion,
@@ -49,11 +44,11 @@ class ChatServices {
       },
     );
     log(response.data.toString());
-    List<ChatModel> chatList = [];
+    List<MessageModel> chatList = [];
     if (response.data["choices"].length > 0) {
       chatList = List.generate(
         response.data["choices"].length,
-        (index) => ChatModel(
+        (index) => MessageModel(
             msg: response.data["choices"][index]["text"],
             role: 'assistant',
             chatIndex: 1,
@@ -63,34 +58,20 @@ class ChatServices {
     return chatList;
   }
 
-  static Future<List<ChatModel>> getConversationTags(
-      {required List<ChatModel> chats, required String modelId}) async {
+  static Future<List<MessageModel>> getConversationTags(
+      {required List<MessageModel> messages, required String modelId}) async {
     final response = await DioChat.postData(EndPoints.chatCompletionGPT, {
       "model": modelId,
-      "max_tokens": 20,
-      "frequency_penalty": 1,
-      "presence_penalty": 0,
-      "n": 10,
+      "max_tokens": 100,
       "messages": [
-        ChatModel(
-                msg: 'you act like an keyword extractor',
-                chatIndex: 2,
-                role: 'system')
-            .toMap(),
-        ...ChatModel.generatePreviousUserChats(chats),
-        ChatModel(
-                msg:
-                    'generate one keyword in message without any leading words',
-                chatIndex: 1,
-                role: 'user')
-            .toMap()
+        MessageModel.generateMessageForTags(messages).toMap(),
       ],
     });
-    List<ChatModel> chatList = [];
+    List<MessageModel> chatList = [];
     if (response.data["choices"].length > 0) {
       chatList = List.generate(
         response.data["choices"].length,
-        (index) => ChatModel.fromJson(
+        (index) => MessageModel.fromJson(
           response.data["choices"][index]["message"],
         ),
       );
@@ -98,3 +79,10 @@ class ChatServices {
     return chatList;
   }
 }
+/*
+ Extract keywords from this text conversation between system, user and assistant (AI chatgpt):
+ user: hello
+ AI: Hello, How can I help you today?
+ user: Help me to do my homework in math in grade 4.
+ AI: sure, provide me the questions and i'll answer.
+ */

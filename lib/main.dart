@@ -1,5 +1,6 @@
 import 'package:chatgpt/bloc_observer.dart';
-import 'package:chatgpt/cubits/chat_cubit/chat_cubit.dart';
+import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
+import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/providers/models_provider.dart';
 import 'package:chatgpt/screens/chat/chat_history_screen.dart';
@@ -12,7 +13,7 @@ import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
 import 'providers/chats_provider.dart';
-import 'screens/chat_screen.dart';
+import 'screens/conversation_screen.dart';
 
 void main() {
   DioHelper.init();
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ChatCubit(),
+          create: (context) => AppCubit(),
         ),
         BlocProvider(
           create: (context) => PersonasCubit(),

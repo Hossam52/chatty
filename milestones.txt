@@ -1,17 +1,21 @@
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
+
 20/5 12:30 -> 7:00 6h
     make popup that fill data for each personas 12:30 to 3:30 3h
     add tags in the app 4:00 to 7:00 3h
     upload files and make operation for them(summerize, select best one from CVs)
+
 21/5 7.5 h
 make laravel backend for chat history (done) 21/5 from 12:00 am to 03:30am 3.5h
 make the UI for chat history and make every chat has its own messages from 4:15 to 8:30 4:15
 
+22/5 03:00 to 08:00 total 5h
+    - make each history has it's dependant messages from 03:00am to 4:30am 1.5h
+    - refactor the chat cubit as can 4:30am to 5:30am 1h 
+    - split the chat screen to smaller pieces 5:30am to 6:00 am
+    - make consideration to add the persona chat item 6:00am to 6:20
+    - modify the expressinon for tags 6:20am to 7:00 am
+    - fix issue send message not work and not save in api 0.5h
+    - add loading bar in home and in conversation 0.5h
+    - rename the MessageModel to messageModel(done)
 
-//Need to be done
-- make each history has it's dependant messages
-- make consideration to add the persona chat item
-- refactor the chat cubit as can
-- rename the chatModel to messageModel
-- add loading bar in home and in conversation
-- split the chat screen to smaller pieces
