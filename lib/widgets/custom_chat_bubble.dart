@@ -38,19 +38,32 @@ class _CustomChatBubble extends StatelessWidget {
 }
 
 class SendChatBubble extends StatelessWidget {
-  const SendChatBubble({super.key, required this.msg});
-  final String msg;
+  const SendChatBubble({super.key, required this.message});
+  final MessageModel message;
   @override
   Widget build(BuildContext context) {
     return _CustomChatBubble(
       bubbleType: BubbleType.sendBubble,
       color: sendColor,
-      child: Text(msg,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          )),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Text(message.msg,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                )),
+          ),
+          const SizedBox(width: 10),
+          if (message is FileMessageModel)
+            const Icon(
+              Icons.picture_as_pdf,
+              color: Colors.white,
+            ),
+        ],
+      ),
     );
   }
 }

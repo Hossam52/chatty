@@ -23,10 +23,34 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+      floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            showModalBottomSheet(
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+              ),
+              backgroundColor: Colors.blueGrey,
+              context: context,
+              builder: (_) => _CreateChatBottomSheetWidget(
+                appCubit: AppCubit.instance(context),
+              ),
+            );
+          },
+          child: const Icon(Icons.add)),
       appBar: AppBar(
         title: const Text('Welcome back ... ^_^'),
       ),
-      body: SafeArea(child: AppBlocBuilder(builder: (context, state) {
+      body: SafeArea(
+          child: AppBlocConsumer(listener: (context, state) {
+        if (state is AddNewChatSuccessState) {
+          Navigator.pop(context);
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ConversationScreen(chat: state.chat)));
+        }
+      }, builder: (context, state) {
         final chats = AppCubit.instance(context).getChats;
         if (state is FetchAllChatsLoadingState) {
           return const Center(
@@ -60,6 +84,56 @@ class _ChatHistoryScreenState extends State<ChatHistoryScreen> {
           itemCount: chats.length,
         );
       })),
+    );
+  }
+}
+
+class _CreateChatBottomSheetWidget extends StatefulWidget {
+  const _CreateChatBottomSheetWidget({super.key, required this.appCubit});
+
+  final AppCubit appCubit;
+  @override
+  State<_CreateChatBottomSheetWidget> createState() =>
+      _CreateChatBottomSheetWidgetState();
+}
+
+class _CreateChatBottomSheetWidgetState
+    extends State<_CreateChatBottomSheetWidget> {
+  final controller = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Flexible(child: TextWidget(label: 'Chat Name: ')),
+              Expanded(
+                  flex: 2,
+                  child: TextField(
+                    decoration: const InputDecoration(
+                        filled: true, fillColor: Colors.white30),
+                    controller: controller,
+                  ))
+            ],
+          ),
+          SizedBox(height: 15),
+          OutlinedButton.icon(
+              onPressed: () {
+                widget.appCubit.addNewChat(controller.text);
+              },
+              icon: const Icon(
+                Icons.save,
+                color: Colors.white,
+              ),
+              label: const TextWidget(
+                label: 'Save and create',
+              ))
+        ],
+      ),
     );
   }
 }

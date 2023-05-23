@@ -36,4 +36,14 @@ class AppServices {
     final response = await AppDioHelper.getData(url: EndPoints.allchats);
     return response.data;
   }
+
+  static Future<Map<String, dynamic>> createChat(String chatName) async {
+    final response =
+        await AppDioHelper.postData(url: EndPoints.createChat, data: {
+      'name': chatName,
+      'model': 'gpt03-turbo-0301',
+    });
+    log(response.toString());
+    return response.data;
+  }
 }

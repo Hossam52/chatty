@@ -19,3 +19,10 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - add loading bar in home and in conversation 0.5h
     - rename the MessageModel to messageModel(done)
 
+23/5 total 5.5h
+    - modify UI to add the file picker 02:15 to 02:45 
+    - upload file to chatgpt and get summry of it 03:00 to 06:30
+    - modify the tags ui and make queries about this tag 10:00 to 11:30
+    - save file in database
+    - make table in backend that hold the files and its generated summery
+

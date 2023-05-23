@@ -42,6 +42,8 @@ class MessageWidget extends StatelessWidget {
         ],
       );
     }
+    if (message is HiddenMessageModel) return const SizedBox.shrink();
+
     return Directionality(
       textDirection:
           message.chatIndex == 0 ? TextDirection.rtl : TextDirection.ltr,
@@ -66,7 +68,7 @@ class MessageWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: message.chatIndex == 0
-                        ? SendChatBubble(msg: message.msg)
+                        ? SendChatBubble(message: message)
                         : RecieveChatBubble(
                             message: message,
                           ),

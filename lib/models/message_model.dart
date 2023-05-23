@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 import 'dart:math';
+
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class MessageModel {
   final String msg;
@@ -43,6 +46,7 @@ class MessageModel {
     if (systemIndex == -1) systemIndex = messages.length - 1;
     return messages
         .getRange(0, systemIndex + 1)
+        .where((element) => element is! HiddenMessageModel)
         .toList()
         .reversed
         .map((e) => e.toMap())
@@ -72,4 +76,34 @@ class MessageModel {
       isNewly: isNewly ?? this.isNewly,
     );
   }
+}
+
+class FileMessageModel extends MessageModel {
+  FileMessageModel(
+      {required this.file, required super.chatIndex, super.name, super.role})
+      : super(msg: file.path.split('/').last);
+  final File file;
+  String _fileContentString = '';
+  Future<String> get content async {
+    if (_fileContentString.isEmpty) {
+      final document = PdfDocument(inputBytes: file.readAsBytesSync());
+
+      PdfTextExtractor extractor = PdfTextExtractor(document);
+
+      String text = extractor.extractText().replaceAll('\n', '');
+      if (text.split(' ').length > 3000)
+        throw 'The document words must be less than 3000 words';
+      return _fileContentString = text;
+    } else {
+      return _fileContentString;
+    }
+  }
+
+  Future<String> get summerizePrompt async =>
+      'Summerize the following pdf content:  ${await content}';
+}
+
+class HiddenMessageModel extends MessageModel {
+  HiddenMessageModel(
+      {required super.msg, required super.chatIndex, super.name, super.role});
 }

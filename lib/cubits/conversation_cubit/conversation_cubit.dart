@@ -1,5 +1,7 @@
 import 'dart:core';
-import 'dart:developer';
+import 'dart:developer' as developer;
+import 'dart:io';
+import 'dart:math';
 
 import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/models/message_model.dart';
@@ -24,14 +26,20 @@ class ConversationCubit extends Cubit<ConversationStates> {
       BlocProvider.of<ConversationCubit>(context);
   ChatModel chat;
   List<MessageModel> _tags = [];
+  List<String> tagsStrings = [];
+
   int _untrackedMessages = 0;
-  String get conversationTags {
-    if (_tags.isEmpty) return '';
-    return _tags[0]
+
+  void formatTags() {
+    if (_tags.isEmpty) return;
+    tagsStrings = _tags[0]
         .msg
         .toLowerCase()
         .replaceAll(RegExp(r'keyword|:|\n'), '')
-        .replaceAll(RegExp(r'\d.'), ' - ');
+        .replaceAll(RegExp(r'(\d)+.|,'), ' - ')
+        .split('-');
+    tagsStrings.removeWhere(
+        (element) => element.trim().isEmpty || element.length == 2);
   }
 
   List<MessageModel> get getMessages => chat.messages;
@@ -54,12 +62,48 @@ class ConversationCubit extends Cubit<ConversationStates> {
     emit(AddUserMessage());
   }
 
+  void addFileMessage({required File file}) async {
+    try {
+      isGeneratingAssitantMessage = true;
+      emit(AddUserMessage());
+      final message = FileMessageModel(file: file, chatIndex: 0);
+      await message.content;
+      chat.messages.insert(0, message);
+
+      _untrackedMessages++;
+      emit(AddUserMessage());
+
+      await _summerizeFile(message);
+    } catch (e) {
+      emit(ErrorAddUserFileMessage(e.toString()));
+    } finally {
+      isGeneratingAssitantMessage = false;
+    }
+  }
+
+  Future<void> _summerizeFile(FileMessageModel message) async {
+    try {
+      developer.log(await message.content);
+      emit(SummerizeFileLoadingState());
+      final summery = await ChatServices.sendMessageGPT(previousChats: [
+        MessageModel(msg: await message.summerizePrompt, chatIndex: 0)
+      ], message: await message.summerizePrompt, modelId: 'gpt-3.5-turbo-0301');
+
+      chat.messages
+          .insert(0, HiddenMessageModel(msg: summery[0].msg, chatIndex: 0));
+      chat.messages.insert(0, summery[0]);
+      emit(SummerizeFileSuccessState());
+    } catch (e) {
+      emit(SummerizeFileErrorState(error: e.toString()));
+    }
+  }
+
   Future<void> fetchAllMessages() async {
     chat.messages.clear();
     try {
       emit(FetchAllMessagesLoadingState());
       final response = await AppServices.getAllMessages(chat.id);
-      log(response.toString());
+      developer.log(response.toString());
       chat.messages.insertAll(0, response);
 
       emit(FetchAllMessagesSuccessState());
@@ -67,6 +111,25 @@ class ConversationCubit extends Cubit<ConversationStates> {
       emit(FetchAllMessagesErrorState(error: e.toString()));
       rethrow;
     }
+  }
+
+  Future<void> _baseSendMessage(String chosenModelId) async {
+    AppServices.sendMessage(
+        chat.id,
+        chat.messages
+            .getRange(0, _untrackedMessages)
+            .toList()
+            .reversed
+            .toList());
+
+    _untrackedMessages = 0;
+
+    _tags = await ChatServices.getConversationTags(
+      messages: chat.messages,
+      modelId: chosenModelId,
+    );
+    formatTags();
+    emit(SendMessageSuccessState());
   }
 
   Future<void> sendMessageAndGetAnswers(
@@ -85,18 +148,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
         chat.messages.insertAll(0, chats);
         _untrackedMessages += chats.length;
 
-        AppServices.sendMessage(
-            chat.id,
-            chat.messages
-                .getRange(0, _untrackedMessages)
-                .toList()
-                .reversed
-                .toList());
-        _untrackedMessages = 0;
-        _tags = await ChatServices.getConversationTags(
-          messages: chat.messages,
-          modelId: chosenModelId,
-        );
+        _baseSendMessage(chosenModelId);
       } else {
         chat.messages.insertAll(
             0,

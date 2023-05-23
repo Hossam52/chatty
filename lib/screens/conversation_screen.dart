@@ -6,6 +6,7 @@ import 'package:chatgpt/cubits/conversation_cubit/conversation_states.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/services/services.dart';
+import 'package:chatgpt/widgets/chat_dialogs/tag_details_dialog.dart';
 import 'package:chatgpt/widgets/chat_widget.dart';
 import 'package:chatgpt/widgets/send_message_field.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,19 @@ class _ChatScreenState extends State<ConversationScreen> {
       child: Builder(builder: (context) {
         return Scaffold(
             appBar: _appBar(context),
-            body: ConversationBlocBuilder(builder: (context, state) {
+            body: ConversationBlocConsumer(listener: (context, state) {
+              if (state is ErrorAddUserFileMessage) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: TextWidget(
+                      label: state.error,
+                      fontSize: 14,
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            }, builder: (context, state) {
               final conversationCubit = ConversationCubit.instance(context);
               if (state is FetchAllMessagesLoadingState) {
                 return const Center(
@@ -115,20 +128,47 @@ class _ChatScreenState extends State<ConversationScreen> {
   AppBar _keywordsAppBar() {
     return AppBar(title: ConversationBlocBuilder(
       builder: (context, state) {
-        return Row(
-          children: [
-            const TextWidget(label: 'Keywords: ', fontSize: 14),
-            Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: TextWidget(
-                  label: ConversationCubit.instance(context).conversationTags,
-                  color: Colors.white70,
-                  fontSize: 13,
+        final conversationCubit = ConversationCubit.instance(context);
+        conversationCubit.formatTags();
+        return Container(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // const TextWidget(label: 'Keywords: ', fontSize: 14),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Wrap(
+                    spacing: 10,
+                    children: conversationCubit.tagsStrings
+                        .map((e) => OutlinedButton(
+                              style: const ButtonStyle(
+                                  side: MaterialStatePropertyAll(BorderSide(
+                                    color: Colors.white,
+                                  )),
+                                  padding: MaterialStatePropertyAll(
+                                    EdgeInsets.all(1),
+                                  ),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap),
+                              child: TextWidget(
+                                label: e,
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) =>
+                                        TagDetailsDialog(tagName: e));
+                              },
+                            ))
+                        .toList(),
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     ));

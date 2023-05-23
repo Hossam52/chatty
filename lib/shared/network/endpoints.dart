@@ -10,6 +10,6 @@ class EndPoints {
   static const String sendMessage = '/messages/store';
 
   static const String allchats = '/chats';
-  static const String createChat = '/chats/store';
+  static const String createChat = '/chats/create';
   static const String deleteChat = '/chats/delete';
 }

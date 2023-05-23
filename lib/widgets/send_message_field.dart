@@ -1,9 +1,11 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/providers/models_provider.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,6 +53,20 @@ class _SendMessageFieldState extends State<SendMessageField> {
                     hintStyle: TextStyle(color: Colors.grey)),
               ),
             ),
+            IconButton(
+                onPressed: () async {
+                  final response = await FilePicker.platform.pickFiles(
+                      dialogTitle: 'Select file',
+                      allowedExtensions: ['pdf'],
+                      type: FileType.custom);
+                  if (response == null) return;
+                  final selectedFile = File(response.files.single.path!);
+                  conversationCubit.addFileMessage(file: selectedFile);
+                },
+                icon: const Icon(
+                  Icons.attach_file_sharp,
+                  color: Colors.white,
+                )),
             IconButton(
                 onPressed: () async {
                   await sendMessageFCT(

@@ -1,4 +1,6 @@
 //
+import 'package:chatgpt/models/chat_history_model.dart';
+
 abstract class AppStates {}
 
 class IntitalAppState extends AppStates {}
@@ -12,4 +14,18 @@ class FetchAllChatsSuccessState extends AppStates {}
 class FetchAllChatsErrorState extends AppStates {
   final String error;
   FetchAllChatsErrorState({required this.error});
+}
+
+//AddNewChat online fetch data
+class AddNewChatLoadingState extends AppStates {}
+
+class AddNewChatSuccessState extends AppStates {
+  final ChatModel chat;
+
+  AddNewChatSuccessState(this.chat);
+}
+
+class AddNewChatErrorState extends AppStates {
+  final String error;
+  AddNewChatErrorState({required this.error});
 }
