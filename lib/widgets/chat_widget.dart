@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/models/message_model.dart';
-import 'package:chatgpt/services/assets_manager.dart';
+import 'package:chatgpt/shared/presentation/resourses/assets_manager.dart';
 import 'package:chatgpt/widgets/custom_chat_bubble.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -71,6 +69,7 @@ class MessageWidget extends StatelessWidget {
                         ? SendChatBubble(message: message)
                         : RecieveChatBubble(
                             message: message,
+                            chatCubit: ConversationCubit.instance(context),
                           ),
                   ),
                   message.chatIndex == 0

@@ -69,11 +69,12 @@ class SendChatBubble extends StatelessWidget {
 }
 
 class RecieveChatBubble extends StatelessWidget {
-  const RecieveChatBubble({super.key, required this.message});
+  const RecieveChatBubble(
+      {super.key, required this.message, required this.chatCubit});
   final MessageModel message;
+  final ConversationCubit chatCubit;
   @override
   Widget build(BuildContext context) {
-    final chatCubit = ConversationCubit.instance(context);
     return _CustomChatBubble(
       bubbleType: BubbleType.receiverBubble,
       color: recieveColor,

@@ -26,3 +26,14 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - save file in database
     - make table in backend that hold the files and its generated summery
 
+24/5 
+    - work in authenticaiton routes in laravel backend 2:30am to 6:00 am
+
+25/25 
+    - add simple login form and send data via api 05:00am to 06:00am
+
+26/5
+    - connect the logged in user to the all application apis and make sure to save user data in cache 08:00am to 12:00pm
+    - add onboarding screen 12:00pm to 01:00 pm
+    - enhance login form 02:00pm to 04:15pm
+    - enhance register form 04:30pm to 06:30 pm

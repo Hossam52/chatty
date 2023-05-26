@@ -113,9 +113,10 @@ class ConversationCubit extends Cubit<ConversationStates> {
     }
   }
 
-  Future<void> _baseSendMessage(String chosenModelId) async {
+  Future<void> _baseSendMessage(String chosenModelId, int userId) async {
     AppServices.sendMessage(
         chat.id,
+        userId,
         chat.messages
             .getRange(0, _untrackedMessages)
             .toList()
@@ -132,31 +133,40 @@ class ConversationCubit extends Cubit<ConversationStates> {
     emit(SendMessageSuccessState());
   }
 
+  Future<void> sendMessageViaChatGPT(
+      {required String msg,
+      required String chosenModelId,
+      required int userId}) async {
+    if (chosenModelId.toLowerCase().startsWith("gpt")) {
+      final chats = await ChatServices.sendMessageGPT(
+        previousChats: chat.messages,
+        message: msg,
+        modelId: chosenModelId,
+      );
+      chat.messages.insertAll(0, chats);
+      _untrackedMessages += chats.length;
+    } else {
+      chat.messages.insertAll(
+          0,
+          await ChatServices.sendMessage(
+            message: msg,
+            modelId: chosenModelId,
+          ));
+    }
+  }
+
   Future<void> sendMessageAndGetAnswers(
-      {required String msg, required String chosenModelId}) async {
+      {required String msg,
+      required String chosenModelId,
+      required int userId}) async {
     try {
       isGeneratingAssitantMessage = true;
 
       emit(SendMessageLoadingState());
+      await sendMessageViaChatGPT(
+          chosenModelId: chosenModelId, userId: userId, msg: msg);
+      await _baseSendMessage(chosenModelId, userId);
 
-      if (chosenModelId.toLowerCase().startsWith("gpt")) {
-        final chats = await ChatServices.sendMessageGPT(
-          previousChats: chat.messages,
-          message: msg,
-          modelId: chosenModelId,
-        );
-        chat.messages.insertAll(0, chats);
-        _untrackedMessages += chats.length;
-
-        _baseSendMessage(chosenModelId);
-      } else {
-        chat.messages.insertAll(
-            0,
-            await ChatServices.sendMessage(
-              message: msg,
-              modelId: chosenModelId,
-            ));
-      }
       emit(SendMessageSuccessState());
     } catch (e) {
       emit(SendMessageErrorState(error: e.toString()));
@@ -172,5 +182,34 @@ class ConversationCubit extends Cubit<ConversationStates> {
       if (element.isNewly) element.changeToOld();
     }
     emit(ChangeStatusToOld(index: chat.messages.length - 1));
+  }
+}
+
+typedef TagsConversationQueryiesBlocBuilder
+    = BlocBuilder<TagsConversationQueryiesCubit, ConversationStates>;
+
+class TagsConversationQueryiesCubit extends ConversationCubit {
+  TagsConversationQueryiesCubit(super.chat);
+  static ConversationCubit instance(BuildContext context) =>
+      BlocProvider.of<TagsConversationQueryiesCubit>(context);
+
+  @override
+  Future<void> sendMessageAndGetAnswers(
+      {required String msg,
+      required String chosenModelId,
+      required int userId}) async {
+    try {
+      isGeneratingAssitantMessage = true;
+
+      emit(SendMessageLoadingState());
+      await sendMessageViaChatGPT(
+          chosenModelId: chosenModelId, userId: userId, msg: msg);
+      emit(SendMessageSuccessState());
+    } catch (e) {
+      emit(SendMessageErrorState(error: e.toString()));
+      rethrow;
+    } finally {
+      isGeneratingAssitantMessage = false;
+    }
   }
 }

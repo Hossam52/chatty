@@ -1,21 +1,16 @@
-import 'dart:developer';
-
-import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_states.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/services/services.dart';
+import 'package:chatgpt/shared/presentation/resourses/assets_manager.dart';
 import 'package:chatgpt/widgets/chat_dialogs/tag_details_dialog.dart';
 import 'package:chatgpt/widgets/chat_widget.dart';
 import 'package:chatgpt/widgets/send_message_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:provider/provider.dart';
 
-import '../providers/models_provider.dart';
-import '../services/assets_manager.dart';
 import '../widgets/text_widget.dart';
 
 class ConversationScreen extends StatefulWidget {
@@ -42,8 +37,8 @@ class _ChatScreenState extends State<ConversationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    DateTime closedOn = DateTime(2023, 05, 24);
-    if (closedOn.isBefore(DateTime.now())) return Container();
+    // DateTime closedOn = DateTime(2023, 05, 24);
+    // if (closedOn.isBefore(DateTime.now())) return Container();
 
     return BlocProvider(
       create: (_) => ConversationCubit(widget.chat)..fetchAllMessages(),

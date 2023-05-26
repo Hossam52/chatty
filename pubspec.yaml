@@ -49,6 +49,9 @@ dependencies:
   dio: ^5.1.2
   file_picker: ^5.3.0
   syncfusion_flutter_pdf: ^21.2.4
+  flutter_screenutil: ^5.7.0
+  shared_preferences: ^2.1.1
+  queen_validators: ^1.0.1
 
 dev_dependencies:
   flutter_test:

@@ -29,3 +29,13 @@ class AddNewChatErrorState extends AppStates {
   final String error;
   AddNewChatErrorState({required this.error});
 }
+
+//GetUser online fetch data
+class GetUserLoadingState extends AppStates {}
+
+class GetUserSuccessState extends AppStates {}
+
+class GetUserErrorState extends AppStates {
+  final String error;
+  GetUserErrorState({required this.error});
+}

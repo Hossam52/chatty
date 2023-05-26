@@ -2,8 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chatgpt/constants/constants.dart';
+import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/providers/models_provider.dart';
+import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
+import 'package:chatgpt/widgets/custom_text_field.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -39,18 +42,19 @@ class _SendMessageFieldState extends State<SendMessageField> {
         child: Row(
           children: [
             Expanded(
-              child: TextField(
+              child: CustomTextFormField(
                 focusNode: focusNode,
-                style: const TextStyle(color: Colors.white),
                 controller: textEditingController,
-                onSubmitted: (value) async {
+                onSubmit: (value) async {
                   await sendMessageFCT(
                       modelsProvider: modelsProvider,
                       chatCubit: conversationCubit);
                 },
-                decoration: const InputDecoration.collapsed(
-                    hintText: "How can I help you",
-                    hintStyle: TextStyle(color: Colors.grey)),
+                hint: 'How can I help you',
+                borderColor: ColorManager.white,
+                // decoration: const InputDecoration.collapsed(
+                //     hintText: "How can I help you",
+                //     hintStyle: TextStyle(color: Colors.grey)),
               ),
             ),
             IconButton(
@@ -116,7 +120,9 @@ class _SendMessageFieldState extends State<SendMessageField> {
 
       chatCubit.addUserMessage(msg: msg);
       await chatCubit.sendMessageAndGetAnswers(
-          msg: msg, chosenModelId: modelsProvider.getCurrentModel);
+          userId: (await AppCubit.instance(context).currentUser).id,
+          msg: msg,
+          chosenModelId: modelsProvider.getCurrentModel);
     } catch (error) {
       log("error $error");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

@@ -19,15 +19,19 @@ class TagDetailsDialog extends StatelessWidget {
       chatIndex: 0,
     );
     return BlocProvider(
-        create: (context) =>
-            ConversationCubit(ChatModel(id: 1, chat_name: 'Query', model: ''))
-              ..addUserMessage(msg: 'What is the $tagName meaining?')
-              ..sendMessageAndGetAnswers(
-                  msg: userMessage.msg, chosenModelId: 'gpt-3.5-turbo-0301'),
-        child: ConversationBlocBuilder(
+        create: (context) => TagsConversationQueryiesCubit(
+            ChatModel(id: 1, chat_name: 'Query', model: ''))
+          ..addUserMessage(msg: 'What is the $tagName meaining?')
+          ..sendMessageAndGetAnswers(
+              userId: 0, //not a user
+              msg: userMessage.msg,
+              chosenModelId: 'gpt-3.5-turbo-0301'),
+        child: TagsConversationQueryiesBlocBuilder(
           builder: (context, state) {
-            final conversationCubit = ConversationCubit.instance(context);
+            final conversationCubit =
+                TagsConversationQueryiesCubit.instance(context);
             final messages = conversationCubit.getMessages.reversed.toList();
+
             return Dialog(
               backgroundColor: scaffoldBackgroundColor,
               child: Padding(
@@ -41,7 +45,10 @@ class TagDetailsDialog extends StatelessWidget {
                             if (messages[index].chatIndex == 0)
                               SendChatBubble(message: messages[index]),
                             if (messages[index].chatIndex == 1)
-                              RecieveChatBubble(message: messages[index]),
+                              RecieveChatBubble(
+                                message: messages[index],
+                                chatCubit: conversationCubit,
+                              ),
                             if (conversationCubit.isGeneratingAssitantMessage)
                               const SpinKitThreeBounce(
                                 color: Colors.white,
