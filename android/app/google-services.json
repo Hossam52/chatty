@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "638770161985",
+    "project_id": "gptiva",
+    "storage_bucket": "gptiva.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:638770161985:android:b210071a97fb4e5c7619c0",
+        "android_client_info": {
+          "package_name": "com.chatty.chat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB3AUWqvuXtzS5orvAj_BnoBjK-wFE8unw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
