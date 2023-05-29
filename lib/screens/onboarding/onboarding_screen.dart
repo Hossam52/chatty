@@ -28,7 +28,7 @@ class OnBoardingScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Chatty\n Welcome to ChatGPT, your all-in-one chatbot app!',
+                          'Gptiva\n Welcome to ChatGPT, your all-in-one chatbot app!',
                           textAlign: TextAlign.center,
                           style: getMediumStyle(
                               color: ColorManager.white,

@@ -9,6 +9,39 @@ import '../widgets/drop_down.dart';
 import '../widgets/text_widget.dart';
 
 class Services {
+  static Widget roleSelection(BuildContext context) {
+    return BlocProvider.value(
+      value: ConversationCubit.instance(context),
+      child: PersonasBlocBuilder(builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // const _CustomRow(
+              //   label: 'Chosen Model:',
+              //   child: ModelsDrowDownWidget(),
+              // ),
+              const _CustomRow(
+                label: 'Act as:',
+                child: PersonasDropDown(),
+              ),
+              // _CustomRow(
+              //   label: 'The system message',
+              //   child: TextWidget(
+              //     fontSize: 13,
+              //     label: PersonasCubit.instance(context)
+              //         .selectedPersona
+              //         .generateContent(),
+              //   ),
+              // ),
+            ],
+          ),
+        );
+      }),
+    );
+  }
+
   static Future<void> showModalSheet({required BuildContext context}) async {
     await showModalBottomSheet(
         shape: const RoundedRectangleBorder(
@@ -19,36 +52,7 @@ class Services {
         backgroundColor: scaffoldBackgroundColor,
         context: context,
         builder: (_) {
-          return BlocProvider.value(
-            value: ConversationCubit.instance(context),
-            child: PersonasBlocBuilder(builder: (context, state) {
-              return Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const _CustomRow(
-                      label: 'Chosen Model:',
-                      child: ModelsDrowDownWidget(),
-                    ),
-                    const _CustomRow(
-                      label: 'Act as:',
-                      child: PersonasDropDown(),
-                    ),
-                    _CustomRow(
-                      label: 'The system message',
-                      child: TextWidget(
-                        fontSize: 13,
-                        label: PersonasCubit.instance(context)
-                            .selectedPersona
-                            .generateContent(),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-          );
+          return roleSelection(context);
         });
   }
 }

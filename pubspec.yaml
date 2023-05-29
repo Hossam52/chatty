@@ -52,6 +52,9 @@ dependencies:
   flutter_screenutil: ^5.7.0
   shared_preferences: ^2.1.1
   queen_validators: ^1.0.1
+  firebase_core: ^2.13.0
+  firebase_phone_auth_handler: ^1.0.8
+  pin_code_fields: ^7.4.0
 
 dev_dependencies:
   flutter_test:

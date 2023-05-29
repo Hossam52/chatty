@@ -2,14 +2,13 @@ import 'dart:developer';
 
 import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
+import 'package:chatgpt/screens/auth/confirm_phone_screen.dart';
 import 'package:chatgpt/screens/auth/login_screen.dart';
 import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
-import 'package:chatgpt/screens/chat/chat_history_screen.dart';
 import 'package:chatgpt/shared/methods.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
-import 'package:chatgpt/widgets/custom_text_field.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +28,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final formKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final nameController = TextEditingController();
+  final phoneController = TextEditingController();
   final passwordController = TextEditingController();
   final passwordConfirmController = TextEditingController();
 
@@ -47,8 +47,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
         body: AuthBlocConsumer(
           listener: (context, state) {
             if (state is RegisterSuccessState) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ConfirmPhoneScreen(
+                            phoneNumber: phoneController.text,
+                          )));
             }
             if (state is RegisterErrorState) {
               Methods.showSnackBar(context, state.error);
@@ -85,14 +89,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               label: 'Name',
                               hint: 'Enter your name',
                               validationRules: const [],
+                              inputType: TextInputType.name,
                               controller: nameController),
                           AuthTextField(
                               label: 'Email',
                               hint: 'Enter your email',
+                              inputType: TextInputType.emailAddress,
                               validationRules: const [
                                 IsEmail('Your email is not correct')
                               ],
                               controller: emailController),
+                          AuthTextField(
+                              label: 'Phone',
+                              inputType: TextInputType.phone,
+                              hint: 'Enter your phone number',
+                              validationRules: [
+                                IsNumber('Your phone is not correct')
+                              ],
+                              controller: phoneController),
                           StatefulBuilder(builder: (context, setState) {
                             return AuthTextField(
                                 label: 'Password',

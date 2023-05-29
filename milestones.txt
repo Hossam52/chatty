@@ -37,3 +37,10 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - add onboarding screen 12:00pm to 01:00 pm
     - enhance login form 02:00pm to 04:15pm
     - enhance register form 04:30pm to 06:30 pm
+
+29/5
+    - change tags location from top to bottom 09:30: 09:45
+    - create auth with phone from 10:00pm to 12:00PM
+    - add phone and verified to database
+    - remove the string in the more conversation(done)
+    - remove more and make it expandable in the chat conversation(done)

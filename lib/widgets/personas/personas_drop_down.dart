@@ -51,7 +51,7 @@ class PersonasDropDown extends StatelessWidget {
                     .changeSystemRole(personasCubit.selectedPersona);
               }
               personasCubit.changeSelected(value);
-              Navigator.pop(context);
+              // Navigator.pop(context);
             },
           );
         },
