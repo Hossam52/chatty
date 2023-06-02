@@ -13,6 +13,7 @@ import 'package:chatgpt/widgets/custom_button.dart';
 import 'package:chatgpt/widgets/custom_text_field.dart';
 import 'package:chatgpt/widgets/default_loader.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,9 +45,8 @@ class _ConfirmPhoneScreenState extends State<ConfirmPhoneScreen> {
 
   @override
   void initState() {
-    if (widget.sendVerification) {
-      AuthCubit.instance(context).sendVerification();
-    }
+    AuthCubit.instance(context).sendVerification(widget.phoneNumber);
+
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }
@@ -86,7 +86,8 @@ class _ConfirmPhoneScreenState extends State<ConfirmPhoneScreen> {
           return Center(
             child: InkWell(
                 onTap: () {
-                  AuthCubit.instance(context).sendVerification();
+                  AuthCubit.instance(context)
+                      .sendVerification(widget.phoneNumber);
                 },
                 child: TextWidget(label: 'Try again ${state.error}')),
           );
@@ -217,7 +218,8 @@ class _ConfirmPhoneScreenState extends State<ConfirmPhoneScreen> {
           ),
           TextButton(
             onPressed: () async {
-              await AuthCubit.instance(context).sendVerification();
+              await AuthCubit.instance(context)
+                  .sendVerification(widget.phoneNumber);
               snackBar("OTP resend!!");
             },
             child: const Text(
@@ -346,7 +348,7 @@ class _NewPhoneDialogState extends State<_NewPhoneDialog> {
         Methods.showSnackBar(context, state.error);
       }
       if (state is ChangePhoneSuccessState) {
-        AuthCubit.instance(context).sendVerification();
+        AuthCubit.instance(context).sendVerification(phoneController.text);
         Navigator.pop(context, state.phone);
       }
     }, builder: (context, state) {

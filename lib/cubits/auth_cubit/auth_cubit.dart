@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/models/auth/register_model.dart';
-import 'package:chatgpt/models/auth/user_model.dart';
+import 'package:chatgpt/models/auth/user_model.dart' as userModel;
 import 'package:chatgpt/shared/network/local/cache_helper.dart';
 import 'package:chatgpt/shared/network/services/app_services.dart';
 import 'package:chatgpt/shared/network/services/auth_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import './auth_states.dart';
@@ -24,7 +25,7 @@ class AuthCubit extends Cubit<AuthStates> {
     try {
       emit(LoginLoadingState());
       final response = await AuthServices.login(email, password);
-      final user = User.fromMap(response);
+      final user = userModel.User.fromMap(response);
       Constants.token = user.access_token;
 
       if (user.verified != 0) await CacheHelper.setToken(user.access_token);
@@ -61,9 +62,23 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
+  Future<UserCredential> _signInWithCred(PhoneAuthCredential cred) async {
+    try {
+      return await FirebaseAuth.instance.signInWithCredential(cred);
+    } on FirebaseAuthException {
+      throw 'Error on code';
+    }
+  }
+
   Future<void> verifyOtp(String code) async {
     try {
       emit(VerifyOtpLoadingState());
+      if (_verificationId == null) throw 'The verification id is null';
+      final phoneCred = _phoneAuthCredential ??
+          PhoneAuthProvider.credential(
+              verificationId: _verificationId!, smsCode: code);
+      final user = await _signInWithCred(phoneCred);
+      log(user.toString());
       final response = await AuthServices.verifyAccount(code);
       log(response.toString());
       emit(VerifyOtpSuccessState(message: response['message']));
@@ -73,10 +88,26 @@ class AuthCubit extends Cubit<AuthStates> {
     }
   }
 
-  Future<void> sendVerification() async {
+  PhoneAuthCredential? _phoneAuthCredential;
+  String? _verificationId;
+  int? _forceSendingToken;
+
+  Future<void> sendVerification(String phoneNumber) async {
     try {
       emit(SendVerificationLoadingState());
-      final response = await AuthServices.sendVerificationCode();
+      await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          verificationCompleted: (cred) {
+            //when auth retrieved autocomplete
+            _phoneAuthCredential = cred;
+            verifyOtp(cred.smsCode!);
+          },
+          verificationFailed: (err) {},
+          codeSent: (verificationId, forceResendingToken) {
+            _verificationId = verificationId;
+            _forceSendingToken = forceResendingToken;
+          },
+          codeAutoRetrievalTimeout: (verificationId) {});
 
       emit(SendVerificationSuccessState());
     } catch (e) {
