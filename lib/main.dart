@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chatgpt/bloc_observer.dart';
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
@@ -12,6 +14,7 @@ import 'package:chatgpt/shared/network/local/cache_helper.dart';
 import 'package:chatgpt/shared/network/remote/app_dio_helper.dart';
 import 'package:chatgpt/shared/network/remote/dio_helper.dart';
 import 'package:chatgpt/shared/presentation/resourses/theme_manager.dart';
+import 'package:chatgpt/widgets/custom_button.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
@@ -75,11 +78,11 @@ class MyApp extends StatelessWidget {
               //       color: cardColor,
               //     )),
 
-              home: ConfirmPhoneScreen(phoneNumber: '+201115425561'),
-              // home: Constants.token != null
-              //     ? const ChatHistoryScreen()
-              //     // : const LoginScreen(),
-              //     : const OnBoardingScreen(),
+              // home: const ConfirmPhoneScreen(phoneNumber: '+201115425561'),
+              // home: _TestScaffold(),
+              home: Constants.token != null
+                  ? const ChatHistoryScreen()
+                  : const OnBoardingScreen(),
             ),
           ),
         ),
@@ -94,13 +97,34 @@ class _TestScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: FirebasePhoneAuthHandler(
-          phoneNumber: "+201115425562",
-          builder: (context, controller) {
-            controller.verifyOtp('932972');
-            return SizedBox.shrink();
+        child: CustomButton(
+          onPressed: () async {
+            await FirebaseAuth.instance.verifyPhoneNumber(
+                phoneNumber: '+201115425561',
+                verificationCompleted: (cred) {
+                  log(cred.toString());
+                },
+                verificationFailed: (err) {
+                  log(err.message.toString());
+                },
+                codeSent: ((verificationId, forceResendingToken) {
+                  log('verificationId $verificationId');
+                  log('forceResend $forceResendingToken');
+                }),
+                codeAutoRetrievalTimeout: (x) {});
           },
         ),
+        //  FirebasePhoneAuthHandler(
+        //   phoneNumber: "+201115425561",
+        //   builder: (context, controller) {
+        //     return CustomButton(
+        //       onPressed: () {
+
+        //         controller.sendOTP();
+        //       },
+        //     );
+        //   },
+        // ),
       ),
     );
   }

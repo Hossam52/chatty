@@ -9,6 +9,7 @@ import 'package:chatgpt/shared/methods.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
+import 'package:chatgpt/widgets/default_loader.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,6 +48,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         body: AuthBlocConsumer(
           listener: (context, state) {
             if (state is RegisterSuccessState) {
+              Methods.showSnackBar(
+                  context, 'Success register login to continue');
               Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
@@ -58,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               Methods.showSnackBar(context, state.error);
             }
           },
-          builder: (context, snapshot) {
+          builder: (context, state) {
             log('Builder');
             return GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
@@ -158,21 +161,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   child: const TextWidget(label: 'Login')),
                             ],
                           ),
-                          CustomButton(
-                            text: 'Register',
-                            onPressed: () {
-                              if (formKey.currentState!.validate()) {
-                                AuthCubit.instance(context).register(
-                                  email: emailController.text,
-                                  name: nameController.text,
-                                  password: passwordController.text,
-                                  passwordConfirm:
-                                      passwordConfirmController.text,
-                                );
-                              }
-                            },
-                            backgroundColor: ColorManager.accentColor,
-                          ),
+                          if (state is RegisterLoadingState)
+                            const DefaultLoader()
+                          else
+                            CustomButton(
+                              text: 'Register',
+                              onPressed: () {
+                                if (formKey.currentState!.validate()) {
+                                  AuthCubit.instance(context).register(
+                                    email: emailController.text,
+                                    phone: phoneController.text,
+                                    name: nameController.text,
+                                    password: passwordController.text,
+                                    passwordConfirm:
+                                        passwordConfirmController.text,
+                                  );
+                                }
+                              },
+                              backgroundColor: ColorManager.accentColor,
+                            ),
                         ],
                       ),
                     ),

@@ -16,6 +16,9 @@ class EndPoints {
   //Auth
   static const String login = '/login';
   static const String register = '/register';
+  static const String changePhone = '/changePhone';
+  static const String verifyOtp = '/verify-otp';
+  static const String sendOtp = '/createSession';
   static const String profile = '/profile';
   static const String logout = '/logout';
 }

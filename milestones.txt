@@ -1,3 +1,4 @@
+total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 = 59h
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
 
 20/5 12:30 -> 7:00 6h
@@ -26,21 +27,28 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - save file in database
     - make table in backend that hold the files and its generated summery
 
-24/5 
+24/5 3.5h
     - work in authenticaiton routes in laravel backend 2:30am to 6:00 am
 
-25/25 
+25/25 1h
     - add simple login form and send data via api 05:00am to 06:00am
 
-26/5
+26/5 9h
     - connect the logged in user to the all application apis and make sure to save user data in cache 08:00am to 12:00pm
     - add onboarding screen 12:00pm to 01:00 pm
     - enhance login form 02:00pm to 04:15pm
     - enhance register form 04:30pm to 06:30 pm
 
-29/5
+29/5 2h
     - change tags location from top to bottom 09:30: 09:45
     - create auth with phone from 10:00pm to 12:00PM
     - add phone and verified to database
     - remove the string in the more conversation(done)
     - remove more and make it expandable in the chat conversation(done)
+    
+1/6 4.5h
+    - add integration with firebase phone auth in backend 12:00 am : 4:30 am 
+
+2/6 5.5
+    - integrate flutter with phone auth after register or login 05:20pm:8:00
+    - make the confirm phone screen and call api 08:00pm:10:30pm 

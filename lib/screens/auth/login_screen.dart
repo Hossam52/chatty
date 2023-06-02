@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
+import 'package:chatgpt/screens/auth/confirm_phone_screen.dart';
 import 'package:chatgpt/screens/auth/register_screen.dart';
 import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
 import 'package:chatgpt/screens/chat/chat_history_screen.dart';
@@ -12,6 +13,7 @@ import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:chatgpt/widgets/custom_button.dart';
 import 'package:chatgpt/widgets/custom_text_field.dart';
+import 'package:chatgpt/widgets/default_loader.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -43,15 +45,25 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
         body: AuthBlocConsumer(listener: (context, state) {
           if (state is LoginSuccessState) {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const ChatHistoryScreen()));
+            if (state.user.verified == 0) {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ConfirmPhoneScreen(
+                            phoneNumber: state.user.phone,
+                            sendVerification: true,
+                          )));
+            } else {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const ChatHistoryScreen()));
+            }
           }
           if (state is LoginErrorState) {
             Methods.showSnackBar(context, state.error);
           }
-        }, builder: (context, snapshot) {
+        }, builder: (context, state) {
           return GestureDetector(
             onTap: () => FocusScope.of(context).unfocus(),
             child: SafeArea(
@@ -131,17 +143,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 child: const TextWidget(label: 'Register')),
                           ],
                         ),
-                        CustomButton(
-                          text: 'Login',
-                          onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              AuthCubit.instance(context).login(
-                                  emailController.text,
-                                  passwordController.text);
-                            }
-                          },
-                          backgroundColor: ColorManager.accentColor,
-                        ),
+                        if (state is LoginLoadingState)
+                          const DefaultLoader()
+                        else
+                          CustomButton(
+                            text: 'Login',
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                AuthCubit.instance(context).login(
+                                    emailController.text,
+                                    passwordController.text);
+                              }
+                            },
+                            backgroundColor: ColorManager.accentColor,
+                          ),
                       ],
                     ),
                   ),
