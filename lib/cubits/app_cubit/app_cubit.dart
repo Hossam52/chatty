@@ -18,6 +18,14 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(IntitalAppState());
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
+
+  int _selectedBottomIndex = 1;
+  int get getSelectedBottomIndex => _selectedBottomIndex;
+  set selectedBottomIndex(int index) {
+    _selectedBottomIndex = index;
+    emit(ChangeAppBottomState());
+  }
+
   List<ChatModel> _chats = [];
 
   List<ChatModel> get getChats => _chats;

@@ -11,11 +11,13 @@ class AuthTextField extends StatelessWidget {
     required this.controller,
     required this.label,
     required this.hint,
-    this.inputType = TextInputType.text,
     required this.validationRules,
+    this.flex,
+    this.inputType = TextInputType.text,
     this.password = false,
     this.onIconPressed,
   });
+  final int? flex;
   final TextEditingController controller;
   final bool password;
   final TextInputType inputType;
@@ -34,7 +36,7 @@ class AuthTextField extends StatelessWidget {
                     style: getMediumStyle(color: ColorManager.white))),
             SizedBox(width: 20.w),
             Expanded(
-              flex: 4,
+              flex: flex ?? 4,
               child: CustomTextFormField(
                   controller: controller,
                   isSecure: password,

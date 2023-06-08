@@ -4,7 +4,9 @@ import 'package:chatgpt/models/chat_history_model.dart';
 abstract class AppStates {}
 
 class IntitalAppState extends AppStates {}
+
 //
+class ChangeAppBottomState extends AppStates {}
 
 //FetchAllChats online fetch data
 class FetchAllChatsLoadingState extends AppStates {}

@@ -100,8 +100,8 @@ class OnBoardingScreen extends StatelessWidget {
                                 },
                                 child: Text(
                                   'Login',
-                                  style: getBoldStyle(
-                                      color: ColorManager.accentColor),
+                                  style:
+                                      getBoldStyle(color: ColorManager.primary),
                                 ),
                               ),
                             )

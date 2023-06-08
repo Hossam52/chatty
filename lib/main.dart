@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:chatgpt/bloc_observer.dart';
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
@@ -9,6 +10,7 @@ import 'package:chatgpt/providers/models_provider.dart';
 import 'package:chatgpt/screens/auth/confirm_phone_screen.dart';
 import 'package:chatgpt/screens/auth/login_screen.dart';
 import 'package:chatgpt/screens/chat/chat_history_screen.dart';
+import 'package:chatgpt/screens/home/home_screen.dart';
 import 'package:chatgpt/screens/onboarding/onboarding_screen.dart';
 import 'package:chatgpt/shared/network/local/cache_helper.dart';
 import 'package:chatgpt/shared/network/remote/app_dio_helper.dart';
@@ -25,10 +27,21 @@ import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
 import 'providers/chats_provider.dart';
-import 'screens/conversation_screen.dart';
+import 'screens/conversation/conversation_screen.dart';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  HttpOverrides.global = MyHttpOverrides();
+
   await Firebase.initializeApp();
 
   await CacheHelper.init();
@@ -49,9 +62,6 @@ class MyApp extends StatelessWidget {
       child: ScreenUtilInit(
         builder: (_, __) => MultiBlocProvider(
           providers: [
-            BlocProvider(
-              create: (context) => AppCubit(),
-            ),
             BlocProvider(
               create: (context) => AuthCubit(),
             ),
@@ -81,7 +91,7 @@ class MyApp extends StatelessWidget {
               // home: const ConfirmPhoneScreen(phoneNumber: '+201115425561'),
               // home: _TestScaffold(),
               home: Constants.token != null
-                  ? const ChatHistoryScreen()
+                  ? const HomeScreen()
                   : const OnBoardingScreen(),
             ),
           ),

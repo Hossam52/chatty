@@ -52,3 +52,19 @@ make the UI for chat history and make every chat has its own messages from 4:15 
 2/6 5.5
     - integrate flutter with phone auth after register or login 05:20pm:8:00
     - make the confirm phone screen and call api 08:00pm:10:30pm 
+
+8/6 4.5h
+    - add settings page 12am : 3am 3h
+    - add bottom bar navigation 3.5am : 5:am 1.5h
+
+9/6
+    - modify settings page and create profile page 10pm to 2am 4h
+
+
+
+- create the apis for update profile
+- add prompt construction at chat
+- select text from ai response
+- change phone number field
+- remove the email in register and make it after the phone ins confirmed
+- change colors to be good like the app in google play

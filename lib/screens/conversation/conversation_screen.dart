@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-import '../widgets/text_widget.dart';
+import '../../widgets/text_widget.dart';
 
 class ConversationScreen extends StatefulWidget {
   const ConversationScreen({super.key, required this.chat});

@@ -7,6 +7,7 @@ import 'package:chatgpt/screens/auth/confirm_phone_screen.dart';
 import 'package:chatgpt/screens/auth/register_screen.dart';
 import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
 import 'package:chatgpt/screens/chat/chat_history_screen.dart';
+import 'package:chatgpt/screens/home/home_screen.dart';
 import 'package:chatgpt/shared/methods.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
@@ -16,6 +17,7 @@ import 'package:chatgpt/widgets/custom_text_field.dart';
 import 'package:chatgpt/widgets/default_loader.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:queen_validators/queen_validators.dart';
@@ -54,10 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             sendVerification: true,
                           )));
             } else {
-              Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const ChatHistoryScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const HomeScreen()));
             }
           }
           if (state is LoginErrorState) {
@@ -125,6 +125,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                               controller: passwordController);
                         }),
+                        if (kDebugMode)
+                          TextButton(
+                              onPressed: () async {
+                                await AuthCubit.instance(context)
+                                    .login('hossam@gmail.com', '123456');
+                              },
+                              child: Text('Test')),
                         const SizedBox(height: 50),
                         Row(
                           children: [
