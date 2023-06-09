@@ -6,6 +6,7 @@ import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/models/message_model.dart';
 import 'package:chatgpt/providers/chats_provider.dart';
 import 'package:chatgpt/providers/models_provider.dart';
+import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:provider/provider.dart';
@@ -99,8 +100,9 @@ class RecieveChatBubble extends StatelessWidget {
                         fontSize: 16),
                   ),
                 ])
-          : Text(
+          : SelectableText(
               message.msg.trim(),
+              cursorColor: ColorManager.accentColor,
               style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,

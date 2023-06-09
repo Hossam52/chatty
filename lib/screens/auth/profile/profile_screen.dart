@@ -1,12 +1,17 @@
+import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
+import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
+import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
 import 'package:chatgpt/models/auth/user_model.dart';
 import 'package:chatgpt/screens/auth/edit/change_password_screen.dart';
 import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
 import 'package:chatgpt/screens/settings/widgets/setting_item.dart';
 import 'package:chatgpt/screens/settings/widgets/setting_section.dart';
+import 'package:chatgpt/shared/methods.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:chatgpt/widgets/custom_button.dart';
+import 'package:chatgpt/widgets/default_loader.dart';
 import 'package:chatgpt/widgets/person_image_widget.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
@@ -41,57 +46,79 @@ class _ProfileScreenState extends State<ProfileScreen> {
           title: const TextWidget(
         label: 'Profile',
       )),
-      body: SafeArea(
-        child: ListView(
-          padding: EdgeInsets.all(12.w),
-          children: [
-            PersonImageWidget(
-              user: widget.user,
-              factor: 0.13,
-            ),
-            SettingsSectionWidget(title: 'Subscription', items: [
-              SettingItem(
-                  title: 'Subscription',
-                  contentWidget: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      _SubscriptionItem('Subscription plan', 'Free'),
-                      _SubscriptionItem('Remaining messages', '10'),
-                    ],
-                  ),
-                  onTap: () {}),
-            ]),
-            Form(
-              key: formKey,
-              child:
-                  SettingsSectionWidget(title: 'Personal information', items: [
-                AuthTextField(
-                    controller: TextEditingController(),
-                    label: 'Current password',
-                    hint: 'Current password',
-                    validationRules: const []),
-                AuthTextField(
-                    controller: TextEditingController(text: widget.user.name),
-                    label: 'Name',
-                    hint: 'Your name',
-                    validationRules: const []),
-                AuthTextField(
-                    controller: TextEditingController(text: widget.user.email),
-                    label: 'Email',
-                    hint: 'Your Email',
-                    validationRules: const [
-                      IsEmail(),
-                    ]),
-                CustomButton(
-                  text: 'Update',
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {}
-                  },
+      body: AuthBlocConsumer(
+        listener: (context, state) {
+          if (state is UpdateProfileDataSuccessState) {
+            AppCubit.instance(context).updateCurrentUser(state.user);
+            Methods.showSuccessSnackBar(context, 'Updated successfully');
+          }
+          if (state is UpdateProfileDataErrorState) {
+            Methods.showSnackBar(context, state.error);
+          }
+        },
+        builder: (context, state) {
+          return SafeArea(
+            child: ListView(
+              padding: EdgeInsets.all(12.w),
+              children: [
+                PersonImageWidget(
+                  user: widget.user,
+                  factor: 0.13,
+                ),
+                SettingsSectionWidget(title: 'Subscription', items: [
+                  SettingItem(
+                      title: 'Subscription',
+                      contentWidget: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          _SubscriptionItem('Subscription plan', 'Free'),
+                          _SubscriptionItem('Remaining messages', '10'),
+                        ],
+                      ),
+                      onTap: () {}),
+                ]),
+                Form(
+                  key: formKey,
+                  child: SettingsSectionWidget(
+                      title: 'Personal information',
+                      items: [
+                        AuthTextField(
+                            controller: currentPasswordController,
+                            label: 'Current password',
+                            hint: 'Current password',
+                            validationRules: const []),
+                        AuthTextField(
+                            controller: nameController,
+                            label: 'Name',
+                            hint: 'Your name',
+                            validationRules: const []),
+                        AuthTextField(
+                            controller: emailController,
+                            label: 'Email',
+                            hint: 'Your Email',
+                            validationRules: const [
+                              IsEmail(),
+                            ]),
+                        if (state is UpdateProfileDataLoadingState)
+                          const DefaultLoader()
+                        else
+                          CustomButton(
+                            text: 'Update',
+                            onPressed: () {
+                              if (formKey.currentState!.validate()) {
+                                AuthCubit.instance(context).updateProfileData(
+                                    password: currentPasswordController.text,
+                                    name: nameController.text,
+                                    email: emailController.text);
+                              }
+                            },
+                          )
+                      ]),
                 )
-              ]),
-            )
-          ],
-        ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

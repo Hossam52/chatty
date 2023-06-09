@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
+import 'package:chatgpt/screens/auth/edit/change_phone_screen.dart';
 import 'package:chatgpt/screens/auth/login_screen.dart';
 import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
 import 'package:chatgpt/shared/methods.dart';
@@ -341,6 +342,8 @@ class _NewPhoneDialogState extends State<_NewPhoneDialog> {
   final TextEditingController passwordController = TextEditingController();
 
   final formKey = GlobalKey<FormState>();
+
+  String _completePhoneNumber = '';
   @override
   Widget build(BuildContext context) {
     return AuthBlocConsumer(listener: (context, state) {
@@ -361,11 +364,15 @@ class _NewPhoneDialogState extends State<_NewPhoneDialog> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                AuthTextField(
+                AuthTextField.customTextField(
+                  textField: PhoneField(
                     controller: phoneController,
-                    label: 'Phone',
-                    hint: 'Enter new phone',
-                    validationRules: []),
+                    onChange: (phoneNumber) =>
+                        _completePhoneNumber = phoneNumber,
+                  ),
+                  controller: phoneController,
+                  label: 'Phone',
+                ),
                 AuthTextField(
                     controller: passwordController,
                     label: 'Password',
@@ -377,7 +384,7 @@ class _NewPhoneDialogState extends State<_NewPhoneDialog> {
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
                       await AuthCubit.instance(context).changePhone(
-                          phoneController.text, passwordController.text);
+                          _completePhoneNumber, passwordController.text);
                     }
                   },
                 )

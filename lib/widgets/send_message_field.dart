@@ -120,7 +120,7 @@ class _SendMessageFieldState extends State<SendMessageField> {
 
       chatCubit.addUserMessage(msg: msg);
       await chatCubit.sendMessageAndGetAnswers(
-          userId: (await AppCubit.instance(context).currentUser).id,
+          userId: AppCubit.instance(context).currentUser.id,
           msg: msg,
           chosenModelId: modelsProvider.getCurrentModel);
     } catch (error) {

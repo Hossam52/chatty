@@ -16,8 +16,10 @@ class AuthTextField extends StatelessWidget {
     this.inputType = TextInputType.text,
     this.password = false,
     this.onIconPressed,
+    this.textField,
   });
   final int? flex;
+  final Widget? textField;
   final TextEditingController controller;
   final bool password;
   final TextInputType inputType;
@@ -25,6 +27,18 @@ class AuthTextField extends StatelessWidget {
   final String hint;
   final List<TextValidationRule> validationRules;
   final void Function()? onIconPressed;
+  AuthTextField.customTextField({
+    super.key,
+    required this.controller,
+    required this.label,
+    required this.textField,
+    this.inputType = TextInputType.text,
+    this.password = false,
+    this.hint = '',
+    this.validationRules = const [],
+    this.flex,
+    this.onIconPressed,
+  });
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,21 +51,23 @@ class AuthTextField extends StatelessWidget {
             SizedBox(width: 20.w),
             Expanded(
               flex: flex ?? 4,
-              child: CustomTextFormField(
-                  controller: controller,
-                  isSecure: password,
-                  type: inputType,
-                  hasBorder: true,
-                  suffixIconColor: ColorManager.white,
-                  suffixIcon: password
-                      ? Icons.visibility_off
-                      : onIconPressed != null
-                          ? Icons.visibility
-                          : null,
-                  suffixPressed: onIconPressed,
-                  borderColor: Colors.white54,
-                  hint: hint,
-                  validation: qValidator([IsRequired(), ...validationRules])),
+              child: textField ??
+                  CustomTextFormField(
+                      controller: controller,
+                      isSecure: password,
+                      type: inputType,
+                      hasBorder: true,
+                      suffixIconColor: ColorManager.white,
+                      suffixIcon: password
+                          ? Icons.visibility_off
+                          : onIconPressed != null
+                              ? Icons.visibility
+                              : null,
+                      suffixPressed: onIconPressed,
+                      borderColor: Colors.white54,
+                      hint: hint,
+                      validation:
+                          qValidator([IsRequired(), ...validationRules])),
             ),
           ],
         ),

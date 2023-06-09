@@ -31,10 +31,16 @@ class AppCubit extends Cubit<AppStates> {
   List<ChatModel> get getChats => _chats;
 
   User? _user;
-  Future<User> get currentUser async {
-    if (_user == null) {
-      final user = await getUser();
-      if (user == null) throw 'Undifined user';
+  bool get userError => _user == null;
+  void updateCurrentUser(User user) {
+    _user = user;
+    emit(UpdateUserState());
+  }
+
+  User get currentUser {
+    if (userError) {
+      // final user = await getUser();
+      throw 'Undifined user';
     }
 
     return _user!;
@@ -42,7 +48,8 @@ class AppCubit extends Cubit<AppStates> {
 
   Future<void> fetchAllChats() async {
     try {
-      final user = await currentUser;
+      if (userError) await getUser();
+      final user = currentUser;
       emit(FetchAllChatsLoadingState());
       final response = await AppServices.getAllChats(user.id);
       log(response.toString());
@@ -70,17 +77,16 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future<User?> getUser() async {
+  Future<void> getUser() async {
+    if (_user != null) return;
     try {
       emit(GetUserLoadingState());
       final response = await AuthServices.profile();
       log(response.toString());
       _user = User.fromMap(response);
       emit(GetUserSuccessState());
-      return _user;
     } catch (e) {
       emit(GetUserErrorState(error: e.toString()));
     }
-    return null;
   }
 }

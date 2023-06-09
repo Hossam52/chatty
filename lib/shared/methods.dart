@@ -11,11 +11,23 @@ abstract class Methods {
   static void showSnackBar(BuildContext context, String text) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 1),
+        duration: const Duration(seconds: 2),
         content: TextWidget(
           label: text,
         ),
         backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  static void showSuccessSnackBar(BuildContext context, String text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 2),
+        content: TextWidget(
+          label: text,
+        ),
+        backgroundColor: Colors.green,
       ),
     );
   }

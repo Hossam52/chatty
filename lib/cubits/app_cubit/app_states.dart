@@ -8,6 +8,8 @@ class IntitalAppState extends AppStates {}
 //
 class ChangeAppBottomState extends AppStates {}
 
+class UpdateUserState extends AppStates {}
+
 //FetchAllChats online fetch data
 class FetchAllChatsLoadingState extends AppStates {}
 

@@ -138,4 +138,26 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(ChangePhoneErrorState(error: e.toString()));
     }
   }
+
+  Future<void> updateProfileData(
+      {required String password,
+      String? phone,
+      String? email,
+      String? name}) async {
+    try {
+      emit(UpdateProfileDataLoadingState());
+      final response = await AuthServices.updateProfile(
+        currentPassword: password,
+        phone: phone,
+        name: name,
+        email: email,
+      );
+
+      log(response.toString());
+      final user = userModel.User.fromMap(response);
+      emit(UpdateProfileDataSuccessState(user));
+    } catch (e) {
+      emit(UpdateProfileDataErrorState(error: e.toString()));
+    }
+  }
 }

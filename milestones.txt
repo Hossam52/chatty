@@ -1,4 +1,4 @@
-total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 = 59h
+total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +9= 72h
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
 
 20/5 12:30 -> 7:00 6h
@@ -57,14 +57,14 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - add settings page 12am : 3am 3h
     - add bottom bar navigation 3.5am : 5:am 1.5h
 
-9/6
+9/6 9h
     - modify settings page and create profile page 10pm to 2am 4h
+    - select text from ai response 0.5h
+    - change phone number field 1h
+    - create the apis for update profile 5:30AM :9:00AM 3.5h
+    - 
 
 
 
-- create the apis for update profile
 - add prompt construction at chat
-- select text from ai response
-- change phone number field
-- remove the email in register and make it after the phone ins confirmed
 - change colors to be good like the app in google play

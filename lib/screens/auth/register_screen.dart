@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
 import 'package:chatgpt/screens/auth/confirm_phone_screen.dart';
+import 'package:chatgpt/screens/auth/edit/change_phone_screen.dart';
 import 'package:chatgpt/screens/auth/login_screen.dart';
 import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
 import 'package:chatgpt/shared/methods.dart';
@@ -35,6 +36,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool passwordVisible = false;
   bool passwordConfirmVisible = false;
+
+  String _completePhoneNumber = '';
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -102,14 +105,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 IsEmail('Your email is not correct')
                               ],
                               controller: emailController),
-                          AuthTextField(
-                              label: 'Phone',
-                              inputType: TextInputType.phone,
-                              hint: 'Enter your phone number',
-                              validationRules: [
-                                IsNumber('Your phone is not correct')
-                              ],
-                              controller: phoneController),
+                          AuthTextField.customTextField(
+                            textField: PhoneField(
+                              controller: phoneController,
+                              onChange: (phoneNumber) =>
+                                  _completePhoneNumber = phoneNumber,
+                            ),
+                            label: 'Phone',
+                            controller: phoneController,
+                          ),
                           StatefulBuilder(builder: (context, setState) {
                             return AuthTextField(
                                 label: 'Password',
@@ -170,7 +174,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 if (formKey.currentState!.validate()) {
                                   AuthCubit.instance(context).register(
                                     email: emailController.text,
-                                    phone: phoneController.text,
+                                    phone: _completePhoneNumber,
                                     name: nameController.text,
                                     password: passwordController.text,
                                     passwordConfirm:

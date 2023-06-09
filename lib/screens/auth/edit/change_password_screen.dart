@@ -72,6 +72,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 }
 
 class CustomAuthField extends AuthTextField {
+  static const int _customFlex = 2;
   const CustomAuthField({
     super.key,
     required super.controller,
@@ -81,5 +82,12 @@ class CustomAuthField extends AuthTextField {
     super.inputType = TextInputType.text,
     super.password = false,
     super.onIconPressed,
-  }) : super(flex: 2);
+    super.textField,
+  }) : super(flex: _customFlex);
+  CustomAuthField.customTextField({
+    super.key,
+    required super.controller,
+    required super.label,
+    super.textField,
+  }) : super.customTextField(flex: _customFlex);
 }

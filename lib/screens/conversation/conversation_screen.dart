@@ -1,3 +1,4 @@
+import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_states.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
@@ -42,95 +43,107 @@ class _ChatScreenState extends State<ConversationScreen> {
     // DateTime closedOn = DateTime(2023, 05, 24);
     // if (closedOn.isBefore(DateTime.now())) return Container();
 
-    return BlocProvider(
-      create: (_) => ConversationCubit(widget.chat)..fetchAllMessages(),
-      child: Builder(builder: (context) {
-        return Scaffold(
-            appBar: _appBar(context),
-            body: Column(
-              children: [
-                // Container(
-                //   height: 65.h,
-                //   color: Colors.blue,
-                // ),
-                ExpansionTileTheme(
-                  data: ExpansionTileThemeData(
-                    iconColor: ColorManager.grey,
-                    collapsedIconColor: ColorManager.grey,
-                    collapsedBackgroundColor: ColorManager.primary,
-                    backgroundColor: ColorManager.primary.withOpacity(0.8),
-                  ),
-                  child: ExpansionTile(
-                    title: Center(
-                      child: TextWidget(
-                        label: 'Select role',
-                        color: ColorManager.grey,
+    return AppBlocBuilder(
+      builder: (context, state) {
+        final appCubit = AppCubit.instance(context);
+        if (appCubit.userError)
+          return TextButton(
+              onPressed: () async {
+                appCubit.getUser();
+              },
+              child: TextWidget(label: 'Error happened in user try again'));
+        return BlocProvider(
+          create: (_) => ConversationCubit(widget.chat)..fetchAllMessages(),
+          child: Builder(builder: (context) {
+            return Scaffold(
+                appBar: _appBar(context),
+                body: Column(
+                  children: [
+                    // Container(
+                    //   height: 65.h,
+                    //   color: Colors.blue,
+                    // ),
+                    ExpansionTileTheme(
+                      data: ExpansionTileThemeData(
+                        iconColor: ColorManager.grey,
+                        collapsedIconColor: ColorManager.grey,
+                        collapsedBackgroundColor: ColorManager.primary,
+                        backgroundColor: ColorManager.primary.withOpacity(0.8),
+                      ),
+                      child: ExpansionTile(
+                        title: Center(
+                          child: TextWidget(
+                            label: 'Select role',
+                            color: ColorManager.grey,
+                          ),
+                        ),
+                        children: [Services.roleSelection(context)],
                       ),
                     ),
-                    children: [Services.roleSelection(context)],
-                  ),
-                ),
-                Expanded(
-                  child: ConversationBlocConsumer(listener: (context, state) {
-                    if (state is ErrorAddUserFileMessage) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: TextWidget(
-                            label: state.error,
-                            fontSize: 14,
-                          ),
-                          backgroundColor: Colors.red,
-                        ),
-                      );
-                    }
-                  }, builder: (context, state) {
-                    final conversationCubit =
-                        ConversationCubit.instance(context);
-                    if (state is FetchAllMessagesLoadingState) {
-                      return const Center(
-                          child:
-                              SpinKitCubeGrid(color: Colors.white, size: 30));
-                    }
-                    return SafeArea(
-                      child: Column(
-                        children: [
-                          Flexible(
-                              child: BlocBuilder<PersonasCubit, PersonasState>(
-                            builder: (context, state) {
-                              return ListView.builder(
-                                  reverse: true,
-                                  controller: _listScrollController,
-                                  itemCount: conversationCubit
-                                      .getMessages.length, //chatList.length,
-                                  itemBuilder: (context, index) {
-                                    return MessageWidget(
-                                      message:
-                                          conversationCubit.getMessages[index],
-                                    );
-                                  });
-                            },
-                          )),
-                          if (conversationCubit
-                              .isGeneratingAssitantMessage) ...[
-                            const SpinKitThreeBounce(
-                              color: Colors.white,
-                              size: 18,
+                    Expanded(
+                      child:
+                          ConversationBlocConsumer(listener: (context, state) {
+                        if (state is ErrorAddUserFileMessage) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: TextWidget(
+                                label: state.error,
+                                fontSize: 14,
+                              ),
+                              backgroundColor: Colors.red,
                             ),
-                          ],
-                          const SizedBox(
-                            height: 15,
+                          );
+                        }
+                      }, builder: (context, state) {
+                        final conversationCubit =
+                            ConversationCubit.instance(context);
+                        if (state is FetchAllMessagesLoadingState) {
+                          return const Center(
+                              child: SpinKitCubeGrid(
+                                  color: Colors.white, size: 30));
+                        }
+                        return SafeArea(
+                          child: Column(
+                            children: [
+                              Flexible(child:
+                                  BlocBuilder<PersonasCubit, PersonasState>(
+                                builder: (context, state) {
+                                  return ListView.builder(
+                                      reverse: true,
+                                      controller: _listScrollController,
+                                      itemCount: conversationCubit.getMessages
+                                          .length, //chatList.length,
+                                      itemBuilder: (context, index) {
+                                        return MessageWidget(
+                                          message: conversationCubit
+                                              .getMessages[index],
+                                        );
+                                      });
+                                },
+                              )),
+                              if (conversationCubit
+                                  .isGeneratingAssitantMessage) ...[
+                                const SpinKitThreeBounce(
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                              ],
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              if (conversationCubit.tagsStrings.isNotEmpty)
+                                _keywordsAppBar(),
+                              const SendMessageField(),
+                            ],
                           ),
-                          if (conversationCubit.tagsStrings.isNotEmpty)
-                            _keywordsAppBar(),
-                          const SendMessageField(),
-                        ],
-                      ),
-                    );
-                  }),
-                ),
-              ],
-            ));
-      }),
+                        );
+                      }),
+                    ),
+                  ],
+                ));
+          }),
+        );
+      },
     );
   }
 

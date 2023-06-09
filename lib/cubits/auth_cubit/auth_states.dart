@@ -78,3 +78,17 @@ class ChangePhoneErrorState extends AuthStates {
   final String error;
   ChangePhoneErrorState({required this.error});
 }
+
+//UpdateProfileData online fetch data
+class UpdateProfileDataLoadingState extends AuthStates {}
+
+class UpdateProfileDataSuccessState extends AuthStates {
+  final User user;
+
+  UpdateProfileDataSuccessState(this.user);
+}
+
+class UpdateProfileDataErrorState extends AuthStates {
+  final String error;
+  UpdateProfileDataErrorState({required this.error});
+}

@@ -67,4 +67,36 @@ abstract class AuthServices {
         data: {'phone': phone, 'password': password});
     return response.data;
   }
+
+  static Future<Map<String, dynamic>> changePassword(
+      {required String currentPassword,
+      required String newPassword,
+      required String newPasswordConfirmation}) async {
+    final response = await AppDioHelper.postData(
+        url: EndPoints.changePassword,
+        token: Constants.token,
+        data: {
+          'current_password': currentPassword,
+          'new_password': newPassword,
+          'new_password_confirmation': newPasswordConfirmation,
+        });
+    return response.data;
+  }
+
+  static Future<Map<String, dynamic>> updateProfile(
+      {required String currentPassword,
+      String? name,
+      String? email,
+      String? phone}) async {
+    final response = await AppDioHelper.postData(
+        url: EndPoints.updateProfile,
+        token: Constants.token,
+        data: {
+          'password': currentPassword,
+          'phone': phone,
+          'name': name,
+          'email': email
+        });
+    return response.data;
+  }
 }
