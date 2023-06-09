@@ -74,7 +74,6 @@ class CustomTextFormField extends StatefulWidget {
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   @override
   Widget build(BuildContext context) {
-    log(widget.borderColor.toString());
     final border = widget.hasBorder
         ? OutlineInputBorder(
             borderSide: widget.borderColor == null

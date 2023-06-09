@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:core';
 import 'dart:developer' as developer;
 import 'dart:io';
@@ -24,6 +25,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
   ConversationCubit(this.chat) : super(IntitalChatState());
   static ConversationCubit instance(BuildContext context) =>
       BlocProvider.of<ConversationCubit>(context);
+
   ChatModel chat;
   List<MessageModel> _tags = [];
   List<String> tagsStrings = [];
@@ -130,6 +132,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
       modelId: chosenModelId,
     );
     formatTags();
+
     emit(SendMessageSuccessState());
   }
 
@@ -166,8 +169,6 @@ class ConversationCubit extends Cubit<ConversationStates> {
       await sendMessageViaChatGPT(
           chosenModelId: chosenModelId, userId: userId, msg: msg);
       await _baseSendMessage(chosenModelId, userId);
-
-      emit(SendMessageSuccessState());
     } catch (e) {
       emit(SendMessageErrorState(error: e.toString()));
       rethrow;

@@ -47,5 +47,8 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Add the following for ad integration -->
+	<key>GADApplicationIdentifier</key>
+	<string>ca-app-pub-6209088586214779~8542867987</string>
 </dict>
 </plist>

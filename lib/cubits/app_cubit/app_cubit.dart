@@ -18,6 +18,14 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(IntitalAppState());
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
+  final int _showAdsAfter = 5; //Show intersential ads after # messages
+  int _totalMessagesSent =
+      1; //For managing the intersentitial ads after $trails of messags
+  bool get showInterstitialAds => _totalMessagesSent % _showAdsAfter == 0;
+
+  void increaseMessagesCount() {
+    _totalMessagesSent++;
+  }
 
   int _selectedBottomIndex = 1;
   int get getSelectedBottomIndex => _selectedBottomIndex;
