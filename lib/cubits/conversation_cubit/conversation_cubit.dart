@@ -125,15 +125,14 @@ class ConversationCubit extends Cubit<ConversationStates> {
             .reversed
             .toList());
 
-    _untrackedMessages = 0;
-
     _tags = await ChatServices.getConversationTags(
       messages: chat.messages,
       modelId: chosenModelId,
     );
     formatTags();
 
-    emit(SendMessageSuccessState());
+    emit(SendMessageSuccessState(_untrackedMessages));
+    _untrackedMessages = 0;
   }
 
   Future<void> sendMessageViaChatGPT(
@@ -205,7 +204,7 @@ class TagsConversationQueryiesCubit extends ConversationCubit {
       emit(SendMessageLoadingState());
       await sendMessageViaChatGPT(
           chosenModelId: chosenModelId, userId: userId, msg: msg);
-      emit(SendMessageSuccessState());
+      emit(SendMessageSuccessState(1));
     } catch (e) {
       emit(SendMessageErrorState(error: e.toString()));
       rethrow;

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chatgpt/bloc_observer.dart';
+import 'package:chatgpt/cubits/ads_cubit/ads_cubit.dart';
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
@@ -66,6 +67,9 @@ class MyApp extends StatelessWidget {
           providers: [
             BlocProvider(
               create: (context) => AuthCubit(),
+            ),
+            BlocProvider(
+              create: (context) => AdsCubit(),
             ),
             BlocProvider(
               create: (context) => PersonasCubit(),

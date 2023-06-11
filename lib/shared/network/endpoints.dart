@@ -13,6 +13,9 @@ class EndPoints {
   static const String createChat = '/chats/create';
   static const String deleteChat = '/chats/delete';
 
+  //ads
+  static const String adReward = '/quota/adReward';
+
   //Auth
   static const String login = '/login';
   static const String register = '/register';

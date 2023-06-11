@@ -43,3 +43,19 @@ class GetUserErrorState extends AppStates {
   final String error;
   GetUserErrorState({required this.error});
 }
+
+//ClaimAdReward online fetch data
+class ClaimAdRewardLoadingState extends AppStates {}
+
+class ClaimAdRewardSuccessState extends AppStates {
+  final String message;
+
+  ClaimAdRewardSuccessState(this.message);
+}
+
+class ClaimAdRewardErrorState extends AppStates {
+  final String error;
+  ClaimAdRewardErrorState({required this.error});
+}
+
+class ChangeMessagesQuota extends AppStates {}

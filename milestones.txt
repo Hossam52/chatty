@@ -1,4 +1,4 @@
-total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14= 77h
+total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3= 80h
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
 
 20/5 12:30 -> 7:00 6h
@@ -64,7 +64,9 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - create the apis for update profile 5:30AM :9:00AM 3.5h
     - integrate ads banner and intersential with app 8:30pm to 1:30 am
 
-
-
+11/6 3h
+    - integrate ads rewarded 11:30pm to 2:00am
+    - make backend suitable for the the nubmer of messages remaining 2:00 to 3:00 am
 - add prompt construction at chat
 - change colors to be good like the app in google play
+- when the user is not authenticated then let him login again

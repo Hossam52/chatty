@@ -97,6 +97,8 @@ class _ChatScreenState extends State<ConversationScreen> {
                           ConversationBlocConsumer(listener: (context, state) {
                         if (state is SendMessageSuccessState) {
                           _successSendMessage(context);
+                          AppCubit.instance(context)
+                              .decreaseQuota(state.totalMessagesSent);
                         }
                         if (state is ErrorAddUserFileMessage) {
                           Methods.showSnackBar(context, state.error);

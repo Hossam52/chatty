@@ -5,6 +5,7 @@ import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/providers/models_provider.dart';
+import 'package:chatgpt/shared/methods.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/widgets/custom_text_field.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
@@ -110,6 +111,11 @@ class _SendMessageFieldState extends State<SendMessageField> {
           backgroundColor: Colors.red,
         ),
       );
+      return;
+    }
+    if (AppCubit.instance(context).hasExcceedQuota) {
+      Methods.showSnackBar(context,
+          'You excceed the quota limit go to settings to add more messages');
       return;
     }
     try {

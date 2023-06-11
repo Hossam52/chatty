@@ -54,6 +54,13 @@ class AppCubit extends Cubit<AppStates> {
     return _user!;
   }
 
+  void decreaseQuota(int totalMessagesSent) {
+    currentUser.remaining_messages -= totalMessagesSent;
+    emit(ChangeMessagesQuota());
+  }
+
+  bool get hasExcceedQuota => currentUser.remaining_messages <= 0;
+
   Future<void> fetchAllChats() async {
     try {
       if (userError) await getUser();
@@ -82,6 +89,17 @@ class AppCubit extends Cubit<AppStates> {
     } catch (e) {
       emit(AddNewChatErrorState(error: e.toString()));
       rethrow;
+    }
+  }
+
+  Future<void> claimAdReward() async {
+    try {
+      emit(ClaimAdRewardLoadingState());
+      final response = await AppServices.claimAdReward();
+      _user = User.fromMap(response);
+      emit(ClaimAdRewardSuccessState(response['message']));
+    } catch (e) {
+      emit(ClaimAdRewardErrorState(error: e.toString()));
     }
   }
 

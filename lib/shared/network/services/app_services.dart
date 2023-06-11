@@ -59,4 +59,10 @@ class AppServices {
     log(response.toString());
     return response.data;
   }
+
+  static Future<Map<String, dynamic>> claimAdReward() async {
+    final response = await AppDioHelper.postData(
+        url: EndPoints.adReward, token: Constants.token, data: {});
+    return response.data;
+  }
 }

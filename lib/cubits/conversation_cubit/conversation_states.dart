@@ -12,7 +12,6 @@ class ErrorAddUserFileMessage extends ConversationStates {
   final String error;
 
   ErrorAddUserFileMessage(this.error);
-
 }
 
 class ChangeChatPersona extends ConversationStates {}
@@ -25,7 +24,11 @@ class ChangeStatusToOld extends ConversationStates {
 //SendMessage online fetch data
 class SendMessageLoadingState extends ConversationStates {}
 
-class SendMessageSuccessState extends ConversationStates {}
+class SendMessageSuccessState extends ConversationStates {
+  final int totalMessagesSent;
+
+  SendMessageSuccessState(this.totalMessagesSent);
+}
 
 class SendMessageErrorState extends ConversationStates {
   final String error;

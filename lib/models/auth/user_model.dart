@@ -7,6 +7,7 @@ class User {
   final String phone;
   final int verified;
   final String access_token;
+  int remaining_messages;
 
   User(
       {required this.id,
@@ -14,6 +15,7 @@ class User {
       required this.access_token,
       required this.name,
       required this.phone,
+      required this.remaining_messages,
       required this.email});
 
   Map<String, dynamic> toMap() {
@@ -23,6 +25,7 @@ class User {
       'email': email,
       'phone': phone,
       'verified': verified,
+      'remaining_messages, ': remaining_messages,
       'access_token': access_token,
     };
   }
@@ -34,6 +37,7 @@ class User {
       email: map['user']['email'] ?? '',
       phone: map['user']['phone'] ?? '',
       verified: map['user']['verified'] ?? 0,
+      remaining_messages: map['user']['remaining_messages'] ?? 0,
       access_token: map['access_token'] ?? '',
     );
   }
@@ -44,6 +48,6 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, name: $name, email: $email,phone: $phone, access_token: $access_token)';
+    return 'User(id: $id, name: $name, email: $email,phone: $phone,remaining_messages: $remaining_messages, access_token: $access_token)';
   }
 }
