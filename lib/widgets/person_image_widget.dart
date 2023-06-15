@@ -1,6 +1,6 @@
-import 'package:chatgpt/models/auth/user_model.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
+import '../models/auth/user_model.dart';
+import '../shared/presentation/resourses/color_manager.dart';
+import '../shared/presentation/resourses/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

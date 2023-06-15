@@ -1,15 +1,14 @@
 import 'dart:developer';
 
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/models/auth/register_model.dart';
-import 'package:chatgpt/models/auth/user_model.dart' as userModel;
-import 'package:chatgpt/shared/network/local/cache_helper.dart';
-import 'package:chatgpt/shared/network/services/app_services.dart';
-import 'package:chatgpt/shared/network/services/auth_services.dart';
+import '../../constants/constants.dart';
+import '../../models/auth/register_model.dart';
+import '../../models/auth/user_model.dart' as userModel;
+import '../../shared/network/local/cache_helper.dart';
+import '../../shared/network/services/auth_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import './auth_states.dart';
+import 'auth_states.dart';
 
 //Bloc builder and bloc consumer methods
 typedef AuthBlocBuilder = BlocBuilder<AuthCubit, AuthStates>;
@@ -90,7 +89,6 @@ class AuthCubit extends Cubit<AuthStates> {
 
   PhoneAuthCredential? _phoneAuthCredential;
   String? _verificationId;
-  int? _forceSendingToken;
 
   Future<void> sendVerification(String phoneNumber) async {
     try {
@@ -105,7 +103,6 @@ class AuthCubit extends Cubit<AuthStates> {
           verificationFailed: (err) {},
           codeSent: (verificationId, forceResendingToken) {
             _verificationId = verificationId;
-            _forceSendingToken = forceResendingToken;
           },
           codeAutoRetrievalTimeout: (verificationId) {});
 
@@ -118,7 +115,6 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> logout() async {
     try {
       emit(LogoutLoadingState());
-      final response = await AuthServices.logout();
       await CacheHelper.removeToken();
       Constants.token = null;
 
@@ -131,7 +127,6 @@ class AuthCubit extends Cubit<AuthStates> {
   Future<void> changePhone(String phone, String password) async {
     try {
       emit(ChangePhoneLoadingState());
-      final response = await AuthServices.changePhone(phone, password);
 
       emit(ChangePhoneSuccessState(phone));
     } catch (e) {

@@ -1,4 +1,4 @@
-import 'package:chatgpt/shared/presentation/resourses/strings_manager.dart';
+import 'strings_manager.dart';
 import 'package:flutter/material.dart';
 
 class Routes {

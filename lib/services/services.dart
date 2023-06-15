@@ -1,11 +1,10 @@
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
-import 'package:chatgpt/widgets/personas/personas_drop_down.dart';
+import '../cubits/conversation_cubit/conversation_cubit.dart';
+import '../cubits/personas_cubit/personas_cubit.dart';
+import '../widgets/personas/personas_drop_down.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../constants/constants.dart';
-import '../widgets/drop_down.dart';
 import '../widgets/text_widget.dart';
 
 class Services {
@@ -13,8 +12,8 @@ class Services {
     return BlocProvider.value(
       value: ConversationCubit.instance(context),
       child: PersonasBlocBuilder(builder: (context, state) {
-        return Padding(
-          padding: const EdgeInsets.all(18.0),
+        return const Padding(
+          padding: EdgeInsets.all(18.0),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -22,7 +21,7 @@ class Services {
               //   label: 'Chosen Model:',
               //   child: ModelsDrowDownWidget(),
               // ),
-              const _CustomRow(
+              _CustomRow(
                 label: 'Act as:',
                 child: PersonasDropDown(),
               ),

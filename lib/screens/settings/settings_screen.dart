@@ -1,30 +1,28 @@
-import 'dart:developer';
-
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/app_cubit/app_states.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
-import 'package:chatgpt/models/auth/user_model.dart';
-import 'package:chatgpt/screens/auth/edit/change_password_screen.dart';
-import 'package:chatgpt/screens/auth/edit/change_phone_screen.dart';
-import 'package:chatgpt/screens/auth/profile/profile_screen.dart';
-import 'package:chatgpt/screens/onboarding/onboarding_screen.dart';
-import 'package:chatgpt/screens/settings/widgets/setting_item.dart';
-import 'package:chatgpt/screens/settings/widgets/setting_section.dart';
-import 'package:chatgpt/shared/methods.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
-import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:chatgpt/widgets/custom_text_field.dart';
-import 'package:chatgpt/widgets/default_loader.dart';
-import 'package:chatgpt/widgets/person_image_widget.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../cubits/app_cubit/app_cubit.dart';
+import '../../cubits/app_cubit/app_states.dart';
+import '../../cubits/auth_cubit/auth_cubit.dart';
+import '../../cubits/auth_cubit/auth_states.dart';
+import '../../models/auth/user_model.dart';
+import '../../shared/methods.dart';
+import '../../shared/presentation/resourses/color_manager.dart';
+import '../../shared/presentation/resourses/font_manager.dart';
+import '../../shared/presentation/resourses/styles_manager.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/default_loader.dart';
+import '../../widgets/person_image_widget.dart';
+import '../../widgets/text_widget.dart';
+import '../auth/edit/change_password_screen.dart';
+import '../auth/edit/change_phone_screen.dart';
+import '../auth/profile/profile_screen.dart';
+import '../onboarding/onboarding_screen.dart';
+import 'widgets/setting_item.dart';
+import 'widgets/setting_section.dart';
 
 //my account, share with friends, privacy, about
 class SettingsScreen extends StatefulWidget {

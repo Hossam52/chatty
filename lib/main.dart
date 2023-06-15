@@ -1,24 +1,18 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:chatgpt/bloc_observer.dart';
-import 'package:chatgpt/cubits/ads_cubit/ads_cubit.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
-import 'package:chatgpt/providers/models_provider.dart';
-import 'package:chatgpt/screens/auth/confirm_phone_screen.dart';
-import 'package:chatgpt/screens/auth/login_screen.dart';
-import 'package:chatgpt/screens/chat/chat_history_screen.dart';
-import 'package:chatgpt/screens/home/home_screen.dart';
-import 'package:chatgpt/screens/onboarding/onboarding_screen.dart';
-import 'package:chatgpt/shared/network/local/cache_helper.dart';
-import 'package:chatgpt/shared/network/remote/app_dio_helper.dart';
-import 'package:chatgpt/shared/network/remote/dio_helper.dart';
-import 'package:chatgpt/shared/presentation/resourses/theme_manager.dart';
-import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:dio/dio.dart';
+import 'bloc_observer.dart';
+import 'cubits/ads_cubit/ads_cubit.dart';
+import 'cubits/auth_cubit/auth_cubit.dart';
+import 'cubits/personas_cubit/personas_cubit.dart';
+import 'providers/models_provider.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/onboarding/onboarding_screen.dart';
+import 'shared/network/local/cache_helper.dart';
+import 'shared/network/remote/app_dio_helper.dart';
+import 'shared/network/remote/dio_helper.dart';
+import 'shared/presentation/resourses/theme_manager.dart';
+import 'widgets/custom_button.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +23,6 @@ import 'package:provider/provider.dart';
 
 import 'constants/constants.dart';
 import 'providers/chats_provider.dart';
-import 'screens/conversation/conversation_screen.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override

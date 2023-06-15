@@ -1,8 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:chatgpt/shared/network/endpoints.dart';
-import 'package:chatgpt/shared/network/remote/dio_helper.dart';
+import 'dio_helper.dart';
 import 'package:dio/dio.dart';
 
 class DioChat {

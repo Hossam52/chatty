@@ -1,8 +1,8 @@
-import 'package:chatgpt/screens/auth/register_screen.dart';
-import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../register_screen.dart';
+import '../widgets/auth_text_field.dart';
+import '../../../shared/presentation/resourses/color_manager.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:queen_validators/queen_validators.dart';
 

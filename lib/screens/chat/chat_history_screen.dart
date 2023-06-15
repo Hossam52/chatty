@@ -1,21 +1,12 @@
-import 'dart:developer';
-
-import 'package:chatgpt/constants/ad_helper.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/app_cubit/app_states.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/screens/auth/login_screen.dart';
-import 'package:chatgpt/screens/conversation/conversation_screen.dart';
-import 'package:chatgpt/screens/onboarding/onboarding_screen.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/ads/banner_ad_widget.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../../cubits/app_cubit/app_cubit.dart';
+import '../../cubits/app_cubit/app_states.dart';
+import '../conversation/conversation_screen.dart';
+import '../../shared/presentation/resourses/color_manager.dart';
+import '../../widgets/ads/banner_ad_widget.dart';
+import '../../widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class ChatHistoryScreen extends StatefulWidget {
   const ChatHistoryScreen({Key? key}) : super(key: key);

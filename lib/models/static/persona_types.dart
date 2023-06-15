@@ -1,5 +1,5 @@
-import 'package:chatgpt/models/static/persona_question.dart';
-import 'package:chatgpt/models/static/system_role_model.dart';
+import 'persona_question.dart';
+import 'system_role_model.dart';
 
 class ProgrammerPersona extends SystemRoleModel {
   ProgrammerPersona()

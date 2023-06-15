@@ -1,4 +1,4 @@
-import 'package:chatgpt/models/static/persona_question.dart';
+import 'persona_question.dart';
 
 abstract class SystemRoleModel {
   final String name;

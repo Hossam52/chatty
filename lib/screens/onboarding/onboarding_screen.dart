@@ -1,10 +1,9 @@
-import 'package:chatgpt/screens/auth/login_screen.dart';
-import 'package:chatgpt/screens/auth/register_screen.dart';
-import 'package:chatgpt/shared/presentation/resourses/assets_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../auth/login_screen.dart';
+import '../auth/register_screen.dart';
+import '../../shared/presentation/resourses/assets_manager.dart';
+import '../../shared/presentation/resourses/color_manager.dart';
+import '../../shared/presentation/resourses/font_manager.dart';
+import '../../shared/presentation/resourses/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

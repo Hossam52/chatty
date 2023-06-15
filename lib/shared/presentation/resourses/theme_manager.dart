@@ -1,7 +1,7 @@
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/values.dart';
+import 'color_manager.dart';
+import 'font_manager.dart';
+import 'styles_manager.dart';
+import 'values.dart';
 import 'package:flutter/material.dart';
 
 ThemeData getApplicationTheme() {

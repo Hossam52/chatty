@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'dart:developer';
 
-import 'package:chatgpt/models/auth/user_model.dart';
+import 'user_model.dart';
 
 class RegisterModel {
   final int status;

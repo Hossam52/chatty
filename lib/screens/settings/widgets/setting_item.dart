@@ -1,5 +1,5 @@
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../../../shared/presentation/resourses/color_manager.dart';
+import '../../../widgets/text_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

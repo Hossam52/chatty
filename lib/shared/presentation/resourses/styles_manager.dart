@@ -1,4 +1,4 @@
-import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
+import 'font_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

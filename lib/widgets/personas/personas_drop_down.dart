@@ -1,7 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
-import 'dart:developer';
-
 import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
 import 'package:chatgpt/widgets/personas/persona_questions_dialog.dart';
@@ -47,6 +43,7 @@ class PersonasDropDown extends StatelessWidget {
                 savedData = true;
               }
               if (savedData != null && savedData) {
+                // ignore: use_build_context_synchronously
                 ConversationCubit.instance(context)
                     .changeSystemRole(personasCubit.selectedPersona);
               }

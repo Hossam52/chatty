@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/models/message_model.dart';
-import 'package:chatgpt/shared/network/endpoints.dart';
-import 'package:chatgpt/shared/network/remote/app_dio_helper.dart';
-import 'package:chatgpt/shared/network/remote/dio_helper.dart';
+import '../../../constants/constants.dart';
+import '../../../models/message_model.dart';
+import '../endpoints.dart';
+import '../remote/app_dio_helper.dart';
 
 class AppServices {
   AppServices._();

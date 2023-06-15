@@ -1,7 +1,4 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -54,7 +51,6 @@ class MessageModel {
   }
 
   static MessageModel generateMessageForTags(List<MessageModel> messages) {
-    final range = messages.getRange(0, min(10, messages.length));
     String prompt =
         "Extract up to 10 in one line keywords from this conversation between system,user and assistant(AI chatgpt)\n";
     for (var element in messages) {

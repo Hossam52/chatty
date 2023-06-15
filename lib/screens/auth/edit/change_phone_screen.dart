@@ -1,20 +1,15 @@
-import 'dart:developer';
-
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
-import 'package:chatgpt/screens/auth/edit/change_password_screen.dart';
-import 'package:chatgpt/screens/auth/register_screen.dart';
-import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
-import 'package:chatgpt/shared/methods.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
-import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:chatgpt/widgets/default_loader.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../../../cubits/app_cubit/app_cubit.dart';
+import '../../../cubits/auth_cubit/auth_cubit.dart';
+import '../../../cubits/auth_cubit/auth_states.dart';
+import 'change_password_screen.dart';
+import '../../../shared/methods.dart';
+import '../../../shared/presentation/resourses/color_manager.dart';
+import '../../../shared/presentation/resourses/styles_manager.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/default_loader.dart';
+import '../../../widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
-import 'package:queen_validators/queen_validators.dart';
 
 class ChangePhoneScreen extends StatefulWidget {
   const ChangePhoneScreen({Key? key}) : super(key: key);

@@ -1,8 +1,8 @@
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
-import 'package:chatgpt/models/static/persona_question.dart';
-import 'package:chatgpt/models/static/system_role_model.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../../constants/constants.dart';
+import '../../cubits/personas_cubit/personas_cubit.dart';
+import '../../models/static/persona_question.dart';
+import '../../models/static/system_role_model.dart';
+import '../text_widget.dart';
 import 'package:flutter/material.dart';
 
 class PersonaQuestionsDialog extends StatefulWidget {

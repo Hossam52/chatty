@@ -1,7 +1,6 @@
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
-import 'package:chatgpt/shared/network/endpoints.dart';
-import 'package:chatgpt/shared/network/remote/app_dio_helper.dart';
+import '../../../constants/constants.dart';
+import '../endpoints.dart';
+import '../remote/app_dio_helper.dart';
 
 abstract class AuthServices {
   static Future<Map<String, dynamic>> login(

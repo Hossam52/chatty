@@ -1,5 +1,5 @@
-import 'package:chatgpt/models/static/persona_types.dart';
-import 'package:chatgpt/models/static/system_role_model.dart';
+import '../../models/static/persona_types.dart';
+import '../../models/static/system_role_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

@@ -1,8 +1,8 @@
-import 'package:chatgpt/constants/ad_helper.dart';
+import '../../constants/ad_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import './ads_states.dart';
+import 'ads_states.dart';
 
 //Bloc builder and bloc consumer methods
 typedef AdsBlocBuilder = BlocBuilder<AdsCubit, AdsStates>;

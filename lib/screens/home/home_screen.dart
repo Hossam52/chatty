@@ -1,10 +1,7 @@
-import 'dart:developer';
-
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/screens/chat/chat_history_screen.dart';
-import 'package:chatgpt/screens/settings/settings_screen.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
+import '../../cubits/app_cubit/app_cubit.dart';
+import '../chat/chat_history_screen.dart';
+import '../settings/settings_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

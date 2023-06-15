@@ -1,10 +1,9 @@
-import 'dart:developer';
-
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../shared/presentation/resourses/color_manager.dart';
+import '../shared/presentation/resourses/styles_manager.dart';
 
 class CustomTextFormField extends StatefulWidget {
   final TextEditingController? controller;

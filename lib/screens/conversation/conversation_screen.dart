@@ -1,22 +1,21 @@
 import 'dart:developer';
 
-import 'package:chatgpt/constants/ad_helper.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_states.dart';
-import 'package:chatgpt/cubits/personas_cubit/personas_cubit.dart';
-import 'package:chatgpt/models/chat_history_model.dart';
-import 'package:chatgpt/services/services.dart';
-import 'package:chatgpt/shared/methods.dart';
-import 'package:chatgpt/shared/presentation/resourses/assets_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/ads/banner_ad_widget.dart';
-import 'package:chatgpt/widgets/chat_dialogs/tag_details_dialog.dart';
-import 'package:chatgpt/widgets/chat_widget.dart';
-import 'package:chatgpt/widgets/send_message_field.dart';
+import '../../constants/ad_helper.dart';
+import '../../cubits/app_cubit/app_cubit.dart';
+import '../../cubits/conversation_cubit/conversation_cubit.dart';
+import '../../cubits/conversation_cubit/conversation_states.dart';
+import '../../cubits/personas_cubit/personas_cubit.dart';
+import '../../models/chat_history_model.dart';
+import '../../services/services.dart';
+import '../../shared/methods.dart';
+import '../../shared/presentation/resourses/assets_manager.dart';
+import '../../shared/presentation/resourses/color_manager.dart';
+import '../../widgets/ads/banner_ad_widget.dart';
+import '../../widgets/chat_dialogs/tag_details_dialog.dart';
+import '../../widgets/chat_widget.dart';
+import '../../widgets/send_message_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 

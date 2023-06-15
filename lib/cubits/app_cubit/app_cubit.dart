@@ -1,13 +1,12 @@
 import 'dart:developer';
 
-import 'package:chatgpt/models/auth/user_model.dart';
-import 'package:chatgpt/models/chat_history_model.dart';
-import 'package:chatgpt/shared/network/services/app_services.dart';
-import 'package:chatgpt/shared/network/services/auth_services.dart';
-import 'package:chatgpt/shared/network/services/chat_services.dart';
+import '../../models/auth/user_model.dart';
+import '../../models/chat_history_model.dart';
+import '../../shared/network/services/app_services.dart';
+import '../../shared/network/services/auth_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import './app_states.dart';
+import 'app_states.dart';
 
 //Bloc builder and bloc consumer methods
 typedef AppBlocBuilder = BlocBuilder<AppCubit, AppStates>;

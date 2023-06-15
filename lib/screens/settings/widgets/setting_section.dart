@@ -1,6 +1,5 @@
-import 'package:chatgpt/screens/settings/widgets/setting_item.dart';
-import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
+import '../../../shared/presentation/resourses/font_manager.dart';
+import '../../../shared/presentation/resourses/styles_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 

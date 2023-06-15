@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:chatgpt/constants/constants.dart';
+import '../../../constants/constants.dart';
 import 'package:dio/dio.dart';
 
 class DioHelper {
@@ -20,7 +18,6 @@ class DioHelper {
       ),
     );
     dio.options.headers = {'Authorization': 'Bearer ${Constants.CHAT_KEY}'};
-
   }
 
   static Future<Response> getData({

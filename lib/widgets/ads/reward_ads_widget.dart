@@ -1,13 +1,11 @@
 import 'dart:developer';
 
-import 'package:chatgpt/cubits/ads_cubit/ads_cubit.dart';
-import 'package:chatgpt/cubits/ads_cubit/ads_states.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../../cubits/ads_cubit/ads_cubit.dart';
+import '../../cubits/ads_cubit/ads_states.dart';
+import '../../cubits/app_cubit/app_cubit.dart';
+import '../../shared/presentation/resourses/color_manager.dart';
+import '../text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class RewardAdsWidget extends StatelessWidget {

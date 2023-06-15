@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:chatgpt/models/message_model.dart';
-import 'package:chatgpt/models/models_model.dart';
-import 'package:chatgpt/shared/network/endpoints.dart';
-import 'package:chatgpt/shared/network/remote/dio_chat.dart';
+import '../../../models/message_model.dart';
+import '../../../models/models_model.dart';
+import '../endpoints.dart';
+import '../remote/dio_chat.dart';
 
 class ChatServices {
   static Future<List<ModelsModel>> getModels() async {

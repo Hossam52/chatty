@@ -1,29 +1,23 @@
-import 'dart:developer';
-
-import 'package:chatgpt/constants/ad_helper.dart';
-import 'package:chatgpt/cubits/ads_cubit/ads_cubit.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/app_cubit/app_states.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_cubit.dart';
-import 'package:chatgpt/cubits/auth_cubit/auth_states.dart';
-import 'package:chatgpt/models/auth/user_model.dart';
-import 'package:chatgpt/screens/auth/edit/change_password_screen.dart';
-import 'package:chatgpt/screens/auth/widgets/auth_text_field.dart';
-import 'package:chatgpt/screens/settings/widgets/setting_item.dart';
-import 'package:chatgpt/screens/settings/widgets/setting_section.dart';
-import 'package:chatgpt/shared/methods.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
-import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
-import 'package:chatgpt/widgets/ads/reward_ads_widget.dart';
-import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:chatgpt/widgets/default_loader.dart';
-import 'package:chatgpt/widgets/person_image_widget.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../../../cubits/app_cubit/app_cubit.dart';
+import '../../../cubits/app_cubit/app_states.dart';
+import '../../../cubits/auth_cubit/auth_cubit.dart';
+import '../../../cubits/auth_cubit/auth_states.dart';
+import '../../../models/auth/user_model.dart';
+import '../widgets/auth_text_field.dart';
+import '../../settings/widgets/setting_item.dart';
+import '../../settings/widgets/setting_section.dart';
+import '../../../shared/methods.dart';
+import '../../../shared/presentation/resourses/color_manager.dart';
+import '../../../shared/presentation/resourses/font_manager.dart';
+import '../../../shared/presentation/resourses/styles_manager.dart';
+import '../../../widgets/ads/reward_ads_widget.dart';
+import '../../../widgets/custom_button.dart';
+import '../../../widgets/default_loader.dart';
+import '../../../widgets/person_image_widget.dart';
+import '../../../widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:queen_validators/queen_validators.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -35,8 +29,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  RewardedAd? _rewardedAd;
-
   late final TextEditingController currentPasswordController;
   late final TextEditingController nameController;
   late final TextEditingController emailController;

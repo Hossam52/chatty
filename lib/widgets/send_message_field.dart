@@ -1,14 +1,14 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/providers/models_provider.dart';
-import 'package:chatgpt/shared/methods.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/custom_text_field.dart';
-import 'package:chatgpt/widgets/text_widget.dart';
+import '../constants/constants.dart';
+import '../cubits/app_cubit/app_cubit.dart';
+import '../cubits/conversation_cubit/conversation_cubit.dart';
+import '../providers/models_provider.dart';
+import '../shared/methods.dart';
+import '../shared/presentation/resourses/color_manager.dart';
+import 'custom_text_field.dart';
+import 'text_widget.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

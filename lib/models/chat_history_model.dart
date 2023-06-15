@@ -1,4 +1,4 @@
-import 'package:chatgpt/models/message_model.dart';
+import 'message_model.dart';
 
 class ChatModel {
   final int id;

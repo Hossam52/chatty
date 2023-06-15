@@ -1,15 +1,10 @@
-import 'dart:developer';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/models/message_model.dart';
-import 'package:chatgpt/providers/chats_provider.dart';
-import 'package:chatgpt/providers/models_provider.dart';
-import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
+import '../constants/constants.dart';
+import '../cubits/conversation_cubit/conversation_cubit.dart';
+import '../models/message_model.dart';
+import '../shared/presentation/resourses/color_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
-import 'package:provider/provider.dart';
 
 class _CustomChatBubble extends StatelessWidget {
   const _CustomChatBubble(

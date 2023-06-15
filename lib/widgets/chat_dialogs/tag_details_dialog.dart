@@ -1,10 +1,8 @@
-import 'dart:developer';
-
-import 'package:chatgpt/constants/constants.dart';
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
-import 'package:chatgpt/models/chat_history_model.dart';
-import 'package:chatgpt/models/message_model.dart';
-import 'package:chatgpt/widgets/custom_chat_bubble.dart';
+import '../../constants/constants.dart';
+import '../../cubits/conversation_cubit/conversation_cubit.dart';
+import '../../models/chat_history_model.dart';
+import '../../models/message_model.dart';
+import '../custom_chat_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
