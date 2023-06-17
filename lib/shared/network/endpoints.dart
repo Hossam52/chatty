@@ -5,6 +5,9 @@ class EndPoints {
   static const String chatCompletion = '/completions';
   static const String models = '/models';
 
+  //Prompts
+  static const String prompts = '/prompts';
+
   //App endpoints
   static const String allMessages = '/messages';
   static const String sendMessage = '/messages/store';

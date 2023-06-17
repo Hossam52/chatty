@@ -19,6 +19,8 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
+    return const SizedBox.shrink();
+    // ignore: dead_code
     return BlocProvider(
       create: (context) => AdsCubit(),
       child: AdsBlocBuilder(

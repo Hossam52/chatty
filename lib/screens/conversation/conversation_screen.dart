@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:chatgpt/widgets/prompts/custom_prompt_dialog.dart';
+
 import '../../constants/ad_helper.dart';
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../../cubits/conversation_cubit/conversation_cubit.dart';
@@ -202,14 +204,25 @@ class _ChatScreenState extends State<ConversationScreen> {
         label: "Chatty (${widget.chat.chat_name})",
         fontSize: 15,
       ),
-      // actions: [
-      //   IconButton(
-      //     onPressed: () async =>
-      //         await Services.showModalSheet(context: context),
-      //     icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
-      //   ),
-      // ],
+      actions: [
+        IconButton(
+          onPressed: () async => customShowDialog(context),
+          icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
+        ),
+      ],
     );
+  }
+
+  void customShowDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (_) => BlocProvider.value(
+              value: ConversationCubit.instance(context),
+              child: BlocProvider.value(
+                value: AppCubit.instance(context),
+                child: const CustomPromptDialog(),
+              ),
+            ));
   }
 
   AppBar _keywordsAppBar() {

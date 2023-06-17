@@ -56,8 +56,13 @@ class ConversationCubit extends Cubit<ConversationStates> {
     emit(ChangeChatPersona());
   }
 
-  void addUserMessage({required String msg}) {
-    chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
+  void addUserMessage({required String msg, String? alteranteText}) {
+    if (alteranteText == null) {
+      chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
+    } else {
+      chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
+      // chat.messages.insert(0, HiddenMessageModel(msg: msg, chatIndex: 0));
+    }
     _untrackedMessages++;
     emit(AddUserMessage());
   }
@@ -114,20 +119,20 @@ class ConversationCubit extends Cubit<ConversationStates> {
   }
 
   Future<void> _baseSendMessage(String chosenModelId, int userId) async {
-    AppServices.sendMessage(
-        chat.id,
-        userId,
-        chat.messages
-            .getRange(0, _untrackedMessages)
-            .toList()
-            .reversed
-            .toList());
+    // AppServices.sendMessage(
+    //     chat.id,
+    //     userId,
+    //     chat.messages
+    //         .getRange(0, _untrackedMessages)
+    //         .toList()
+    //         .reversed
+    //         .toList());
 
-    _tags = await ChatServices.getConversationTags(
-      messages: chat.messages,
-      modelId: chosenModelId,
-    );
-    formatTags();
+    // _tags = await ChatServices.getConversationTags(
+    //   messages: chat.messages,
+    //   modelId: chosenModelId,
+    // );
+    // formatTags();
 
     emit(SendMessageSuccessState(_untrackedMessages));
     _untrackedMessages = 0;

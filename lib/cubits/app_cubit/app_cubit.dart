@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:chatgpt/models/prompts/prompt_model.dart';
+
 import '../../models/auth/user_model.dart';
 import '../../models/chat_history_model.dart';
 import '../../shared/network/services/app_services.dart';
@@ -17,6 +19,7 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(IntitalAppState());
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
+  PromptModel? promptModel;
   final int _showAdsAfter = 5; //Show intersential ads after # messages
   int _totalMessagesSent =
       1; //For managing the intersentitial ads after $trails of messags
@@ -112,6 +115,17 @@ class AppCubit extends Cubit<AppStates> {
       emit(GetUserSuccessState());
     } catch (e) {
       emit(GetUserErrorState(error: e.toString()));
+    }
+  }
+
+  Future<void> getPrompts() async {
+    try {
+      emit(GetPromptsLoadingState());
+      final response = await AppServices.getPrompts();
+      promptModel = PromptModel.fromMap(response);
+      emit(GetPromptsSuccessState());
+    } catch (e) {
+      emit(GetPromptsErrorState(error: e.toString()));
     }
   }
 }

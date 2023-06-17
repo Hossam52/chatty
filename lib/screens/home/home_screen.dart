@@ -36,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppCubit()..fetchAllChats(),
+      create: (context) => AppCubit()
+        ..getPrompts()
+        ..fetchAllChats(),
       child: Scaffold(
         bottomNavigationBar: _bottomNavigation(),
         extendBody: true,

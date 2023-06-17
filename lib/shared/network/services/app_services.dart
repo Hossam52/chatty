@@ -59,6 +59,14 @@ class AppServices {
     return response.data;
   }
 
+  static Future<Map<String, dynamic>> getPrompts() async {
+    final response = await AppDioHelper.getData(
+      url: EndPoints.prompts,
+      token: null,
+    );
+    return response.data;
+  }
+
   static Future<Map<String, dynamic>> claimAdReward() async {
     final response = await AppDioHelper.postData(
         url: EndPoints.adReward, token: Constants.token, data: {});

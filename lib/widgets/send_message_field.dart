@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chatgpt/services/services.dart';
+
 import '../constants/constants.dart';
 import '../cubits/app_cubit/app_cubit.dart';
 import '../cubits/conversation_cubit/conversation_cubit.dart';
@@ -91,6 +93,14 @@ class _SendMessageFieldState extends State<SendMessageField> {
   Future<void> sendMessageFCT(
       {required ModelsProvider modelsProvider,
       required ConversationCubit chatCubit}) async {
+    Services.sendMessage(
+        context: context,
+        text: textEditingController.text,
+        onSendMessage: () {
+          textEditingController.clear();
+          focusNode.unfocus();
+        });
+    return;
     if (chatCubit.isGeneratingAssitantMessage) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

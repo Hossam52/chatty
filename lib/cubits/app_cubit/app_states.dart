@@ -59,3 +59,13 @@ class ClaimAdRewardErrorState extends AppStates {
 }
 
 class ChangeMessagesQuota extends AppStates {}
+
+//GetPrompts online fetch data
+class GetPromptsLoadingState extends AppStates {}
+
+class GetPromptsSuccessState extends AppStates {}
+
+class GetPromptsErrorState extends AppStates {
+  final String error;
+  GetPromptsErrorState({required this.error});
+}
