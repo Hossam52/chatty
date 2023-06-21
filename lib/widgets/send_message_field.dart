@@ -101,6 +101,7 @@ class _SendMessageFieldState extends State<SendMessageField> {
           focusNode.unfocus();
         });
     return;
+    // ignore: dead_code
     if (chatCubit.isGeneratingAssitantMessage) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(

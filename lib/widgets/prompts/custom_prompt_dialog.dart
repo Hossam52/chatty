@@ -23,6 +23,42 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
 
   @override
   Widget build(BuildContext context) {
+    var buttonStyleData2 = ButtonStyleData(
+      height: 50.h,
+      width: 160.w,
+      padding: const EdgeInsets.only(left: 14, right: 14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: Colors.black26,
+        ),
+        color: ColorManager.accentColor.withOpacity(0.7),
+      ),
+      elevation: 2,
+    );
+    var dropdownStyleData2 = DropdownStyleData(
+        maxHeight: 200.h,
+        width: 250.w,
+        padding: null,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: ColorManager.accentColor.withOpacity(0.6),
+        ),
+        elevation: 8,
+        offset: const Offset(-20, 0),
+        scrollbarTheme: ScrollbarThemeData(
+          radius: const Radius.circular(40),
+          thickness: MaterialStateProperty.all(6),
+          thumbVisibility: MaterialStateProperty.all(true),
+        ));
+    var iconStyleData2 = IconStyleData(
+      icon: const Icon(
+        Icons.arrow_forward_ios_outlined,
+      ),
+      iconSize: 14,
+      iconEnabledColor: ColorManager.white,
+      iconDisabledColor: Colors.grey,
+    );
     return Dialog(
       backgroundColor: scaffoldBackgroundColor,
       child: Padding(
@@ -38,64 +74,13 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
                   child: DropdownButtonHideUnderline(
                       child: DropdownButton2(
                     isExpanded: true,
-                    hint: Row(
-                      children: [
-                        Icon(
-                          Icons.list,
-                          size: 16,
-                          color: ColorManager.white,
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Expanded(
-                          child: Text(
-                            'Select Item',
-                            style: getMediumStyle(),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
+                    hint: _dropDownHint(),
                     items: items(context),
                     value: _selected,
                     onChanged: _onchanged,
-                    buttonStyleData: ButtonStyleData(
-                      height: 50.h,
-                      width: 160.w,
-                      padding: const EdgeInsets.only(left: 14, right: 14),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: Colors.black26,
-                        ),
-                        color: ColorManager.accentColor.withOpacity(0.7),
-                      ),
-                      elevation: 2,
-                    ),
-                    iconStyleData: IconStyleData(
-                      icon: const Icon(
-                        Icons.arrow_forward_ios_outlined,
-                      ),
-                      iconSize: 14,
-                      iconEnabledColor: ColorManager.white,
-                      iconDisabledColor: Colors.grey,
-                    ),
-                    dropdownStyleData: DropdownStyleData(
-                        maxHeight: 200.h,
-                        width: 250.w,
-                        padding: null,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
-                          color: ColorManager.accentColor.withOpacity(0.6),
-                        ),
-                        elevation: 8,
-                        offset: const Offset(-20, 0),
-                        scrollbarTheme: ScrollbarThemeData(
-                          radius: const Radius.circular(40),
-                          thickness: MaterialStateProperty.all(6),
-                          thumbVisibility: MaterialStateProperty.all(true),
-                        )),
+                    buttonStyleData: buttonStyleData2,
+                    iconStyleData: iconStyleData2,
+                    dropdownStyleData: dropdownStyleData2,
                     menuItemStyleData: MenuItemStyleData(
                       height: 40,
                       padding: EdgeInsets.symmetric(horizontal: 14.w),
@@ -105,16 +90,8 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
               ],
             ),
             if (_selected != null) ...[
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return getPromptQueryWidget(_selected!.queries[index]);
-                  },
-                  itemCount: _selected!.queries.length,
-                ),
-              ),
-              Text(_selected!.generate()),
+              _promptFields(),
+              // Text(_selected!.generate()),
               SizedBox(height: 20.h),
               CustomButton(
                 text: 'Apply',
@@ -131,6 +108,40 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
           ],
         ),
       ),
+    );
+  }
+
+  Flexible _promptFields() {
+    return Flexible(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return getPromptQueryWidget(_selected!.queries[index]);
+        },
+        itemCount: _selected!.queries.length,
+      ),
+    );
+  }
+
+  Row _dropDownHint() {
+    return Row(
+      children: [
+        Icon(
+          Icons.list,
+          size: 16,
+          color: ColorManager.white,
+        ),
+        const SizedBox(
+          width: 4,
+        ),
+        Expanded(
+          child: Text(
+            'Select Item',
+            style: getMediumStyle(),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ],
     );
   }
 
@@ -152,5 +163,3 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
         .toList();
   }
 }
-/*
-Create a social media post for [platform] that targets [persona] and has a [tone] tone. The post should be [type of content] and include relevant hashtags such as [hashtags]. */

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 abstract class BasePromptType {
@@ -9,54 +11,58 @@ abstract class BasePromptType {
     this.prompt,
     this.queries,
   );
-  static String getQueryString(List<PromptQuery> queries) {
-    // final String queryString = queries
-    //     .map((e) => e.generateQuery(String prompt))
-    //     .where((element) => element.isNotEmpty)
-    //     .join(' and ');
-    return 'queryString';
-  }
-
   String generate();
 }
 
 abstract class PromptQuery {
-  final String name;
-  PromptQuery(this.name);
+  final String field;
+  final int field_type;
 
-  String generateQuery(String prompt);
+  String get userInput;
+  String generateQuery(String prompt) {
+    //replace template the prompt must be in the format prompt [field] to be replaced by user input
+    return prompt
+        .toLowerCase()
+        .replaceAll('[${field.toLowerCase()}]', userInput);
+  }
+
+  PromptQuery.fromJson(Map<String, dynamic> map)
+      : field = map['field'] ?? '',
+        field_type = map['field_type'] ?? '';
 }
 
 class TextPromptType extends PromptQuery {
   final TextEditingController controller = TextEditingController();
 
-  TextPromptType(super.name);
+  TextPromptType.fromJson(Map<String, dynamic> map) : super.fromJson(map);
+
   @override
-  String generateQuery(String prompt) {
-    return prompt.replaceAll('[${name.toLowerCase()}]', controller.text);
-  }
+  String get userInput => controller.text;
 }
 
-abstract class IntPromptType implements PromptQuery {
+class IntPromptType extends PromptQuery {
   final TextEditingController controller = TextEditingController();
+  IntPromptType.fromJson(Map<String, dynamic> map) : super.fromJson(map);
+
   @override
-  String generateQuery(String prompt) {
-    return controller.text.isEmpty ? '' : '$name is ${controller.text}';
-  }
+  String get userInput => controller.text;
 }
 
-abstract class ChipsPromptType implements PromptQuery {
+class ChipsPromptType extends PromptQuery {
   List<String> chips = [];
-  @override
-  String generateQuery(String prompt) {
-    return chips.isEmpty ? '' : '$name is ${'controller.text'}';
-  }
-}
+  ChipsPromptType.fromJson(Map<String, dynamic> map) : super.fromJson(map);
 
-abstract class DropDownPromptType implements PromptQuery {
-  List<String> items = [];
+  void insertItem(String item) => chips.add(item);
+  void removeItem(int index) =>
+      index >= chips.length ? null : chips.removeAt(index);
+
   @override
-  String generateQuery(String prompt) {
-    return items.isEmpty ? '' : '$name is ${'controller.text'}';
+  String get userInput {
+    String str = chips.join(', ');
+    if (chips.length >= 2) {
+      str = str.replaceRange(
+          str.lastIndexOf(','), str.lastIndexOf(',') + 1, ' and ');
+    }
+    return str;
   }
 }
