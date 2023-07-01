@@ -1,22 +1,15 @@
 import '../../../cubits/app_cubit/app_cubit.dart';
-import '../../../cubits/app_cubit/app_states.dart';
 import '../../../cubits/auth_cubit/auth_cubit.dart';
 import '../../../cubits/auth_cubit/auth_states.dart';
 import '../../../models/auth/user_model.dart';
 import '../widgets/auth_text_field.dart';
-import '../../settings/widgets/setting_item.dart';
 import '../../settings/widgets/setting_section.dart';
 import '../../../shared/methods.dart';
-import '../../../shared/presentation/resourses/color_manager.dart';
-import '../../../shared/presentation/resourses/font_manager.dart';
-import '../../../shared/presentation/resourses/styles_manager.dart';
-import '../../../widgets/ads/reward_ads_widget.dart';
 import '../../../widgets/custom_button.dart';
 import '../../../widgets/default_loader.dart';
 import '../../../widgets/person_image_widget.dart';
 import '../../../widgets/text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:queen_validators/queen_validators.dart';
 
@@ -68,38 +61,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   user: widget.user,
                   factor: 0.13,
                 ),
-                AppBlocConsumer(
-                  buildWhen: (previous, current) =>
-                      current is ClaimAdRewardSuccessState,
-                  listener: (context, state) {
-                    if (state is ClaimAdRewardSuccessState) {
-                      Methods.showSuccessSnackBar(context, state.message);
-                    }
-
-                    if (state is ClaimAdRewardErrorState) {
-                      Methods.showSnackBar(context, state.error);
-                    }
-                  },
-                  builder: (context, state) {
-                    final user = AppCubit.instance(context).currentUser;
-                    return SettingsSectionWidget(title: 'Subscription', items: [
-                      SettingItem(
-                          title: 'Subscription',
-                          contentWidget: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const _SubscriptionItem(
-                                  'Subscription plan', 'Free'),
-                              _SubscriptionItem('Remaining messages',
-                                  user.remaining_messages.toString()),
-                            ],
-                          ),
-                          onTap: () async {
-                            await _showAwardAdDialog(context);
-                          }),
-                    ]);
-                  },
-                ),
                 Form(
                   key: formKey,
                   child: SettingsSectionWidget(
@@ -143,39 +104,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         },
       ),
-    );
-  }
-
-  Future<bool?> _showAwardAdDialog(BuildContext parentContext) async {
-    return showDialog<bool>(
-      context: parentContext,
-      builder: (context) {
-        return BlocProvider.value(
-          value: AppCubit.instance(parentContext),
-          child: const RewardAdsWidget(),
-        );
-      },
-    );
-  }
-}
-
-class _SubscriptionItem extends StatelessWidget {
-  const _SubscriptionItem(this.title, this.value, {super.key});
-  final String title;
-  final String value;
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          '$title: ',
-          style: getMediumStyle(fontSize: FontSize.s12),
-        ),
-        Text(
-          value,
-          style: getRegularStyle(color: ColorManager.primary),
-        ),
-      ],
     );
   }
 }

@@ -59,6 +59,14 @@ class AppServices {
     return response.data;
   }
 
+  static Future<Map<String, dynamic>> deleteChat(int chatId) async {
+    final response = await AppDioHelper.postData(
+        url: EndPoints.deleteChat,
+        token: Constants.token,
+        data: {'chat_id': chatId});
+    return response.data;
+  }
+
   static Future<Map<String, dynamic>> getPrompts() async {
     final response = await AppDioHelper.getData(
       url: EndPoints.prompts,

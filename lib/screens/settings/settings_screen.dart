@@ -1,3 +1,4 @@
+import 'package:chatgpt/screens/settings/widgets/subscription_setting_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -76,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _divider(),
                 SettingsSectionWidget(title: 'Account info', items: [
                   SettingItem(
-                    title: 'Change Phone',
+                    title: 'Change phone',
                     icon: FontAwesomeIcons.phone,
                     onTap: () {
                       Methods.navigateTo(
@@ -88,13 +89,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     },
                   ),
                   SettingItem(
-                    title: 'Change Password',
+                    title: 'Change password',
                     icon: FontAwesomeIcons.lock,
                     onTap: () {
                       Methods.navigateTo(context, const ChangePasswordScreen());
                     },
                   ),
                 ]),
+                _divider(),
+                SubscriptionSettingItem(),
                 _divider(),
                 SettingsSectionWidget(title: 'App sharing', items: [
                   SettingItem(

@@ -1,4 +1,5 @@
 import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
+import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../chat/chat_history_screen.dart';
 import '../settings/settings_screen.dart';
@@ -54,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _bottomNavigation() {
     return AnimatedNotchBottomBar(
-        color: Colors.black38,
+        color: ColorManager.primary,
         notchColor: Colors.grey,
         onTap: (index) {
           setState(() {});

@@ -17,6 +17,7 @@ abstract class BasePromptType {
 abstract class PromptQuery {
   final String field;
   final int field_type;
+  final String field_type_description;
 
   String get userInput;
   String generateQuery(String prompt) {
@@ -28,7 +29,8 @@ abstract class PromptQuery {
 
   PromptQuery.fromJson(Map<String, dynamic> map)
       : field = map['field'] ?? '',
-        field_type = map['field_type'] ?? '';
+        field_type = map['field_type'] ?? '',
+        field_type_description = map['field_type_description'] ?? '';
 }
 
 class TextPromptType extends PromptQuery {

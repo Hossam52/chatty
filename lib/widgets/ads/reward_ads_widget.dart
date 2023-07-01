@@ -16,7 +16,7 @@ class RewardAdsWidget extends StatelessWidget {
     return AlertDialog(
       backgroundColor: ColorManager.primary,
       title: const TextWidget(label: 'Need more messages?'),
-      content: const TextWidget(label: 'Watch an Ad to get a 5 messages!'),
+      content: const TextWidget(label: 'Watch an Ad to get a 3 messages!'),
       actions: [
         TextButton(
           child: Text('cancel'.toUpperCase()),

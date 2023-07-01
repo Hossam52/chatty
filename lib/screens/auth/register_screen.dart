@@ -44,9 +44,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          leading: CupertinoNavigationBarBackButton(
-            color: ColorManager.white,
-          ),
+          leading: !Navigator.canPop(context)
+              ? null
+              : CupertinoNavigationBarBackButton(
+                  color: ColorManager.white,
+                ),
         ),
         body: AuthBlocConsumer(
           listener: (context, state) {
@@ -57,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => ConfirmPhoneScreen(
-                            phoneNumber: phoneController.text,
+                            phoneNumber: _completePhoneNumber,
                           )));
             }
             if (state is RegisterErrorState) {
@@ -85,7 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           SizedBox(height: 30.h),
                           Text(
-                            'Welcome.\nto new member!',
+                            'Welcome.\nNew member!',
                             style: getRegularStyle(
                                 fontSize: FontSize.s24,
                                 color: ColorManager.white.withOpacity(0.8)),

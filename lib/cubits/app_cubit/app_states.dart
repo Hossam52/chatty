@@ -25,13 +25,23 @@ class AddNewChatLoadingState extends AppStates {}
 
 class AddNewChatSuccessState extends AppStates {
   final ChatModel chat;
-
-  AddNewChatSuccessState(this.chat);
+  final String? initialMessage;
+  AddNewChatSuccessState(this.chat, {this.initialMessage});
 }
 
 class AddNewChatErrorState extends AppStates {
   final String error;
   AddNewChatErrorState({required this.error});
+}
+
+//DeleteChat online fetch data
+class DeleteChatLoadingState extends AppStates {}
+
+class DeleteChatSuccessState extends AppStates {}
+
+class DeleteChatErrorState extends AppStates {
+  final String error;
+  DeleteChatErrorState({required this.error});
 }
 
 //GetUser online fetch data

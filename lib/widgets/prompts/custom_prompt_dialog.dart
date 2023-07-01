@@ -1,7 +1,6 @@
 import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/models/prompts/prompt_types_interfaces.dart';
-import 'package:chatgpt/services/services.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:chatgpt/widgets/custom_button.dart';
@@ -95,13 +94,16 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
               SizedBox(height: 20.h),
               CustomButton(
                 text: 'Apply',
-                onPressed: () {
-                  Services.sendMessage(
-                    context: context,
-                    alternateText: 'Prompt about ${_selected!.name}',
-                    text: _selected!.generate(),
-                  );
-                  Navigator.pop(context);
+                onPressed: () async {
+                  await AppCubit.instance(context).addNewChat(
+                      'Prompt about: ' + _selected!.name,
+                      initialMessage: _selected!.generate());
+                  // Services.sendMessage(
+                  //   context: context,
+                  //   alternateText: 'Prompt about ${_selected!.name}',
+                  //   text: _selected!.generate(),
+                  // );
+                  // Navigator.pop(context);
                 },
               )
             ]

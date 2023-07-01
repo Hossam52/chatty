@@ -39,9 +39,11 @@ class _LoginScreenState extends State<LoginScreen> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          leading: CupertinoNavigationBarBackButton(
-            color: ColorManager.white,
-          ),
+          leading: !Navigator.canPop(context)
+              ? null
+              : CupertinoNavigationBarBackButton(
+                  color: ColorManager.white,
+                ),
         ),
         body: AuthBlocConsumer(listener: (context, state) {
           if (state is LoginSuccessState) {

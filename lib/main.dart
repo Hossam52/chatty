@@ -1,6 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:chatgpt/cubits/subscription_cubit/subscription_cubit.dart';
+import 'package:chatgpt/in_app_purchase_example.dart';
+
 import 'bloc_observer.dart';
 import 'cubits/ads_cubit/ads_cubit.dart';
 import 'cubits/auth_cubit/auth_cubit.dart';
@@ -46,6 +49,7 @@ void main() async {
   AppDioHelper.init();
   Bloc.observer = MyBlocObserver();
   runApp(const MyApp());
+  // runApp(IAPTest());
 }
 
 class MyApp extends StatelessWidget {
@@ -66,6 +70,9 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => PersonasCubit(),
+            ),
+            BlocProvider(
+              create: (context) => SubscriptionCubit(),
             ),
           ],
           child: MultiProvider(

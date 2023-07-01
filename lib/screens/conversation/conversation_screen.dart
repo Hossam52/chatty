@@ -1,32 +1,36 @@
 import 'dart:developer';
 
-import 'package:chatgpt/widgets/prompts/custom_prompt_dialog.dart';
-
-import '../../constants/ad_helper.dart';
-import '../../cubits/app_cubit/app_cubit.dart';
-import '../../cubits/conversation_cubit/conversation_cubit.dart';
-import '../../cubits/conversation_cubit/conversation_states.dart';
-import '../../cubits/personas_cubit/personas_cubit.dart';
-import '../../models/chat_history_model.dart';
-import '../../services/services.dart';
-import '../../shared/methods.dart';
-import '../../shared/presentation/resourses/assets_manager.dart';
-import '../../shared/presentation/resourses/color_manager.dart';
-import '../../widgets/ads/banner_ad_widget.dart';
-import '../../widgets/chat_dialogs/tag_details_dialog.dart';
-import '../../widgets/chat_widget.dart';
-import '../../widgets/send_message_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import 'package:chatgpt/screens/conversation/widgets/conversation_keywords_widget.dart';
+import 'package:chatgpt/screens/conversation/widgets/conversation_messages_list.dart';
+import 'package:chatgpt/screens/conversation/widgets/loading_message_response.dart';
+import 'package:chatgpt/screens/conversation/widgets/role_selection_widget.dart';
+
+import '../../constants/ad_helper.dart';
+import '../../cubits/app_cubit/app_cubit.dart';
+import '../../cubits/conversation_cubit/conversation_cubit.dart';
+import '../../cubits/conversation_cubit/conversation_states.dart';
+import '../../models/chat_history_model.dart';
+import '../../services/services.dart';
+import '../../shared/methods.dart';
+import '../../shared/presentation/resourses/assets_manager.dart';
+import '../../widgets/ads/banner_ad_widget.dart';
+import '../../widgets/send_message_field.dart';
 import '../../widgets/text_widget.dart';
 
 class ConversationScreen extends StatefulWidget {
-  const ConversationScreen({super.key, required this.chat});
+  const ConversationScreen(
+      {super.key,
+      required this.chat,
+      this.initialMessage,
+      required this.appCubit});
   final ChatModel chat;
-
+  final String? initialMessage;
+  final AppCubit appCubit;
   @override
   State<ConversationScreen> createState() => _ChatScreenState();
 }
@@ -71,34 +75,39 @@ class _ChatScreenState extends State<ConversationScreen> {
     super.dispose();
   }
 
+  bool hasLoadedInitial = false;
   @override
   Widget build(BuildContext context) {
     return AppBlocBuilder(
       builder: (context, state) {
-        final appCubit = AppCubit.instance(context);
+        final appCubit = widget.appCubit;
         if (appCubit.userError) {
-          return TextButton(
-              onPressed: () async {
-                appCubit.getUser();
-              },
-              child:
-                  const TextWidget(label: 'Error happened in user try again'));
+          return _ErrorUser(appCubit: appCubit);
         }
         return BlocProvider(
-          create: (_) => ConversationCubit(widget.chat)..fetchAllMessages(),
-          child: Builder(builder: (context) {
-            return Scaffold(
-                appBar: _appBar(context),
+            create: (_) => ConversationCubit(widget.chat)..fetchAllMessages(),
+            child: Scaffold(
+                appBar: _appBar(),
                 body: Column(
                   children: [
                     const BannerAdWidget(),
-                    _roleSelection(context),
+                    RoleSelectionWidget(),
                     Expanded(
                       child:
                           ConversationBlocConsumer(listener: (context, state) {
+                        if (state is FetchAllMessagesSuccessState &&
+                            !hasLoadedInitial &&
+                            widget.initialMessage != null) {
+                          Services.sendMessage(
+                            context: context,
+                            text: widget.initialMessage!,
+                          );
+                          hasLoadedInitial = true;
+                        }
+
                         if (state is SendMessageSuccessState) {
                           _successSendMessage(context);
-                          AppCubit.instance(context)
+                          widget.appCubit
                               .decreaseQuota(state.totalMessagesSent);
                         }
                         if (state is ErrorAddUserFileMessage) {
@@ -115,13 +124,14 @@ class _ChatScreenState extends State<ConversationScreen> {
                         return SafeArea(
                           child: Column(
                             children: [
-                              _messages(conversationCubit),
-                              _loadingResponse(conversationCubit),
-                              const SizedBox(
-                                height: 15,
-                              ),
+                              Flexible(
+                                  child: ConversationMessagesList(
+                                      conversationCubit: conversationCubit)),
+                              LoadingMessageResponse(
+                                  conversationCubit: conversationCubit),
+                              const SizedBox(height: 15),
                               if (conversationCubit.tagsStrings.isNotEmpty)
-                                _keywordsAppBar(),
+                                ConversationKeywordsWidget(),
                               const SendMessageField(),
                             ],
                           ),
@@ -129,70 +139,20 @@ class _ChatScreenState extends State<ConversationScreen> {
                       }),
                     ),
                   ],
-                ));
-          }),
-        );
+                )));
       },
     );
-  }
-
-  Widget _loadingResponse(ConversationCubit conversationCubit) {
-    if (conversationCubit.isGeneratingAssitantMessage) {
-      return const SpinKitThreeBounce(
-        color: Colors.white,
-        size: 18,
-      );
-    } else {
-      return const SizedBox.shrink();
-    }
-  }
-
-  Flexible _messages(ConversationCubit conversationCubit) {
-    return Flexible(child: BlocBuilder<PersonasCubit, PersonasState>(
-      builder: (context, state) {
-        return ListView.builder(
-            reverse: true,
-            controller: _listScrollController,
-            itemCount: conversationCubit.getMessages.length, //chatList.length,
-            itemBuilder: (context, index) {
-              return MessageWidget(
-                message: conversationCubit.getMessages[index],
-              );
-            });
-      },
-    ));
   }
 
   void _successSendMessage(BuildContext context) {
-    if (_interstitialAd != null &&
-        AppCubit.instance(context).showInterstitialAds) {
+    if (_interstitialAd != null && widget.appCubit.showInterstitialAds) {
       _interstitialAd?.show();
       _loadInterstitialAd();
     }
-    AppCubit.instance(context).increaseMessagesCount();
+    widget.appCubit.increaseMessagesCount();
   }
 
-  ExpansionTileTheme _roleSelection(BuildContext context) {
-    return ExpansionTileTheme(
-      data: ExpansionTileThemeData(
-        iconColor: ColorManager.grey,
-        collapsedIconColor: ColorManager.grey,
-        collapsedBackgroundColor: ColorManager.primary,
-        backgroundColor: ColorManager.primary.withOpacity(0.8),
-      ),
-      child: ExpansionTile(
-        title: Center(
-          child: TextWidget(
-            label: 'Select role',
-            color: ColorManager.grey,
-          ),
-        ),
-        children: [Services.roleSelection(context)],
-      ),
-    );
-  }
-
-  AppBar _appBar(BuildContext context) {
+  AppBar _appBar() {
     return AppBar(
       elevation: 2,
       leading: Padding(
@@ -201,79 +161,26 @@ class _ChatScreenState extends State<ConversationScreen> {
       ),
       // bottom: _keywordsAppBar(),
       title: TextWidget(
-        label: "Chatty (${widget.chat.chat_name})",
+        label: "Gptiva (${widget.chat.chat_name})",
         fontSize: 15,
       ),
-      actions: [
-        IconButton(
-          onPressed: () async => customShowDialog(context),
-          icon: const Icon(Icons.more_vert_rounded, color: Colors.white),
-        ),
-      ],
     );
   }
+}
 
-  void customShowDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (_) => BlocProvider.value(
-              value: ConversationCubit.instance(context),
-              child: BlocProvider.value(
-                value: AppCubit.instance(context),
-                child: const CustomPromptDialog(),
-              ),
-            ));
-  }
+class _ErrorUser extends StatelessWidget {
+  const _ErrorUser({
+    required this.appCubit,
+  });
 
-  AppBar _keywordsAppBar() {
-    return AppBar(
-        leadingWidth: 0,
-        leading: const SizedBox.shrink(),
-        title: ConversationBlocBuilder(
-          builder: (context, state) {
-            final conversationCubit = ConversationCubit.instance(context);
-            conversationCubit.formatTags();
-            return Container(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // const TextWidget(label: 'Keywords: ', fontSize: 14),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Wrap(
-                        spacing: 10,
-                        children: conversationCubit.tagsStrings
-                            .map((e) => OutlinedButton(
-                                  style: const ButtonStyle(
-                                      side: MaterialStatePropertyAll(BorderSide(
-                                        color: Colors.white,
-                                      )),
-                                      padding: MaterialStatePropertyAll(
-                                        EdgeInsets.all(1),
-                                      ),
-                                      tapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap),
-                                  child: TextWidget(
-                                    label: e,
-                                    color: Colors.white70,
-                                    fontSize: 13,
-                                  ),
-                                  onPressed: () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            TagDetailsDialog(tagName: e));
-                                  },
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ));
+  final AppCubit appCubit;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () async {
+          appCubit.getUser();
+        },
+        child: const TextWidget(label: 'Error happened in user try again'));
   }
 }

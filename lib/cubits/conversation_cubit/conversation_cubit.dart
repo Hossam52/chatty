@@ -27,8 +27,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
   ChatModel chat;
   List<MessageModel> _tags = [];
   List<String> tagsStrings = [];
-
-  int _untrackedMessages = 0;
+  List<MessageModel> _tempMessages = [];
 
   void formatTags() {
     if (_tags.isEmpty) return;
@@ -45,14 +44,13 @@ class ConversationCubit extends Cubit<ConversationStates> {
   List<MessageModel> get getMessages => chat.messages;
 
   void changeSystemRole(SystemRoleModel systemRoleModel) {
-    chat.messages.insert(
-        0,
-        MessageModel(
-            msg: systemRoleModel.generateContent(),
-            chatIndex: 2,
-            role: 'system',
-            name: systemRoleModel.name));
-    _untrackedMessages++;
+    final message = MessageModel(
+        msg: systemRoleModel.generateContent(),
+        chatIndex: 2,
+        role: 'system',
+        name: systemRoleModel.name);
+    chat.messages.insert(0, message);
+    _tempMessages.insert(0, message);
     emit(ChangeChatPersona());
   }
 
@@ -63,7 +61,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
       chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
       // chat.messages.insert(0, HiddenMessageModel(msg: msg, chatIndex: 0));
     }
-    _untrackedMessages++;
+    _tempMessages.insert(0, MessageModel(msg: msg, chatIndex: 0));
     emit(AddUserMessage());
   }
 
@@ -74,8 +72,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
       final message = FileMessageModel(file: file, chatIndex: 0);
       await message.content;
       chat.messages.insert(0, message);
-
-      _untrackedMessages++;
+      _tempMessages.insert(0, message);
       emit(AddUserMessage());
 
       await _summerizeFile(message);
@@ -97,6 +94,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
       chat.messages
           .insert(0, HiddenMessageModel(msg: summery[0].msg, chatIndex: 0));
       chat.messages.insert(0, summery[0]);
+      _tempMessages.insert(0, summery[0]);
       emit(SummerizeFileSuccessState());
     } catch (e) {
       emit(SummerizeFileErrorState(error: e.toString()));
@@ -119,23 +117,16 @@ class ConversationCubit extends Cubit<ConversationStates> {
   }
 
   Future<void> _baseSendMessage(String chosenModelId, int userId) async {
-    // AppServices.sendMessage(
-    //     chat.id,
-    //     userId,
-    //     chat.messages
-    //         .getRange(0, _untrackedMessages)
-    //         .toList()
-    //         .reversed
-    //         .toList());
+    AppServices.sendMessage(chat.id, userId, _tempMessages.reversed.toList());
 
-    // _tags = await ChatServices.getConversationTags(
-    //   messages: chat.messages,
-    //   modelId: chosenModelId,
-    // );
-    // formatTags();
+    _tags = await ChatServices.getConversationTags(
+      messages: chat.messages,
+      modelId: chosenModelId,
+    );
+    formatTags();
 
-    emit(SendMessageSuccessState(_untrackedMessages));
-    _untrackedMessages = 0;
+    emit(SendMessageSuccessState(1));
+    _tempMessages.clear();
   }
 
   Future<void> sendMessageViaChatGPT(
@@ -149,7 +140,7 @@ class ConversationCubit extends Cubit<ConversationStates> {
         modelId: chosenModelId,
       );
       chat.messages.insertAll(0, chats);
-      _untrackedMessages += chats.length;
+      _tempMessages.insertAll(0, chats);
     } else {
       chat.messages.insertAll(
           0,

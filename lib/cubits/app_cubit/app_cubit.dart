@@ -81,16 +81,29 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future<void> addNewChat(String chatName) async {
+  Future<void> addNewChat(String chatName, {String? initialMessage}) async {
     try {
       emit(AddNewChatLoadingState());
       final response = await AppServices.createChat(chatName);
       ChatModel chatModel = ChatModel.fromJson(response);
       _chats.add(chatModel);
-      emit(AddNewChatSuccessState(chatModel));
+      emit(AddNewChatSuccessState(chatModel, initialMessage: initialMessage));
     } catch (e) {
       emit(AddNewChatErrorState(error: e.toString()));
       rethrow;
+    }
+  }
+
+  Future<void> deleteChat(ChatModel chat) async {
+    try {
+      emit(DeleteChatLoadingState());
+      await AppServices.deleteChat(chat.id);
+
+      _chats.removeWhere((element) => element.id == chat.id);
+      emit(DeleteChatSuccessState());
+    } catch (e) {
+      print(e.toString());
+      emit(DeleteChatErrorState(error: e.toString()));
     }
   }
 

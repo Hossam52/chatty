@@ -4,8 +4,9 @@ class Constants {
   static String lang = 'en';
   static const String CHAT_GPT_URL = "https://api.openai.com/v1";
   // static const String APP_BASE_URL = 'localhost:8000/api';
-  static const String APP_BASE_URL = 'http://10.0.2.2:8000/api';
+  // static const String APP_BASE_URL = 'http://10.0.2.2:8000/api';
   // static const String APP_BASE_URL = 'https://hossam.videobesteg.xyz/api';
+  static const String APP_BASE_URL = 'http://35.179.50.43/api';
   static const String CHAT_KEY =
       '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';
   static String? token;

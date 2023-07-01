@@ -29,7 +29,7 @@ class _ChangePhoneScreenState extends State<ChangePhoneScreen> {
     return Scaffold(
       appBar: AppBar(
           title: const TextWidget(
-        label: 'Change Phone',
+        label: 'Change phone',
       )),
       body: AuthBlocConsumer(
         listener: (context, state) {

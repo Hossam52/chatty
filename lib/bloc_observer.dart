@@ -12,7 +12,7 @@ class MyBlocObserver extends BlocObserver {
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
-    log('onChange -- ${bloc.runtimeType}, $change');
+    print('onChange -- ${bloc.runtimeType}, $change');
   }
 
   @override
@@ -24,6 +24,6 @@ class MyBlocObserver extends BlocObserver {
   @override
   void onClose(BlocBase bloc) {
     super.onClose(bloc);
-    log('onClose -- ${bloc.runtimeType}');
+    print('onClose -- ${bloc.runtimeType}');
   }
 }

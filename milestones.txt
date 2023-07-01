@@ -1,4 +1,4 @@
-total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3 + 8= 88h
+total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3 + 8 +4 = 92h
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
 
 20/5 12:30 -> 7:00 6h
@@ -72,7 +72,30 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - add prompt construction dialog 08:00 pm to 1:00am 
     - generate the prompts 01:00am to 2:00 am 
     - add prompts to backend 02:00am to 04:00am
+22/6 4h
+    - add prompt construction at chat for chips 10 pm to 2.5 am
 
-- add prompt construction at chat
-- change colors to be good like the app in google play
+
+30/6 1.5h
+    - in register make it only phone and after confirm phone enter the remain data
+    - otp not sending (done 0.5h)
+    - replace welcomeback with chats History(done)
+    - in register remove new key word(done)
+    - in settings page make phone and password key start with small letter(done)
+    - replace Name from add new chat to small(done)
+    - change chatty with gptiva(done)
+    - increase font size in subscription section and make it in settings (done 0.5h)
+    - add section subscription in settings and has 3 items (done 0.5h)
+        - my subsciption plan(type and end date) when tap will upgrade that use iap
+        - #messages and and make button to watch ads with premium users
+
+1/7 1.5h
+    - in + in main screen  make it has 2 items dropped one for create new chat and prompts(done 1.5h)
+    - backend in delete chat not correct and should ensure that the chat he try to delete is belongs to him
+
+    - graphics with shaimaa for shaimaa
 - when the user is not authenticated then let him login again
+-payment (IAP)
+    - make a release app in beta to able to test iap
+    - make payment plan for 7days 1 month 1 year or lifetime
+    - make the backend for payment to the user
