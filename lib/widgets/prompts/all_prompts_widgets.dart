@@ -85,6 +85,10 @@ class _ChipsPromptWidgetState extends State<ChipsPromptWidget> {
               ChipsChoice<int>.single(
                 wrapped: false,
                 value: null,
+                direction: Axis.vertical,
+                alignment: WrapAlignment.start,
+                runAlignment: WrapAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 choiceStyle: C2ChipStyle(
                     backgroundColor: ColorManager.accentColor,
                     foregroundColor: ColorManager.white),
@@ -115,10 +119,12 @@ class _ChipsPromptWidgetState extends State<ChipsPromptWidget> {
                 GestureDetector(
                   child: Icon(Icons.add, color: ColorManager.accentColor),
                   onTap: () {
-                    setState(() {
-                      widget.promptType.insertItem(controller.text);
-                      controller.clear();
-                    });
+                    if (controller.text.isNotEmpty) {
+                      setState(() {
+                        widget.promptType.insertItem(controller.text);
+                        controller.clear();
+                      });
+                    }
                   },
                 )
               ],

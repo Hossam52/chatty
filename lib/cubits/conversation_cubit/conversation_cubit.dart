@@ -117,7 +117,8 @@ class ConversationCubit extends Cubit<ConversationStates> {
   }
 
   Future<void> _baseSendMessage(String chosenModelId, int userId) async {
-    AppServices.sendMessage(chat.id, userId, _tempMessages.reversed.toList());
+    await AppServices.sendMessage(
+        chat.id, userId, _tempMessages.reversed.toList());
 
     _tags = await ChatServices.getConversationTags(
       messages: chat.messages,

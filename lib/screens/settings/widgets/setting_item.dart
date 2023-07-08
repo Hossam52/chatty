@@ -20,37 +20,42 @@ class SettingItem extends StatelessWidget {
   final Widget? trailing;
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Material(
-          elevation: 4,
-          color: ColorManager.settingsColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          clipBehavior: Clip.hardEdge,
-          child: ListTile(
-            onTap: onTap,
-            minLeadingWidth: 20.w,
-            leading: icon == null
-                ? null
-                : Icon(
-                    icon,
-                    size: 20.r,
-                    color: Colors.white,
-                  ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 10.w),
-            title: contentWidget ?? TextWidget(label: title),
-            trailing: trailing ??
-                Icon(
-                  CupertinoIcons.forward,
-                  color: ColorManager.white,
-                ),
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+            decoration: BoxDecoration(
+              color: ColorManager.settingsColor,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: Row(
+              children: [
+                icon == null
+                    ? SizedBox.shrink()
+                    : Icon(
+                        icon,
+                        size: 20.r,
+                        color: Colors.white,
+                      ),
+                if (icon != null) SizedBox(width: 10.w),
+                Expanded(child: contentWidget ?? TextWidget(label: title)),
+                trailing != null
+                    ? trailing!
+                    : Icon(
+                        CupertinoIcons.forward,
+                        color: ColorManager.white,
+                      )
+              ],
+            ),
           ),
-        ),
-        SizedBox(
-          height: 10.h,
-        )
-      ],
+          SizedBox(
+            height: 10.h,
+          )
+        ],
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/screens/chat/widgets/delete_chat_dialog.dart';
 import 'package:chatgpt/screens/conversation/conversation_screen.dart';
+import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,8 +27,8 @@ class ChatHistoryItem extends StatelessWidget {
       },
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15),
-          side: const BorderSide(
-            color: Colors.grey,
+          side: BorderSide(
+            color: ColorManager.grey,
           )),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
@@ -40,7 +41,7 @@ class ChatHistoryItem extends StatelessWidget {
           ),
         ));
       },
-      tileColor: Colors.white24,
+      tileColor: ColorManager.accentColor.withOpacity(0.7),
       title: TextWidget(
         label: chat.chat_name,
         fontSize: 14,

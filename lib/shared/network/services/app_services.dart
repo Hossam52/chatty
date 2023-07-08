@@ -7,6 +7,13 @@ import '../remote/app_dio_helper.dart';
 
 class AppServices {
   AppServices._();
+  static Future<Map<String, dynamic>> getHomeData() async {
+    final response = await AppDioHelper.getData(
+      url: EndPoints.home,
+      token: Constants.token,
+    );
+    return response.data;
+  }
 
   static Future<List<MessageModel>> getAllMessages(int chatId) async {
     final response = await AppDioHelper.getData(
@@ -22,7 +29,7 @@ class AppServices {
         .toList();
   }
 
-  static Future<void> sendMessage(
+  static Future<Map<String, dynamic>> sendMessage(
       int chatId, int userId, List<MessageModel> chats) async {
     final map = {
       'chat_id': chatId,
@@ -33,11 +40,12 @@ class AppServices {
       }).toList(),
     };
 
-    await AppDioHelper.postData(
+    final res = await AppDioHelper.postData(
       url: EndPoints.sendMessage,
       data: map,
       token: Constants.token,
     );
+    return res.data;
   }
 
   static Future<Map<String, dynamic>> getAllChats(int userId) async {
@@ -46,11 +54,13 @@ class AppServices {
     return response.data;
   }
 
-  static Future<Map<String, dynamic>> createChat(String chatName) async {
+  static Future<Map<String, dynamic>> createChat(
+      String chatName, bool isChat) async {
     final response = await AppDioHelper.postData(
       url: EndPoints.createChat,
       data: {
         'name': chatName,
+        'is_chat': isChat,
         'model': 'gpt03-turbo-0301',
       },
       token: Constants.token,

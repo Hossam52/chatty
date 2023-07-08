@@ -14,11 +14,12 @@ abstract class SystemRoleModel {
           ? null
           : prompt += '${e.generateQuestionForChat()!} and ';
     }
-    String consideration = '';
-    if (prompt.isNotEmpty) {
-      prompt = prompt.replaceRange(prompt.lastIndexOf('and'), null, '');
-      consideration += 'and make consideration for $prompt';
-    }
-    return 'You as a $name act like $description $consideration';
+    // String consideration = '';
+    // if (prompt.isNotEmpty) {
+    //   prompt = prompt.replaceRange(prompt.lastIndexOf('and'), null, '');
+    //   consideration += 'and make consideration for $prompt';
+    // }
+    // return 'You as a $name act like $description $consideration';
+    return 'Want you to act as $name for the following conversation';
   }
 }

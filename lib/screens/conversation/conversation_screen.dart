@@ -47,26 +47,27 @@ class _ChatScreenState extends State<ConversationScreen> {
   }
 
   void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: AdHelper.interstitialAdUnitId,
-      request: const AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (ad) {
-          ad.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (ad) {
-              log('On DismissedFullScreenContent');
-            },
-          );
+    if (AppCubit.instance(context).currentUser.isFreeSubscription)
+      InterstitialAd.load(
+        adUnitId: AdHelper.interstitialAdUnitId,
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) {
+            ad.fullScreenContentCallback = FullScreenContentCallback(
+              onAdDismissedFullScreenContent: (ad) {
+                log('On DismissedFullScreenContent');
+              },
+            );
 
-          setState(() {
-            _interstitialAd = ad;
-          });
-        },
-        onAdFailedToLoad: (err) {
-          debugPrint('Failed to load an interstitial ad: ${err.message}');
-        },
-      ),
-    );
+            setState(() {
+              _interstitialAd = ad;
+            });
+          },
+          onAdFailedToLoad: (err) {
+            debugPrint('Failed to load an interstitial ad: ${err.message}');
+          },
+        ),
+      );
   }
 
   @override
@@ -157,7 +158,7 @@ class _ChatScreenState extends State<ConversationScreen> {
       elevation: 2,
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Image.asset(AssetsManager.openaiLogo),
+        child: Image.asset(AssetsManager.logoBackgrounded),
       ),
       // bottom: _keywordsAppBar(),
       title: TextWidget(

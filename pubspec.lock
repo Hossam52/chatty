@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  convex_bottom_bar:
+    dependency: "direct main"
+    description:
+      name: convex_bottom_bar
+      sha256: ebf0f3deb1e8e99374d844fee7485d2980ec502dedfaad395c12118477933aef
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.2.0"
   crypto:
     dependency: transitive
     description:
@@ -517,6 +525,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.8.0"
+  lottie:
+    dependency: "direct main"
+    description:
+      name: lottie
+      sha256: f461105d3a35887b27089abf9c292334478dd292f7b47ecdccb6ae5c37a22c80
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
   matcher:
     dependency: transitive
     description:
@@ -637,6 +653,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.5"
+  purchases_flutter:
+    dependency: "direct main"
+    description:
+      name: purchases_flutter
+      sha256: c7e94b04babd44f28be96be205ec5f75ec3ec11b7ce7c2e5252ef6b47e42115a
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.3"
   queen_validators:
     dependency: "direct main"
     description:
@@ -875,5 +899,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0-0 <4.0.0"
-  flutter: ">=3.3.0"
+  dart: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"

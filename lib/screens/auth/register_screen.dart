@@ -116,6 +116,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             label: 'Phone',
                             controller: phoneController,
                           ),
+                          AuthTextField.customTextField(
+                            controller: TextEditingController(),
+                            label: '',
+                            textField: TextWidget(
+                              fontSize: FontSize.s12,
+                              label:
+                                  '* Activation code will be sent to this number.',
+                            ),
+                          ),
+                          SizedBox(height: 20.h),
                           StatefulBuilder(builder: (context, setState) {
                             return AuthTextField(
                                 label: 'Password',
@@ -131,6 +141,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       'Password not equal to confirmation',
                                       confirmPasswordController:
                                           passwordConfirmController),
+                                  MinLength(6),
+                                  MaxLength(50),
                                 ],
                                 controller: passwordController);
                           }),
@@ -148,6 +160,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 validationRules: const [],
                                 controller: passwordConfirmController);
                           }),
+                          AuthTextField.customTextField(
+                            controller: TextEditingController(),
+                            label: '',
+                            textField: TextWidget(
+                              fontSize: FontSize.s12,
+                              label:
+                                  '* Password needs to be min of 6 characters.',
+                            ),
+                          ),
                           const SizedBox(height: 50),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,

@@ -1,4 +1,4 @@
-total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3 + 8 +4 = 92h
+total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3 + 8 +4 +1.5+ 4.5 +10= 108h
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
 
 20/5 12:30 -> 7:00 6h
@@ -92,10 +92,47 @@ make the UI for chat history and make every chat has its own messages from 4:15 
 1/7 1.5h
     - in + in main screen  make it has 2 items dropped one for create new chat and prompts(done 1.5h)
     - backend in delete chat not correct and should ensure that the chat he try to delete is belongs to him
+2/7 4.5h
+    - backend for subscription flow for IAP 06:00am to 10:30am (4.5h)
+
+3/7 10h
+    - make the integration with google pay using revenucat and handle the logic for free and premium users 
+      and not ads if premium 01:00am to 11:30pm (10h)
 
     - graphics with shaimaa for shaimaa
+06/07
+    - launcher_icon need to have background(done)
+    - replace text in onboarding to this 
+        Welcome to GPT intelligent virtual assistant
+        Act as multiple roles
+        Prompt generator
+        Upload your files 
+        And more to come...(done)
+    - write password specs in register
+    - write password requirements in register 
+    - you account verified successful need to be green not red
+    - password conditionsin register is not same as password conditions in login
+    - write activiation code will be sent to this number und3er the phone field
+    - replace color of chat history to terkuaz
+    - chathistory if it has more than in this screen some not appear as the bottom navigation
+    - when scroll up with chat history the it show only background if the chat reach to the appbar
+    - when history is empty show text and image 
+    - transfer logout to appbar
+    - replace icon from chatgpt icon to gptiva_icon
+    - replace meanining not spelling in suggested keywords
+    - in prompts when the field is list this make it scrolls vertically instead of horizontally
+    - make upgrade_andgetmore messages aligned with left to be same height
+    - whhen click getmore show ads directly
+    - make info screen prompt generator
+    - 
+    
+    
+
+    - hidden textfield
+    - make popup if the user has excceded the quota that make the user watch ads or subscripe to package premium
+    - undefined user after login
+    - when get more messages in ads it show me i have subscriped for 3 months
+    - 
+    - ads not work always in debug
+    - color pallete
 - when the user is not authenticated then let him login again
--payment (IAP)
-    - make a release app in beta to able to test iap
-    - make payment plan for 7days 1 month 1 year or lifetime
-    - make the backend for payment to the user

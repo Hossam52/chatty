@@ -11,11 +11,7 @@ typedef PersonasBlocConsumer = BlocConsumer<PersonasCubit, PersonasState>;
 
 class PersonasCubit extends Cubit<PersonasState> {
   PersonasCubit() : super(PersonasInitial()) {
-    allSupportedPersonas = [
-      ProgrammerPersona(),
-      AccountantPerona(),
-      HumanResoursePersona(),
-    ];
+    allSupportedPersonas = supproterRoles;
   }
   static PersonasCubit instance(BuildContext context) =>
       BlocProvider.of<PersonasCubit>(context);

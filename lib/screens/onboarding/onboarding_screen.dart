@@ -12,6 +12,7 @@ class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorManager.accentColor.withOpacity(0.5),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -19,7 +20,7 @@ class OnBoardingScreen extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: Image.asset(AssetsManager.logo),
+                child: Image.asset(AssetsManager.logoHorizontal),
               ),
               Expanded(
                   flex: 2,
@@ -27,7 +28,7 @@ class OnBoardingScreen extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          'Gptiva\n Welcome to ChatGPT, your all-in-one chatbot app!',
+                          'Welcome to GPT intelligent virtual assistant',
                           textAlign: TextAlign.center,
                           style: getMediumStyle(
                               color: ColorManager.white,
@@ -38,13 +39,7 @@ class OnBoardingScreen extends StatelessWidget {
                           child: Column(
                         children: [
                           Text(
-                            'Welcome to the ultimate chatbot app powered by ChatGPT! Choose a role, prompt, and chat with our AI to experience the future of conversations' *
-                                1,
-                            textAlign: TextAlign.center,
-                            style: getRegularStyle(color: ColorManager.white),
-                          ),
-                          Text(
-                            '[switch roles, prompt, upload files!]' * 1,
+                            '''Act as multiple roles Prompt generator Upload your files And more to come...''',
                             textAlign: TextAlign.center,
                             style: getBoldStyle(
                                 color: ColorManager.highlight,

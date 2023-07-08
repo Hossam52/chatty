@@ -1,9 +1,11 @@
-import 'package:chatgpt/screens/settings/widgets/subscription_setting_item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import 'package:chatgpt/screens/app_static_data/app_static_data.dart';
+import 'package:chatgpt/screens/settings/widgets/subscription_setting_item.dart';
 
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../../cubits/app_cubit/app_states.dart';
@@ -13,8 +15,6 @@ import '../../models/auth/user_model.dart';
 import '../../shared/methods.dart';
 import '../../shared/presentation/resourses/color_manager.dart';
 import '../../shared/presentation/resourses/font_manager.dart';
-import '../../shared/presentation/resourses/styles_manager.dart';
-import '../../widgets/custom_button.dart';
 import '../../widgets/default_loader.dart';
 import '../../widgets/person_image_widget.dart';
 import '../../widgets/text_widget.dart';
@@ -44,9 +44,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      bottomNavigationBar: const _LogoutButton(),
+      // bottomNavigationBar: const _LogoutButton(),
       appBar: AppBar(
         title: const TextWidget(label: 'Settings'),
+        actions: [
+          _LogoutButton(),
+        ],
       ),
       body: SingleChildScrollView(
         child: AppBlocBuilder(builder: (context, state) {
@@ -98,27 +101,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ]),
                 _divider(),
                 SubscriptionSettingItem(),
-                _divider(),
-                SettingsSectionWidget(title: 'App sharing', items: [
-                  SettingItem(
-                      title: 'Share app',
-                      icon: FontAwesomeIcons.shareFromSquare,
-                      onTap: () {}),
-                ]),
+                // _divider(),
+                // SettingsSectionWidget(title: 'App sharing', items: [
+                //   SettingItem(
+                //       title: 'Share app',
+                //       icon: FontAwesomeIcons.shareFromSquare,
+                //       onTap: () {}),
+                // ]),
                 _divider(),
                 SettingsSectionWidget(title: 'General', items: [
                   SettingItem(
                       title: 'About app',
                       icon: FontAwesomeIcons.circleInfo,
-                      onTap: () {}),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => AboutAppScreen()));
+                      }),
                   SettingItem(
                       title: 'Privacy policy',
                       icon: FontAwesomeIcons.fileCode,
-                      onTap: () {}),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => PrivacyPolicyScreen()));
+                      }),
                   SettingItem(
                       title: 'Terms of use',
                       icon: FontAwesomeIcons.fileCircleCheck,
-                      onTap: () {})
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => TermsOfUseScreen()));
+                      })
                 ])
               ],
             ),
@@ -192,31 +204,28 @@ class _LogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 100.h),
-      child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: AuthBlocConsumer(
-            listener: (context, state) {
-              if (state is LogoutSuccessState) {
-                Navigator.pop(context);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const OnBoardingScreen()));
-              }
-            },
-            builder: (context, snapshot) {
-              return CustomButton(
-                onPressed: () async {
-                  await AuthCubit.instance(context).logout();
-                },
-                text: 'Logout',
-                backgroundColor: Colors.black54,
-                textStyle: getRegularStyle(
-                    color: ColorManager.error, fontSize: FontSize.s14),
-              );
-            },
-          )),
-    );
+        padding: EdgeInsets.symmetric(horizontal: 20.w),
+        child: AuthBlocConsumer(
+          listener: (context, state) {
+            if (state is LogoutSuccessState) {
+              Navigator.pop(context);
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const OnBoardingScreen()));
+            }
+          },
+          builder: (context, snapshot) {
+            return IconButton(
+              icon: Icon(
+                Icons.logout,
+                color: ColorManager.error,
+              ),
+              onPressed: () async {
+                await AuthCubit.instance(context).logout();
+              },
+            );
+          },
+        ));
   }
 }

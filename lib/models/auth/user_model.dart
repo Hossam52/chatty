@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:chatgpt/models/subscriptions/subscription_model.dart';
+
 class User {
   final int id;
   final String name;
@@ -8,15 +10,22 @@ class User {
   final int verified;
   final String access_token;
   int remaining_messages;
+  final SubscriptionModel? active_subscription;
 
-  User(
-      {required this.id,
-      required this.verified,
-      required this.access_token,
-      required this.name,
-      required this.phone,
-      required this.remaining_messages,
-      required this.email});
+  bool get isFreeSubscription => active_subscription == null;
+  bool get canSendMessage =>
+      !isFreeSubscription || (isFreeSubscription && remaining_messages > 0);
+
+  User({
+    required this.id,
+    required this.verified,
+    required this.access_token,
+    required this.name,
+    required this.phone,
+    required this.remaining_messages,
+    required this.email,
+    required this.active_subscription,
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -27,6 +36,7 @@ class User {
       'verified': verified,
       'remaining_messages, ': remaining_messages,
       'access_token': access_token,
+      'active_subscription': active_subscription,
     };
   }
 
@@ -38,6 +48,9 @@ class User {
       phone: map['user']['phone'] ?? '',
       verified: map['user']['verified'] ?? 0,
       remaining_messages: map['user']['remaining_messages'] ?? 0,
+      active_subscription: map['user']['active_subscription'] == null
+          ? null
+          : SubscriptionModel.fromMap(map['user']['active_subscription']),
       access_token: map['access_token'] ?? '',
     );
   }

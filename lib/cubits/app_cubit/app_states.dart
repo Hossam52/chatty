@@ -79,3 +79,13 @@ class GetPromptsErrorState extends AppStates {
   final String error;
   GetPromptsErrorState({required this.error});
 }
+
+//GetHomeData online fetch data
+class GetHomeDataLoadingState extends AppStates {}
+
+class GetHomeDataSuccessState extends AppStates {}
+
+class GetHomeDataErrorState extends AppStates {
+  final String error;
+  GetHomeDataErrorState({required this.error});
+}

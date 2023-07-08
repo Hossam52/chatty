@@ -39,7 +39,7 @@ class Services {
       );
       return;
     }
-    if (AppCubit.instance(context).hasExcceedQuota) {
+    if (!AppCubit.instance(context).currentUser.canSendMessage) {
       Methods.showSnackBar(context,
           'You excceed the quota limit go to settings to add more messages');
       return;

@@ -19,7 +19,7 @@ class TagDetailsDialog extends StatelessWidget {
     return BlocProvider(
         create: (context) => TagsConversationQueryiesCubit(
             ChatModel(id: 1, chat_name: 'Query', model: ''))
-          ..addUserMessage(msg: 'What is the $tagName meaining?')
+          ..addUserMessage(msg: 'What is the $tagName meaning?')
           ..sendMessageAndGetAnswers(
               userId: 0, //not a user
               msg: userMessage.msg,

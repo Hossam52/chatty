@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import '../../cubits/ads_cubit/ads_cubit.dart';
 import '../../cubits/ads_cubit/ads_states.dart';
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../../shared/presentation/resourses/color_manager.dart';
 import '../text_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class RewardAdsWidget extends StatelessWidget {
   const RewardAdsWidget({super.key});
@@ -32,15 +29,8 @@ class RewardAdsWidget extends StatelessWidget {
             return TextButton(
               child: Text('ok'.toUpperCase()),
               onPressed: () async {
-                final ad = await AdsCubit.instance(context).rewardAd;
-                ad?.show(
-                  onUserEarnedReward: (_, RewardItem reward) async {
-                    log(reward.toString());
-                    await AppCubit.instance(context).claimAdReward();
-
-                    log('User earned the reward');
-                  },
-                );
+                await AdsCubit.instance(context)
+                    .showAds(AppCubit.instance(context));
               },
             );
           },

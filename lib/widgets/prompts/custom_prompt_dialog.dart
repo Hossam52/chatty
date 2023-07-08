@@ -97,6 +97,7 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
                 onPressed: () async {
                   await AppCubit.instance(context).addNewChat(
                       'Prompt about: ' + _selected!.name,
+                      isChat: false,
                       initialMessage: _selected!.generate());
                   // Services.sendMessage(
                   //   context: context,
@@ -154,10 +155,8 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
   }
 
   List<DropdownMenuItem<BasePromptType>> items(BuildContext context) {
-    if (AppCubit.instance(context).promptModel == null) return [];
     return AppCubit.instance(context)
-        .promptModel!
-        .data
+        .prompts
         .map((e) => DropdownMenuItem<BasePromptType>(
               value: e,
               child: TextWidget(label: e.name),

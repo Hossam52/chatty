@@ -5,7 +5,10 @@ class EndPoints {
   static const String chatCompletion = '/completions';
   static const String models = '/models';
 
+  //Home data
+  static const String home = '/home';
   //Prompts
+
   static const String prompts = '/prompts';
 
   //App endpoints
@@ -29,4 +32,9 @@ class EndPoints {
   static const String changePhone = '/auth/changePhone';
   static const String changePassword = '/auth/changePassword';
   static const String logout = '/logout';
+
+  //Subscriptions
+  static const String allPlans = '/subscription/all_plans';
+  static const String purchaseSubscription = '/subscriptions/purchase';
+  static const String mySubscription = '/subscriptions/mySubscriptions';
 }

@@ -1,3 +1,5 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../constants/constants.dart';
 import '../cubits/conversation_cubit/conversation_cubit.dart';
 import '../models/message_model.dart';
@@ -60,9 +62,9 @@ class MessageWidget extends StatelessWidget {
                   Image.asset(
                     message.chatIndex == 0
                         ? AssetsManager.userImage
-                        : AssetsManager.botImage,
-                    height: 30,
-                    width: 30,
+                        : AssetsManager.logoBackgrounded,
+                    height: 50.r,
+                    width: 50.r,
                   ),
                   const SizedBox(
                     width: 8,

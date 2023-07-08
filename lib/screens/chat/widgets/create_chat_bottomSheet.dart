@@ -14,6 +14,7 @@ class CreateChatBottomSheetState extends State<CreateChatBottomSheet> {
   final controller = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    print('-' * 20 + MediaQuery.of(context).viewInsets.bottom.toString());
     return Padding(
       padding: const EdgeInsets.all(8)
           .copyWith(bottom: MediaQuery.of(context).viewInsets.bottom),

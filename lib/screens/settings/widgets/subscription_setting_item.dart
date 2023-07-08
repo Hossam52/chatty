@@ -1,24 +1,31 @@
+import 'package:chatgpt/cubits/ads_cubit/ads_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/cubits/app_cubit/app_states.dart';
 import 'package:chatgpt/screens/settings/widgets/setting_item.dart';
 import 'package:chatgpt/screens/settings/widgets/setting_section.dart';
+import 'package:chatgpt/screens/subscriptions/subscription_screen.dart';
 import 'package:chatgpt/shared/methods.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:chatgpt/widgets/ads/reward_ads_widget.dart';
-import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
 class SubscriptionSettingItem extends StatelessWidget {
   const SubscriptionSettingItem({super.key});
+  String formatDate(DateTime? date) {
+    if (date == null) return 'Undefined';
+    return DateFormat('yyyy-MM-dd').format(date);
+  }
 
   @override
   Widget build(BuildContext context) {
     return AppBlocConsumer(
-      buildWhen: (previous, current) => current is ClaimAdRewardSuccessState,
+      // buildWhen: (previous, current) => current is ClaimAdRewardSuccessState,
       listener: (context, state) {
         if (state is ClaimAdRewardSuccessState) {
           Methods.showSuccessSnackBar(context, state.message);
@@ -32,25 +39,44 @@ class SubscriptionSettingItem extends StatelessWidget {
         final user = AppCubit.instance(context).currentUser;
         return SettingsSectionWidget(title: 'Subscription', items: [
           _SubscriptionItem(
+            user.isFreeSubscription,
             [
-              _RowItem('Subscription plan', 'Free'),
-              _RowItem('End date', 'Not defined'),
+              if (user.isFreeSubscription) ...[
+                _RowItem('Subscription plan', 'Free'),
+              ] else ...[
+                _RowItem(
+                    'Subscription plan', user.active_subscription!.plan.name),
+                _RowItem('End date',
+                    formatDate(user.active_subscription?.period_end_date)),
+              ]
             ],
             actionTitle: 'Upgrade',
-            onAction: () {},
-          ),
-          _SubscriptionItem(
-            [
-              _RowItem(
-                'Remaining messages',
-                user.remaining_messages.toString(),
-              ),
-            ],
-            actionTitle: 'Get more',
-            onAction: () async {
-              await _showAwardAdDialog(context);
+            onAction: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => SubscriptionScreen(
+                            appCubit: AppCubit.instance(context),
+                          )));
             },
           ),
+          if (user.isFreeSubscription)
+            _SubscriptionItem(
+                user.isFreeSubscription,
+                [
+                  _RowItem(
+                    'Remaining messages',
+                    user.remaining_messages.toString(),
+                  ),
+                ],
+                actionTitle: 'Get more', onAction: () async {
+              await AdsCubit.instance(context)
+                  .showAds(AppCubit.instance(context));
+            }
+                // () async {
+                //   await _showAwardAdDialog(context);
+                // },
+                ),
         ]);
       },
     );
@@ -70,28 +96,49 @@ class SubscriptionSettingItem extends StatelessWidget {
 }
 
 class _SubscriptionItem extends StatelessWidget {
-  const _SubscriptionItem(this.items,
-      {super.key, required this.actionTitle, required this.onAction});
+  const _SubscriptionItem(
+    this.isFreeSubscription,
+    this.items, {
+    super.key,
+    required this.actionTitle,
+    required this.onAction,
+  });
   final List<_RowItem> items;
+  final bool isFreeSubscription;
   final String actionTitle;
   final VoidCallback onAction;
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
       children: [
-        Expanded(
-          child: SettingItem(
-              title: 'Subscription',
-              contentWidget: Column(children: items),
-              trailing: SizedBox.shrink(),
-              onTap: () async {}),
+        Row(
+          children: [
+            Expanded(
+              flex: 5,
+              child: SettingItem(
+                  title: 'Subscription',
+                  contentWidget: Column(children: items),
+                  trailing: SizedBox.shrink(),
+                  onTap: () async {}),
+            ),
+            SizedBox(width: 10.w),
+            if (isFreeSubscription)
+              Expanded(
+                  flex: 2,
+                  child: SettingItem(
+                    onTap: onAction,
+                    trailing: SizedBox.shrink(),
+                    title: actionTitle,
+                  ))
+            // CustomButton(
+            //   height: double.infinity,
+            //   text: actionTitle,
+            //   backgroundColor: ColorManager.settingsColor,
+            //   onPressed: onAction,
+            // )
+          ],
         ),
-        SizedBox(width: 10.w),
-        CustomButton(
-          text: actionTitle,
-          backgroundColor: ColorManager.settingsColor,
-          onPressed: onAction,
-        )
+        SizedBox(height: 10.h),
       ],
     );
   }
@@ -110,7 +157,7 @@ class _RowItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Flexible(
           child: Text(

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:chatgpt/models/home_model.dart';
 import 'package:chatgpt/models/prompts/prompt_model.dart';
+import 'package:chatgpt/models/prompts/prompts_map.dart';
 
 import '../../models/auth/user_model.dart';
 import '../../models/chat_history_model.dart';
@@ -19,11 +21,17 @@ class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(IntitalAppState());
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
-  PromptModel? promptModel;
+  HomeModel? _homeModel;
+  List<PromptItem> get prompts => _homeModel?.prompts ?? [];
+  User? get user => _homeModel?.user;
+  List<ChatModel> get allChats => _homeModel?.chats ?? [];
+  List<ChatModel> get allChatsPrompts => _homeModel?.chats_prompts ?? [];
+
   final int _showAdsAfter = 5; //Show intersential ads after # messages
   int _totalMessagesSent =
       1; //For managing the intersentitial ads after $trails of messags
-  bool get showInterstitialAds => _totalMessagesSent % _showAdsAfter == 0;
+  bool get showInterstitialAds =>
+      currentUser.isFreeSubscription && _totalMessagesSent % _showAdsAfter == 0;
 
   void increaseMessagesCount() {
     _totalMessagesSent++;
@@ -36,14 +44,9 @@ class AppCubit extends Cubit<AppStates> {
     emit(ChangeAppBottomState());
   }
 
-  List<ChatModel> _chats = [];
-
-  List<ChatModel> get getChats => _chats;
-
-  User? _user;
-  bool get userError => _user == null;
+  bool get userError => user == null;
   void updateCurrentUser(User user) {
-    _user = user;
+    _homeModel?.user = user;
     emit(UpdateUserState());
   }
 
@@ -51,17 +54,29 @@ class AppCubit extends Cubit<AppStates> {
     if (userError) {
       // final user = await getUser();
       throw 'Undifined user';
+    } else {
+      return _homeModel!.user;
     }
-
-    return _user!;
   }
 
   void decreaseQuota(int totalMessagesSent) {
-    currentUser.remaining_messages -= totalMessagesSent;
+    if (currentUser.isFreeSubscription)
+      currentUser.remaining_messages -= totalMessagesSent;
     emit(ChangeMessagesQuota());
   }
 
   bool get hasExcceedQuota => currentUser.remaining_messages <= 0;
+
+  Future<void> getHomeData() async {
+    try {
+      emit(GetHomeDataLoadingState());
+      final res = await AppServices.getHomeData();
+      _homeModel = HomeModel.fromMap(res);
+      emit(GetHomeDataSuccessState());
+    } catch (e) {
+      emit(GetHomeDataErrorState(error: e.toString()));
+    }
+  }
 
   Future<void> fetchAllChats() async {
     try {
@@ -70,9 +85,10 @@ class AppCubit extends Cubit<AppStates> {
       emit(FetchAllChatsLoadingState());
       final response = await AppServices.getAllChats(user.id);
       log(response.toString());
-      _chats = (response['chats'] as List)
+      final _chats = (response['chats'] as List)
           .map((e) => ChatModel.fromJson(e))
           .toList();
+      _homeModel?.chats = _chats;
       emit(FetchAllChatsSuccessState());
     } catch (e) {
       print(e.toString());
@@ -81,12 +97,13 @@ class AppCubit extends Cubit<AppStates> {
     }
   }
 
-  Future<void> addNewChat(String chatName, {String? initialMessage}) async {
+  Future<void> addNewChat(String chatName,
+      {bool isChat = true, String? initialMessage}) async {
     try {
       emit(AddNewChatLoadingState());
-      final response = await AppServices.createChat(chatName);
+      final response = await AppServices.createChat(chatName, isChat);
       ChatModel chatModel = ChatModel.fromJson(response);
-      _chats.add(chatModel);
+      _homeModel?.addChat(chatModel);
       emit(AddNewChatSuccessState(chatModel, initialMessage: initialMessage));
     } catch (e) {
       emit(AddNewChatErrorState(error: e.toString()));
@@ -98,8 +115,8 @@ class AppCubit extends Cubit<AppStates> {
     try {
       emit(DeleteChatLoadingState());
       await AppServices.deleteChat(chat.id);
-
-      _chats.removeWhere((element) => element.id == chat.id);
+      _homeModel?.chats.removeWhere((element) => element.id == chat.id);
+      _homeModel?.chats_prompts.removeWhere((element) => element.id == chat.id);
       emit(DeleteChatSuccessState());
     } catch (e) {
       print(e.toString());
@@ -111,7 +128,7 @@ class AppCubit extends Cubit<AppStates> {
     try {
       emit(ClaimAdRewardLoadingState());
       final response = await AppServices.claimAdReward();
-      _user = User.fromMap(response);
+      _homeModel?.user = User.fromMap(response);
       emit(ClaimAdRewardSuccessState(response['message']));
     } catch (e) {
       emit(ClaimAdRewardErrorState(error: e.toString()));
@@ -119,12 +136,12 @@ class AppCubit extends Cubit<AppStates> {
   }
 
   Future<void> getUser() async {
-    if (_user != null) return;
+    if (!userError) return;
     try {
       emit(GetUserLoadingState());
       final response = await AuthServices.profile();
       log(response.toString());
-      _user = User.fromMap(response);
+      _homeModel?.user = User.fromMap(response);
       emit(GetUserSuccessState());
     } catch (e) {
       emit(GetUserErrorState(error: e.toString()));
@@ -135,7 +152,7 @@ class AppCubit extends Cubit<AppStates> {
     try {
       emit(GetPromptsLoadingState());
       final response = await AppServices.getPrompts();
-      promptModel = PromptModel.fromMap(response);
+      _homeModel!.prompts = PromptModel.fromMap(response).data;
       emit(GetPromptsSuccessState());
     } catch (e) {
       emit(GetPromptsErrorState(error: e.toString()));

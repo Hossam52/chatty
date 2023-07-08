@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:chatgpt/cubits/subscription_cubit/subscription_cubit.dart';
-import 'package:chatgpt/in_app_purchase_example.dart';
 
 import 'bloc_observer.dart';
 import 'cubits/ads_cubit/ads_cubit.dart';

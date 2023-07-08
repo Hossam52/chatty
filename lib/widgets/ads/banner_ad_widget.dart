@@ -1,3 +1,4 @@
+import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -19,8 +20,10 @@ class _BannerAdWidgetState extends State<BannerAdWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return const SizedBox.shrink();
-    // ignore: dead_code
+    final cubit = AppCubit.instance(context);
+    if (!cubit.userError &&
+        !AppCubit.instance(context).currentUser.isFreeSubscription)
+      return SizedBox.shrink();
     return BlocProvider(
       create: (context) => AdsCubit(),
       child: AdsBlocBuilder(

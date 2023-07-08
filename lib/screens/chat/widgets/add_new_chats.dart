@@ -6,6 +6,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AddNewChats extends StatelessWidget {
   const AddNewChats({super.key});
@@ -15,9 +16,13 @@ class AddNewChats extends StatelessWidget {
     return Center(
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
-          customButton: Icon(
-            Icons.add,
-            color: ColorManager.accentColor,
+          customButton: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Icon(
+              Icons.add,
+              size: 30.r,
+              color: ColorManager.accentColor,
+            ),
           ),
           items: [
             ...MenuItems.firstItems.map(

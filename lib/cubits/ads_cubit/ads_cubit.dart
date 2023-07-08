@@ -1,3 +1,5 @@
+import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
+
 import '../../constants/ad_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +45,13 @@ class AdsCubit extends Cubit<AdsStates> {
         },
       ),
     );
+  }
+
+  Future<void> showAds(AppCubit appCubit) async {
+    final ad = await rewardAd;
+    await ad?.show(onUserEarnedReward: (_, RewardItem reward) async {
+      await appCubit.claimAdReward();
+    });
   }
 
   //-----------------------------------------------

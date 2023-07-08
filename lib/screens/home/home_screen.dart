@@ -1,5 +1,7 @@
-import 'package:animated_notch_bottom_bar/animated_notch_bottom_bar/animated_notch_bottom_bar.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
+import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
+import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../../cubits/app_cubit/app_cubit.dart';
 import '../chat/chat_history_screen.dart';
 import '../settings/settings_screen.dart';
@@ -15,10 +17,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _controller = NotchBottomBarController(index: 1);
+  // final _controller = NotchBottomBarController(index: 1);
   final _pageController = PageController(initialPage: 1);
   final List<_BottomModel> _items = [
-    _BottomModel(title: 'Info', icon: CupertinoIcons.info, child: Container()),
+    _BottomModel(
+        title: 'Prompts', icon: Icons.file_copy, child: ChatPromptsHistory()),
     _BottomModel(
         title: 'Chats',
         icon: CupertinoIcons.chat_bubble_2,
@@ -37,13 +40,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AppCubit()
-        ..getPrompts()
-        ..fetchAllChats(),
+      create: (context) => AppCubit()..getHomeData(),
       child: Scaffold(
         bottomNavigationBar: _bottomNavigation(),
-        extendBody: true,
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
@@ -54,29 +54,57 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _bottomNavigation() {
-    return AnimatedNotchBottomBar(
-        color: ColorManager.primary,
-        notchColor: Colors.grey,
-        onTap: (index) {
-          setState(() {});
-          _pageController.jumpToPage(index);
-        },
-        notchBottomBarController: _controller,
-        bottomBarItems: _items
-            .map(
-              (e) => BottomBarItem(
-                inActiveItem: Icon(
-                  e.icon,
-                  color: Colors.blueGrey,
-                ),
-                activeItem: Icon(
-                  e.icon,
-                  color: Colors.blueGrey,
-                ),
-                itemLabel: e.title,
-              ),
-            )
-            .toList());
+    return StyleProvider(
+      style: Style(),
+      child: ConvexAppBar(
+          top: -18,
+          initialActiveIndex: 1,
+          backgroundColor: ColorManager.primary,
+          activeColor: ColorManager.accentColor.withOpacity(0.7),
+          color: ColorManager.grey,
+          style: TabStyle.flip,
+          onTap: (index) {
+            setState(() {});
+            _pageController.jumpToPage(index);
+          },
+          items: _items
+              .map((e) => TabItem(
+                  icon: Icon(
+                    e.icon,
+                    color: ColorManager.grey,
+                  ),
+                  activeIcon: Icon(
+                    e.icon,
+                    color: ColorManager.accentColor,
+                  ),
+                  title: e.title))
+              .toList()),
+    );
+
+    // return AnimatedNotchBottomBar(
+    //     showShadow: true,
+    //     color: ColorManager.primary.withOpacity(0.7),
+    //     notchColor: Colors.grey,
+    //     onTap: (index) {
+    //       setState(() {});
+    //       _pageController.jumpToPage(index);
+    //     },
+    //     notchBottomBarController: _controller,
+    //     bottomBarItems: _items
+    //         .map(
+    //           (e) => BottomBarItem(
+    //             inActiveItem: Icon(
+    //               e.icon,
+    //               color: Colors.blueGrey,
+    //             ),
+    //             activeItem: Icon(
+    //               e.icon,
+    //               color: Colors.blueGrey,
+    //             ),
+    //             itemLabel: e.title,
+    //           ),
+    //         )
+    //         .toList());
   }
 }
 
@@ -91,4 +119,20 @@ class _BottomModel {
       required this.child,
       required this.icon,
       this.color});
+}
+
+class Style extends StyleHook {
+  @override
+  double get activeIconSize => 40;
+
+  @override
+  double get activeIconMargin => 10;
+
+  @override
+  double get iconSize => 20;
+
+  @override
+  TextStyle textStyle(Color color, String? fontFamily) {
+    return getRegularStyle(color: color, fontSize: FontSize.s11);
+  }
 }

@@ -1,9 +1,14 @@
 import 'dart:async';
-import 'dart:math';
+// ignore: unused_import
+import 'dart:developer';
 
+import 'package:chatgpt/models/subscriptions/purchase_subscription_model.dart';
+import 'package:chatgpt/models/subscriptions/subscription_plans_model.dart';
+import 'package:chatgpt/shared/network/services/subscription_services.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:in_app_purchase/in_app_purchase.dart';
+import 'package:purchases_flutter/purchases_flutter.dart';
 import './subscription_states.dart';
 
 //Bloc builder and bloc consumer methods
@@ -15,86 +20,145 @@ typedef SubscriptionBlocConsumer
 //
 class SubscriptionCubit extends Cubit<SubscriptionStates> {
   SubscriptionCubit() : super(IntitalSubscriptionState()) {
-    _initialize();
+    init();
   }
   static SubscriptionCubit instance(BuildContext context) =>
       BlocProvider.of<SubscriptionCubit>(context);
-  Set<String> _planIds = {'week', 'monthly', '3months', '6months', 'yearly'};
-  final _iap = InAppPurchase.instance;
+  SubscriptionPlans? _allPlans;
 
-  List<ProductDetails> _products = [];
-  List<ProductDetails> get products => _products;
+  List<Package> _packages = [];
+  List<Package> get products => _packages;
 
-  List<PurchaseDetails> _purchases = [];
+  Package? _selectedPackage;
 
-  StreamSubscription? _subscription;
-
-  bool _available = false;
-  bool get available => _available;
-
-  void _initialize() async {
-    _available = await _iap.isAvailable();
-    print('-' * 20 + _available.toString());
-    if (_available) {
-      await _getProducts();
-      await _getPastPurchases();
-
-      await _verifyPurchase();
-
-      _subscription = _iap.purchaseStream.listen(_listenedData);
+  Future<void> init() async {
+    if (_packages.isEmpty) {
+      await PurchaseApi.init();
+      await fetchOffers();
+      await getPlans();
     }
   }
 
-  void _listenedData(List<PurchaseDetails> data) {
-    print('---' * 5 + data[0].error.toString());
-    print('New Purchase');
-    _purchases.addAll(data);
-    _verifyPurchase();
-    emit(PurchasedStreamChangedState());
-  }
-
-  Future<void> _getProducts() async {
-    final response = await _iap.queryProductDetails(_planIds);
-    print(response.error);
-    _products = response.productDetails;
-
-    emit(PurchasedStreamChangedState());
-  }
-
-  Future<void> _getPastPurchases() async {}
-
-  PurchaseDetails? hasPurchased(String productId) {
-    if (_purchases.isEmpty) {
-      return null;
-    } else {
-      final res =
-          _purchases.where((purchase) => purchase.productID == productId);
-      return res.isEmpty ? null : res.first;
+  Future<void> fetchOffers() async {
+    try {
+      emit(FetchOffersLoadingState());
+      if (_packages.isEmpty) {
+        final offerings = await PurchaseApi.fetchOffers();
+        if (offerings.isEmpty) {
+          throw 'No plans available';
+        } else {
+          final packages = offerings
+              .map((offer) => offer.availablePackages)
+              .expand((pair) => pair)
+              .toList();
+          _packages = packages;
+        }
+      }
+      emit(FetchOffersSuccessState());
+    } catch (e) {
+      emit(FetchOffersErrorState(error: e.toString()));
     }
   }
 
-  Future<void> _verifyPurchase() async {
-    final purchase = await hasPurchased('week');
-    print('Purchase ' + '-' * 20 + purchase.toString());
-    if (purchase != null && purchase.status == PurchaseStatus.purchased) {}
+  Future<void> getPlans() async {
+    try {
+      emit(GetPlansLoadingState());
+      final res = await SubscriptionServices.getPlans();
+      _allPlans = SubscriptionPlans.fromMap(res);
+      emit(GetPlansSuccessState());
+    } catch (e) {
+      emit(GetPlansErrorState(error: e.toString()));
+      rethrow;
+    }
   }
 
-  void buyProduct(ProductDetails prod) async {
-    // final response = await _iap.queryProductDetails({'week'});
-    // final first = response.productDetails.first;
-
-    // print(response.productDetails.first.);
-    // return;
-    final purchaseParam = PurchaseParam(productDetails: prod);
-    // print('Buy ' + '-' * 20 + prod.id);
-    final res = await _iap.buyConsumable(
-        purchaseParam: purchaseParam, autoConsume: false);
-    print('$res');
+  int? extractPlanId(String storePlanName) {
+    final res = _allPlans?.plans
+        .where((element) => element.storePlanName == storePlanName)
+        .toList();
+    return res == null || res.isEmpty ? null : res.first.id;
   }
 
-  @override
-  Future<void> close() async {
-    _subscription?.cancel();
-    super.close();
+  Future<void> storeSubscriptions(String storePlanName) async {
+    try {
+      emit(StoreSubscriptionsLoadingState());
+      int? planId = extractPlanId(storePlanName);
+      if (planId != null) {
+        final res =
+            await SubscriptionServices.purchaseSubscription(planId.toString());
+        print(res.toString());
+        final purchaseModel = PurchaseSubscriptionModel.fromMap(res);
+        emit(StoreSubscriptionsSuccessState(purchaseModel.user));
+      } else {
+        throw 'Unknwon plan id';
+      }
+    } catch (e) {
+      emit(StoreSubscriptionsErrorState(error: e.toString()));
+      rethrow;
+    }
+  }
+
+  void changeSelected(Package? product) {
+    this._selectedPackage = product;
+    emit(ChangeSubscriptionSelectedState());
+  }
+
+  bool get isPackageSelected => _selectedPackage != null;
+  bool isProductSelected({required Package package}) {
+    if (_selectedPackage == null)
+      return false;
+    else
+      return _selectedPackage!.identifier == package.identifier;
+  }
+
+  bool get errorInPlans => _allPlans == null;
+
+  Future<void> purchasePackage(String userId) async {
+    try {
+      emit(PurchasePackageLoadingState());
+      final res = await PurchaseApi.purchasePackage(_selectedPackage!, userId);
+      if (res) {
+        emit(PurchasePackageSuccessState());
+
+        storeSubscriptions(_selectedPackage!.storeProduct.identifier);
+      } else {
+        throw 'Purchase not succeeded';
+      }
+    } catch (e) {
+      emit(PurchasePackageErrorState(error: e.toString()));
+    }
+  }
+}
+
+class PurchaseApi {
+  static const _apiKey = 'goog_ZmxxvmIvQWKlWDjKuvcuhDZIssK';
+  static Future init() async {
+    print(_apiKey);
+    await Purchases.setLogLevel(LogLevel.warn);
+    await Purchases.setLogLevel(LogLevel.warn);
+
+    await Purchases.configure(PurchasesConfiguration(_apiKey));
+  }
+
+  static Future<List<Offering>> fetchOffers() async {
+    try {
+      final offerings = await Purchases.getOfferings();
+
+      final current = offerings.current;
+
+      return current == null ? [] : [current];
+    } on PlatformException catch (_) {
+      return [];
+    }
+  }
+
+  static Future<bool> purchasePackage(Package package, String userId) async {
+    try {
+      Purchases.logIn(userId);
+      await Purchases.purchasePackage(package);
+      return true;
+    } on Exception catch (_) {
+      return false;
+    } finally {}
   }
 }

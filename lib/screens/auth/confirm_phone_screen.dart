@@ -75,7 +75,7 @@ class _ConfirmPhoneScreenState extends State<ConfirmPhoneScreen> {
           Methods.showSnackBar(context, state.error);
         }
         if (state is VerifyOtpSuccessState) {
-          Methods.showSnackBar(context, state.message);
+          Methods.showSuccessSnackBar(context, state.message);
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => const LoginScreen()));
         }

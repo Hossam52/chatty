@@ -119,10 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   isPasswordVisible = !isPasswordVisible;
                                 });
                               },
-                              validationRules: [
-                                MinLength(5, 'Min length is 5'),
-                                MaxLength(50, 'You excced max length 50'),
-                              ],
+                              validationRules: [],
                               controller: passwordController);
                         }),
                         if (kDebugMode)
