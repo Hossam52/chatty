@@ -20,6 +20,10 @@ class LoginErrorState extends AuthStates {
   LoginErrorState({required this.error});
 }
 
+class ChangeIsRememberedState extends AuthStates {}
+
+class LoadCachedRememberState extends AuthStates {}
+
 //Logout online fetch data
 class LogoutLoadingState extends AuthStates {}
 

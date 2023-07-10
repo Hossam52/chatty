@@ -22,6 +22,8 @@ class AppCubit extends Cubit<AppStates> {
   static AppCubit instance(BuildContext context) =>
       BlocProvider.of<AppCubit>(context);
   HomeModel? _homeModel;
+  String get contactEmail => _homeModel?.contact_email ?? '';
+  String get facebookLink => _homeModel?.facebook_link ?? '';
   List<PromptItem> get prompts => _homeModel?.prompts ?? [];
   User? get user => _homeModel?.user;
   List<ChatModel> get allChats => _homeModel?.chats ?? [];

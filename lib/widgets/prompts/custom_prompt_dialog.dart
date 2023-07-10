@@ -1,4 +1,3 @@
-import 'package:chatgpt/constants/constants.dart';
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/models/prompts/prompt_types_interfaces.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
@@ -58,57 +57,70 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
       iconEnabledColor: ColorManager.white,
       iconDisabledColor: Colors.grey,
     );
-    return Dialog(
-      backgroundColor: scaffoldBackgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                const TextWidget(label: 'Prompt: '),
-                Expanded(
-                  child: DropdownButtonHideUnderline(
-                      child: DropdownButton2(
-                    isExpanded: true,
-                    hint: _dropDownHint(),
-                    items: items(context),
-                    value: _selected,
-                    onChanged: _onchanged,
-                    buttonStyleData: buttonStyleData2,
-                    iconStyleData: iconStyleData2,
-                    dropdownStyleData: dropdownStyleData2,
-                    menuItemStyleData: MenuItemStyleData(
-                      height: 40,
-                      padding: EdgeInsets.symmetric(horizontal: 14.w),
-                    ),
-                  )),
-                ),
-              ],
+    return GestureDetector(
+      onTap: () {
+        Focus.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        appBar: AppBar(
+            title: TextWidget(
+          label: 'Prompt construction',
+        )),
+        body: SingleChildScrollView(
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      const TextWidget(label: 'Prompt: '),
+                      Expanded(
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButton2(
+                          isExpanded: true,
+                          hint: _dropDownHint(),
+                          items: items(context),
+                          value: _selected,
+                          onChanged: _onchanged,
+                          buttonStyleData: buttonStyleData2,
+                          iconStyleData: iconStyleData2,
+                          dropdownStyleData: dropdownStyleData2,
+                          menuItemStyleData: MenuItemStyleData(
+                            height: 40,
+                            padding: EdgeInsets.symmetric(horizontal: 14.w),
+                          ),
+                        )),
+                      ),
+                    ],
+                  ),
+                  if (_selected != null) ...[
+                    _promptFields(),
+                    // Text(_selected!.generate()),
+                    SizedBox(height: 20.h),
+                    CustomButton(
+                      text: 'Apply',
+                      onPressed: () async {
+                        await AppCubit.instance(context).addNewChat(
+                            'Prompt about: ' + _selected!.name,
+                            isChat: false,
+                            initialMessage: _selected!.generate());
+                        // Services.sendMessage(
+                        //   context: context,
+                        //   alternateText: 'Prompt about ${_selected!.name}',
+                        //   text: _selected!.generate(),
+                        // );
+                        // Navigator.pop(context);
+                      },
+                    )
+                  ]
+                ],
+              ),
             ),
-            if (_selected != null) ...[
-              _promptFields(),
-              // Text(_selected!.generate()),
-              SizedBox(height: 20.h),
-              CustomButton(
-                text: 'Apply',
-                onPressed: () async {
-                  await AppCubit.instance(context).addNewChat(
-                      'Prompt about: ' + _selected!.name,
-                      isChat: false,
-                      initialMessage: _selected!.generate());
-                  // Services.sendMessage(
-                  //   context: context,
-                  //   alternateText: 'Prompt about ${_selected!.name}',
-                  //   text: _selected!.generate(),
-                  // );
-                  // Navigator.pop(context);
-                },
-              )
-            ]
-          ],
+          ),
         ),
       ),
     );
@@ -118,6 +130,7 @@ class _CustomPromptDialogState extends State<CustomPromptDialog> {
     return Flexible(
       child: ListView.builder(
         shrinkWrap: true,
+        primary: false,
         itemBuilder: (context, index) {
           return getPromptQueryWidget(_selected!.queries[index]);
         },

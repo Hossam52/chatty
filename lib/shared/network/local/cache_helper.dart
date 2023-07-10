@@ -35,4 +35,19 @@ abstract class CacheHelper {
   static Future<bool?> setToken(String token) async =>
       await saveData(key: 'token', value: token);
   static Future<bool?> removeToken() async => await removeData(key: 'token');
+
+  //For remembere me functionality
+  static Future<bool> get getIsRemembered async =>
+      await getData(key: 'isRemember') ?? false;
+  static Future<String> get getEmailRemembered async =>
+      await getData(key: 'email') ?? '';
+  static Future<String> get getPasswordRemembered async =>
+      await getData(key: 'password') ?? '';
+  static Future<bool?> setIsRemembered(
+      bool isRemebered, String email, String password) async {
+    final v1 = await saveData(key: 'isRemember', value: isRemebered);
+    final v2 = await saveData(key: 'email', value: email);
+    final v3 = await saveData(key: 'password', value: password);
+    return v1 && v2 && v3;
+  }
 }

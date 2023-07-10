@@ -111,6 +111,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _divider(),
                 SettingsSectionWidget(title: 'General', items: [
                   SettingItem(
+                      title: 'Chat with support',
+                      icon: FontAwesomeIcons.solidMessage,
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (_) => BlocProvider.value(
+                                  value: AppCubit.instance(context),
+                                  child: ContactSupportScreen(),
+                                )));
+                      }),
+                  SettingItem(
+                      title: 'Custom prompt...(Soon)',
+                      icon: Icons.file_copy,
+                      trailing: Icon(
+                        Icons.lock,
+                        color: ColorManager.white,
+                      ),
+                      color: Colors.grey.withOpacity(0.5),
+                      onTap: () {}),
+                  SettingItem(
                       title: 'About app',
                       icon: FontAwesomeIcons.circleInfo,
                       onTap: () {

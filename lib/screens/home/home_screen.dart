@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
       create: (context) => AppCubit()..getHomeData(),
       child: Scaffold(
         bottomNavigationBar: _bottomNavigation(),
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         body: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),

@@ -12,12 +12,14 @@ class SettingItem extends StatelessWidget {
     this.icon,
     this.contentWidget,
     this.trailing,
+    this.color,
   }) : super(key: key);
   final String title;
   final Widget? contentWidget;
   final IconData? icon;
   final VoidCallback onTap;
   final Widget? trailing;
+  final Color? color;
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -27,7 +29,7 @@ class SettingItem extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
             decoration: BoxDecoration(
-              color: ColorManager.settingsColor,
+              color: color ?? ColorManager.settingsColor,
               borderRadius: BorderRadius.circular(20),
             ),
             clipBehavior: Clip.hardEdge,

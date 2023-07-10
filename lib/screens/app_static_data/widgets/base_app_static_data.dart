@@ -6,9 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BaseAppStaticData extends StatelessWidget {
   const BaseAppStaticData(
-      {super.key, required this.title, required this.content});
+      {super.key, required this.title, required this.content, this.widget});
   final String title;
   final String content;
+  final Widget? widget;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -26,7 +27,7 @@ class BaseAppStaticData extends StatelessWidget {
                 width: width * 0.5,
                 height: height * 0.2,
               ),
-              TextWidget(label: content),
+              if (widget != null) widget! else TextWidget(label: content),
             ],
           ),
         ),

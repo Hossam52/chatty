@@ -5,11 +5,15 @@ import 'package:chatgpt/models/chat_history_model.dart';
 import 'package:chatgpt/models/prompts/prompts_map.dart';
 
 class HomeModel {
+  String contact_email;
+  String facebook_link;
   User user;
   List<PromptItem> prompts;
   List<ChatModel> chats;
   List<ChatModel> chats_prompts;
   HomeModel({
+    required this.contact_email,
+    required this.facebook_link,
     required this.user,
     required this.prompts,
     required this.chats,
@@ -25,6 +29,8 @@ class HomeModel {
           List<ChatModel>.from(map['chats']?.map((x) => ChatModel.fromJson(x))),
       chats_prompts: List<ChatModel>.from(
           map['chats_prompts']?.map((x) => ChatModel.fromJson(x))),
+      contact_email: map['contact_email'] ?? '',
+      facebook_link: map['facebook_link'] ?? '',
     );
   }
 

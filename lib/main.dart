@@ -1,12 +1,24 @@
-import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/subscription_cubit/subscription_cubit.dart';
+import 'package:chatgpt/models/chat_history_model.dart';
 
 import 'bloc_observer.dart';
+import 'constants/constants.dart';
 import 'cubits/ads_cubit/ads_cubit.dart';
 import 'cubits/auth_cubit/auth_cubit.dart';
 import 'cubits/personas_cubit/personas_cubit.dart';
+import 'providers/chats_provider.dart';
 import 'providers/models_provider.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/onboarding/onboarding_screen.dart';
@@ -14,17 +26,6 @@ import 'shared/network/local/cache_helper.dart';
 import 'shared/network/remote/app_dio_helper.dart';
 import 'shared/network/remote/dio_helper.dart';
 import 'shared/presentation/resourses/theme_manager.dart';
-import 'widgets/custom_button.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_phone_auth_handler/firebase_phone_auth_handler.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:provider/provider.dart';
-
-import 'constants/constants.dart';
-import 'providers/chats_provider.dart';
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -37,6 +38,8 @@ class MyHttpOverrides extends HttpOverrides {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+
   HttpOverrides.global = MyHttpOverrides();
 
   await Firebase.initializeApp();
@@ -57,9 +60,26 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // return FirebasePhoneAuthProvider(
+    //     child: ScreenUtilInit(
+    //   designSize: const Size(360, 690),
+    //   minTextAdapt: true,
+    //   splitScreenMode: true,
+    //   builder: (context, child) {
+    //     return MaterialApp(
+    //       debugShowCheckedModeBanner: false,
+    //       title: 'First Method',
+    //       // You can use the library anywhere in the app even in theme
+    //       theme: getApplicationTheme(),
+
+    //       home: child,
+    //     );
+    //   },
+    //   child: const _TestScaffold(),
+    // ));
     return FirebasePhoneAuthProvider(
       child: ScreenUtilInit(
-        builder: (_, __) => MultiBlocProvider(
+        builder: (_, child) => MultiBlocProvider(
           providers: [
             BlocProvider(
               create: (context) => AuthCubit(),
@@ -108,38 +128,29 @@ class MyApp extends StatelessWidget {
 
 class _TestScaffold extends StatelessWidget {
   const _TestScaffold({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: CustomButton(
-          onPressed: () async {
-            await FirebaseAuth.instance.verifyPhoneNumber(
-                phoneNumber: '+201115425561',
-                verificationCompleted: (cred) {
-                  log(cred.toString());
-                },
-                verificationFailed: (err) {
-                  log(err.message.toString());
-                },
-                codeSent: ((verificationId, forceResendingToken) {
-                  log('verificationId $verificationId');
-                  log('forceResend $forceResendingToken');
-                }),
-                codeAutoRetrievalTimeout: (x) {});
-          },
-        ),
-        //  FirebasePhoneAuthHandler(
-        //   phoneNumber: "+201115425561",
-        //   builder: (context, controller) {
-        //     return CustomButton(
-        //       onPressed: () {
-
-        //         controller.sendOTP();
-        //       },
-        //     );
-        //   },
-        // ),
+    return BlocProvider(
+      create: (_) => ConversationCubit(ChatModel(
+        chat_name: '',
+        id: 1,
+        model: '',
+      )),
+      child: Builder(
+        builder: (context) {
+          return Scaffold(
+            resizeToAvoidBottomInset: true,
+            body: Container(
+              child: ListView.builder(
+                itemCount: 40,
+                itemBuilder: (context, index) => TextField(
+                  controller: TextEditingController(text: '$index'),
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

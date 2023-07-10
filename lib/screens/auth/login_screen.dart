@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:chatgpt/screens/auth/widgets/remember_me_widget.dart';
 import '../../cubits/auth_cubit/auth_cubit.dart';
 import '../../cubits/auth_cubit/auth_states.dart';
 import 'confirm_phone_screen.dart';
@@ -32,7 +33,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  bool isPasswordVisible = false;
+  bool isPasswordSecured = true;
+  @override
+  void initState() {
+    _loadCachedData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -112,16 +119,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           return AuthTextField(
                               label: 'Password',
                               hint: 'Enter your password',
-                              password: isPasswordVisible,
+                              password: isPasswordSecured,
                               onIconPressed: () {
                                 setState(() {
-                                  log(isPasswordVisible.toString());
-                                  isPasswordVisible = !isPasswordVisible;
+                                  log(isPasswordSecured.toString());
+                                  isPasswordSecured = !isPasswordSecured;
                                 });
                               },
                               validationRules: [],
                               controller: passwordController);
                         }),
+                        RememberMeWidget(),
                         if (kDebugMode)
                           TextButton(
                               onPressed: () async {
@@ -171,5 +179,14 @@ class _LoginScreenState extends State<LoginScreen> {
         }),
       ),
     );
+  }
+
+  Future<void> _loadCachedData() async {
+    print('${'-' * 20}Begin load Cached data');
+    final instance = AuthCubit.instance(context);
+    await AuthCubit.instance(context).loadCahcedRemember();
+    emailController.text = instance.cachedEmail;
+    passwordController.text = instance.cachedPassword;
+    print('${'-' * 20}Endload Cached data');
   }
 }

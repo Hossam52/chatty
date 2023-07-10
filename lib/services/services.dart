@@ -1,5 +1,6 @@
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/shared/methods.dart';
+import 'package:chatgpt/widgets/chat_dialogs/exceed_quota_dialog.dart';
 
 import '../cubits/conversation_cubit/conversation_cubit.dart';
 import '../cubits/personas_cubit/personas_cubit.dart';
@@ -42,6 +43,12 @@ class Services {
     if (!AppCubit.instance(context).currentUser.canSendMessage) {
       Methods.showSnackBar(context,
           'You excceed the quota limit go to settings to add more messages');
+      showDialog(
+          context: context,
+          builder: (_) => BlocProvider.value(
+                value: AppCubit.instance(context),
+                child: ExcceedQuotaDialog(),
+              ));
       return;
     }
     try {

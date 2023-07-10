@@ -5,6 +5,7 @@ import 'package:chatgpt/widgets/prompts/custom_prompt_dialog.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -13,6 +14,7 @@ class AddNewChats extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
     return Center(
       child: DropdownButtonHideUnderline(
         child: DropdownButton2(
@@ -93,6 +95,7 @@ abstract class MenuItems {
       case MenuItems.newChat:
         //Do something
         showModalBottomSheet(
+          isScrollControlled: true,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
@@ -105,13 +108,15 @@ abstract class MenuItems {
         break;
       case MenuItems.newPrompt:
         //Do something
-        showDialog(
-          context: context,
-          builder: (_) => BlocProvider.value(
-            value: AppCubit.instance(context),
-            child: const CustomPromptDialog(),
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BlocProvider.value(
+              value: AppCubit.instance(context),
+              child: const CustomPromptDialog(),
+            ),
           ),
         );
+
         break;
     }
   }

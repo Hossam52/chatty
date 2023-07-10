@@ -102,7 +102,7 @@ class _SubscriptionScreenState extends State<SubscriptionScreen> {
                         SizedBox.shrink()
                       else
                         CustomButton(
-                          text: 'Upgrade now',
+                          text: 'Subscripe now',
                           onPressed: () {
                             cubit.purchasePackage(
                                 widget.appCubit.currentUser.id.toString());

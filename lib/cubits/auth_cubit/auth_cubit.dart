@@ -1,13 +1,14 @@
 import 'dart:developer';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import '../../constants/constants.dart';
 import '../../models/auth/register_model.dart';
 import '../../models/auth/user_model.dart' as userModel;
 import '../../shared/network/local/cache_helper.dart';
 import '../../shared/network/services/auth_services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter/material.dart';
 import 'auth_states.dart';
 
 //Bloc builder and bloc consumer methods
@@ -27,7 +28,10 @@ class AuthCubit extends Cubit<AuthStates> {
       final user = userModel.User.fromMap(response);
       Constants.token = user.access_token;
 
-      if (user.verified != 0) await CacheHelper.setToken(user.access_token);
+      if (user.verified != 0) {
+        await CacheHelper.setToken(user.access_token);
+        await _remember.saveData(email, password);
+      }
 
       log(user.toString());
       emit(LoginSuccessState(user));
@@ -35,6 +39,23 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(LoginErrorState(error: e.toString()));
       rethrow;
     }
+  }
+
+  RememberMeHelper _remember = RememberMeHelper();
+
+  bool get isRememberd => _remember.isRemembered;
+  String get cachedEmail => _remember.email;
+  String get cachedPassword => _remember.password;
+
+  void onChangeCheckMe(bool? isRemembered) {
+    _remember.changeIsRemembered(isRemembered);
+    emit(ChangeIsRememberedState());
+  }
+
+  Future<void> loadCahcedRemember() async {
+    await _remember.loadData();
+    print(_remember.toString());
+    emit(LoadCachedRememberState());
   }
 
   Future<void> register(
@@ -155,4 +176,35 @@ class AuthCubit extends Cubit<AuthStates> {
       emit(UpdateProfileDataErrorState(error: e.toString()));
     }
   }
+}
+
+class RememberMeHelper {
+  bool isRemembered = false;
+  String email = '';
+  String password = '';
+
+  void changeIsRemembered(bool? isRemembered) {
+    this.isRemembered = isRemembered ?? false;
+  }
+
+  Future<void> loadData() async {
+    final isRemembered = await CacheHelper.getIsRemembered;
+    final emailRemembered = await CacheHelper.getEmailRemembered;
+    final passwordRemembered = await CacheHelper.getPasswordRemembered;
+    if (isRemembered) {
+      email = emailRemembered;
+      password = passwordRemembered;
+    } else {
+      email = password = '';
+    }
+  }
+
+  Future<void> saveData(String email, String password) async {
+    if (isRemembered)
+      await CacheHelper.setIsRemembered(isRemembered, email, password);
+  }
+
+  @override
+  String toString() =>
+      'RememberMeHelper(isRemembered: $isRemembered, email: $email, password: $password)';
 }
