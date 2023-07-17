@@ -131,7 +131,7 @@ class _ChatScreenState extends State<ConversationScreen> {
                               LoadingMessageResponse(
                                   conversationCubit: conversationCubit),
                               const SizedBox(height: 15),
-                              if (conversationCubit.tagsStrings.isNotEmpty)
+                              if (conversationCubit.allTags.isNotEmpty)
                                 ConversationKeywordsWidget(),
                               const SendMessageField(),
                             ],

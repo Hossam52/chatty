@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:syncfusion_flutter_pdf/pdf.dart';
@@ -6,6 +7,8 @@ class MessageModel {
   final String msg;
   final int chatIndex;
   final String role;
+  final int? type_id;
+  final String? slug;
   bool isNewly;
   String name;
 
@@ -13,15 +16,28 @@ class MessageModel {
       {required this.msg,
       required this.chatIndex,
       this.role = 'user',
+      this.type_id,
+      this.slug,
       this.name = '',
       this.isNewly = false});
 
-  factory MessageModel.fromJson(Map<String, dynamic> json) {
+  factory MessageModel.fromJson(Map<String, dynamic> json,
+      {bool isNew = false}) {
+    int? typeId = json['type_id'];
+    String? slug = json['slug'];
+    log(typeId.toString());
+    if (typeId != null && typeId == 2) {
+      return FileMessageModel.fromJson(json);
+    }
+
     return MessageModel(
       msg: json["content"],
-      chatIndex: 1,
+      chatIndex: json['index'],
       role: json['role'],
-      isNewly: true,
+      slug: slug,
+      type_id: typeId,
+      isNewly: isNew,
+      name: json['index'] == 2 ? json['slug'] : '',
     );
   }
 
@@ -29,6 +45,7 @@ class MessageModel {
     return {
       'content': msg,
       'role': role,
+      'slug': chatIndex == 2 ? name : slug,
     };
   }
 
@@ -75,10 +92,17 @@ class MessageModel {
 }
 
 class FileMessageModel extends MessageModel {
-  FileMessageModel(
+  FileMessageModel.withFile(
       {required this.file, required super.chatIndex, super.name, super.role})
       : super(msg: file.path.split('/').last);
-  final File file;
+  FileMessageModel(
+      {required super.msg,
+      required super.chatIndex,
+      super.name,
+      super.role,
+      super.type_id,
+      super.slug});
+  late File file;
   String _fileContentString = '';
   Future<String> get content async {
     if (_fileContentString.isEmpty) {
@@ -97,6 +121,17 @@ class FileMessageModel extends MessageModel {
 
   Future<String> get summerizePrompt async =>
       'Summerize the following pdf content:  ${await content}';
+  factory FileMessageModel.fromJson(Map<String, dynamic> json) {
+    int? typeId = json['type_id'];
+    String? slug = json['slug'];
+
+    return FileMessageModel(
+        msg: slug ?? '',
+        chatIndex: json['index'],
+        role: json['role'],
+        type_id: typeId,
+        slug: slug);
+  }
 }
 
 class HiddenMessageModel extends MessageModel {

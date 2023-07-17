@@ -1,29 +1,22 @@
-import '../../constants/constants.dart';
-import '../../cubits/conversation_cubit/conversation_cubit.dart';
-import '../../models/chat_history_model.dart';
-import '../../models/message_model.dart';
-import '../custom_chat_bubble.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../constants/constants.dart';
+import '../../cubits/conversation_cubit/conversation_cubit.dart';
+import '../../models/chat_history_model.dart';
+import '../custom_chat_bubble.dart';
 
 class TagDetailsDialog extends StatelessWidget {
   const TagDetailsDialog({super.key, required this.tagName});
   final String tagName;
   @override
   Widget build(BuildContext context) {
-    final userMessage = MessageModel(
-      msg: 'What is $tagName ?',
-      chatIndex: 0,
-    );
     return BlocProvider(
         create: (context) => TagsConversationQueryiesCubit(
-            ChatModel(id: 1, chat_name: 'Query', model: ''))
+            ChatModel(id: 1, chat_name: 'Query', model: '', user_id: 0))
           ..addUserMessage(msg: 'What is the $tagName meaning?')
-          ..sendMessageAndGetAnswers(
-              userId: 0, //not a user
-              msg: userMessage.msg,
-              chosenModelId: 'gpt-3.5-turbo-0301'),
+          ..getTagInformation(tagName),
         child: TagsConversationQueryiesBlocBuilder(
           builder: (context, state) {
             final conversationCubit =

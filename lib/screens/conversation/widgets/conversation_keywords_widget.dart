@@ -16,7 +16,6 @@ class ConversationKeywordsWidget extends StatelessWidget {
         title: ConversationBlocBuilder(
           builder: (context, state) {
             final conversationCubit = ConversationCubit.instance(context);
-            conversationCubit.formatTags();
             return Container(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -27,7 +26,7 @@ class ConversationKeywordsWidget extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       child: Wrap(
                         spacing: 10,
-                        children: conversationCubit.tagsStrings
+                        children: conversationCubit.allTags
                             .map((e) => OutlinedButton(
                                   style: const ButtonStyle(
                                       side: MaterialStatePropertyAll(BorderSide(

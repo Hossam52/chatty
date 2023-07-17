@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'dart:core';
-import 'dart:developer' as developer;
 import 'dart:io';
+
+import 'package:chatgpt/models/conversation_tags_model.dart';
 
 import '../../models/chat_history_model.dart';
 import '../../models/message_model.dart';
 import '../../models/static/system_role_model.dart';
 import '../../shared/network/services/app_services.dart';
-import '../../shared/network/services/chat_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'conversation_states.dart';
@@ -25,21 +25,9 @@ class ConversationCubit extends Cubit<ConversationStates> {
       BlocProvider.of<ConversationCubit>(context);
 
   ChatModel chat;
-  List<MessageModel> _tags = [];
-  List<String> tagsStrings = [];
+  ConversationTagsModel? _tags;
+  List<String> get allTags => _tags?.tags ?? [];
   List<MessageModel> _tempMessages = [];
-
-  void formatTags() {
-    if (_tags.isEmpty) return;
-    tagsStrings = _tags[0]
-        .msg
-        .toLowerCase()
-        .replaceAll(RegExp(r'keyword|:|\n'), '')
-        .replaceAll(RegExp(r'(\d)+.|,'), ' - ')
-        .split('-');
-    tagsStrings.removeWhere(
-        (element) => element.trim().isEmpty || element.length == 2);
-  }
 
   List<MessageModel> get getMessages => chat.messages;
 
@@ -54,50 +42,29 @@ class ConversationCubit extends Cubit<ConversationStates> {
     emit(ChangeChatPersona());
   }
 
-  void addUserMessage({required String msg, String? alteranteText}) {
-    if (alteranteText == null) {
-      chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
-    } else {
-      chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
-      // chat.messages.insert(0, HiddenMessageModel(msg: msg, chatIndex: 0));
-    }
-    _tempMessages.insert(0, MessageModel(msg: msg, chatIndex: 0));
+  void addUserMessage({required String msg}) {
+    chat.messages.insert(0, MessageModel(msg: msg, chatIndex: 0));
     emit(AddUserMessage());
   }
 
   void addFileMessage({required File file}) async {
     try {
-      isGeneratingAssitantMessage = true;
-      emit(AddUserMessage());
-      final message = FileMessageModel(file: file, chatIndex: 0);
+      final message = FileMessageModel.withFile(file: file, chatIndex: 0);
       await message.content;
       chat.messages.insert(0, message);
-      _tempMessages.insert(0, message);
-      emit(AddUserMessage());
-
-      await _summerizeFile(message);
+      isGeneratingAssitantMessage = true;
+      emit(SendMessageLoadingState());
+      final response = await AppServices.sendMessage(
+          chat.id, chat.user_id, '', [],
+          file: file);
+      final messageContent =
+          MessageModel.fromJson(response['message'], isNew: true);
+      chat.messages.insert(0, messageContent);
+      emit(SendMessageSuccessState(1));
     } catch (e) {
-      emit(ErrorAddUserFileMessage(e.toString()));
+      emit(SendMessageErrorState(error: e.toString()));
     } finally {
       isGeneratingAssitantMessage = false;
-    }
-  }
-
-  Future<void> _summerizeFile(FileMessageModel message) async {
-    try {
-      developer.log(await message.content);
-      emit(SummerizeFileLoadingState());
-      final summery = await ChatServices.sendMessageGPT(previousChats: [
-        MessageModel(msg: await message.summerizePrompt, chatIndex: 0)
-      ], message: await message.summerizePrompt, modelId: 'gpt-3.5-turbo-0301');
-
-      chat.messages
-          .insert(0, HiddenMessageModel(msg: summery[0].msg, chatIndex: 0));
-      chat.messages.insert(0, summery[0]);
-      _tempMessages.insert(0, summery[0]);
-      emit(SummerizeFileSuccessState());
-    } catch (e) {
-      emit(SummerizeFileErrorState(error: e.toString()));
     }
   }
 
@@ -106,7 +73,6 @@ class ConversationCubit extends Cubit<ConversationStates> {
     try {
       emit(FetchAllMessagesLoadingState());
       final response = await AppServices.getAllMessages(chat.id);
-      developer.log(response.toString());
       chat.messages.insertAll(0, response);
 
       emit(FetchAllMessagesSuccessState());
@@ -116,58 +82,35 @@ class ConversationCubit extends Cubit<ConversationStates> {
     }
   }
 
-  Future<void> _baseSendMessage(String chosenModelId, int userId) async {
-    await AppServices.sendMessage(
-        chat.id, userId, _tempMessages.reversed.toList());
-
-    _tags = await ChatServices.getConversationTags(
-      messages: chat.messages,
-      modelId: chosenModelId,
-    );
-    formatTags();
-
-    emit(SendMessageSuccessState(1));
-    _tempMessages.clear();
-  }
-
-  Future<void> sendMessageViaChatGPT(
-      {required String msg,
-      required String chosenModelId,
-      required int userId}) async {
-    if (chosenModelId.toLowerCase().startsWith("gpt")) {
-      final chats = await ChatServices.sendMessageGPT(
-        previousChats: chat.messages,
-        message: msg,
-        modelId: chosenModelId,
-      );
-      chat.messages.insertAll(0, chats);
-      _tempMessages.insertAll(0, chats);
-    } else {
-      chat.messages.insertAll(
-          0,
-          await ChatServices.sendMessage(
-            message: msg,
-            modelId: chosenModelId,
-          ));
-    }
-  }
-
-  Future<void> sendMessageAndGetAnswers(
-      {required String msg,
-      required String chosenModelId,
-      required int userId}) async {
+  Future<void> sendMessage(String prompt) async {
     try {
       isGeneratingAssitantMessage = true;
-
       emit(SendMessageLoadingState());
-      await sendMessageViaChatGPT(
-          chosenModelId: chosenModelId, userId: userId, msg: msg);
-      await _baseSendMessage(chosenModelId, userId);
+      final response = await AppServices.sendMessage(
+          chat.id, chat.user_id, prompt, _tempMessages.reversed.toList());
+      final message = MessageModel.fromJson(response['message'], isNew: true);
+      chat.messages.insert(0, message);
+      emit(SendMessageSuccessState(1));
+      _tempMessages.clear();
+      getTags();
     } catch (e) {
       emit(SendMessageErrorState(error: e.toString()));
       rethrow;
     } finally {
       isGeneratingAssitantMessage = false;
+    }
+  }
+
+  Future<void> getTags() async {
+    try {
+      emit(GetTagsLoadingState());
+      final response = await AppServices.getTags(chat.id);
+      print(response.toString());
+      _tags = ConversationTagsModel.fromMap(response);
+      emit(GetTagsSuccessState());
+    } catch (e) {
+      emit(GetTagsErrorState(error: e.toString()));
+      rethrow;
     }
   }
 
@@ -188,21 +131,17 @@ class TagsConversationQueryiesCubit extends ConversationCubit {
   static ConversationCubit instance(BuildContext context) =>
       BlocProvider.of<TagsConversationQueryiesCubit>(context);
 
-  @override
-  Future<void> sendMessageAndGetAnswers(
-      {required String msg,
-      required String chosenModelId,
-      required int userId}) async {
+  Future<void> getTagInformation(String tag) async {
     try {
       isGeneratingAssitantMessage = true;
-
       emit(SendMessageLoadingState());
-      await sendMessageViaChatGPT(
-          chosenModelId: chosenModelId, userId: userId, msg: msg);
+      final response = await AppServices.tagInfo(tag);
+      final message = MessageModel.fromJson(response['message']);
+      chat.messages.insert(0, message);
       emit(SendMessageSuccessState(1));
+      _tempMessages.clear();
     } catch (e) {
       emit(SendMessageErrorState(error: e.toString()));
-      rethrow;
     } finally {
       isGeneratingAssitantMessage = false;
     }

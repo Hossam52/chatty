@@ -136,10 +136,7 @@ class _SendMessageFieldState extends State<SendMessageField> {
       focusNode.unfocus();
 
       chatCubit.addUserMessage(msg: msg);
-      await chatCubit.sendMessageAndGetAnswers(
-          userId: AppCubit.instance(context).currentUser.id,
-          msg: msg,
-          chosenModelId: modelsProvider.getCurrentModel);
+      await chatCubit.sendMessage(msg);
     } catch (error) {
       log("error $error");
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

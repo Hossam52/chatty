@@ -57,11 +57,8 @@ class Services {
         onSendMessage();
       }
 
-      chatCubit.addUserMessage(msg: msg, alteranteText: alternateText);
-      await chatCubit.sendMessageAndGetAnswers(
-          userId: AppCubit.instance(context).currentUser.id,
-          msg: msg,
-          chosenModelId: 'gpt-3.5-turbo-0301');
+      chatCubit.addUserMessage(msg: msg);
+      await chatCubit.sendMessage(msg);
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: TextWidget(label: error.toString()),

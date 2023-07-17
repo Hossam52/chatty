@@ -37,4 +37,8 @@ class EndPoints {
   static const String allPlans = '/subscription/all_plans';
   static const String purchaseSubscription = '/subscriptions/purchase';
   static const String mySubscription = '/subscriptions/mySubscriptions';
+
+  //Tags
+  static const String allTags = '/messages/tags';
+  static const String tagInfo = '/messages/tag_information';
 }

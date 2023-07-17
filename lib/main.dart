@@ -9,9 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:provider/provider.dart';
 
-import 'package:chatgpt/cubits/conversation_cubit/conversation_cubit.dart';
 import 'package:chatgpt/cubits/subscription_cubit/subscription_cubit.dart';
-import 'package:chatgpt/models/chat_history_model.dart';
 
 import 'bloc_observer.dart';
 import 'constants/constants.dart';
@@ -121,36 +119,6 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _TestScaffold extends StatelessWidget {
-  const _TestScaffold({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => ConversationCubit(ChatModel(
-        chat_name: '',
-        id: 1,
-        model: '',
-      )),
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            resizeToAvoidBottomInset: true,
-            body: Container(
-              child: ListView.builder(
-                itemCount: 40,
-                itemBuilder: (context, index) => TextField(
-                  controller: TextEditingController(text: '$index'),
-                ),
-              ),
-            ),
-          );
-        },
       ),
     );
   }

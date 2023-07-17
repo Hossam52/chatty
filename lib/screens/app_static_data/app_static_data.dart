@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/screens/app_static_data/widgets/base_app_static_data.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/strings_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactSupportScreen extends StatelessWidget {
   const ContactSupportScreen({super.key});
+  Future<void> _launchURLInBrowser(String link) async {
+    final url = link;
+    if (await canLaunchUrl(Uri.parse(link))) {
+      await launchUrl(Uri.parse(link), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,15 +30,20 @@ class ContactSupportScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'You can contact to support from the facebook page:\n${appCubit.facebookLink}',
+              'You can contact to support from the facebook page:\n',
               textAlign: TextAlign.center,
               style: getMediumStyle(fontSize: FontSize.s14),
             ),
-            SizedBox(height: 20.h),
-            Text(
-              'or via email through:\n ${appCubit.contactEmail}',
-              textAlign: TextAlign.center,
-              style: getMediumStyle(fontSize: FontSize.s14),
+            TextButton(
+              onPressed: () async {
+                _launchURLInBrowser(appCubit.contactEmail);
+              },
+              child: Text(
+                '${appCubit.contactEmail}',
+                textAlign: TextAlign.center,
+                style: getMediumStyle(fontSize: FontSize.s14)
+                    .copyWith(decoration: TextDecoration.underline),
+              ),
             ),
           ],
         ),

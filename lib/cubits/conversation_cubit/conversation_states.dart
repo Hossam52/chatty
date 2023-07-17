@@ -53,3 +53,13 @@ class SummerizeFileErrorState extends ConversationStates {
   final String error;
   SummerizeFileErrorState({required this.error});
 }
+
+//GetTags online fetch data
+class GetTagsLoadingState extends ConversationStates {}
+
+class GetTagsSuccessState extends ConversationStates {}
+
+class GetTagsErrorState extends ConversationStates {
+  final String error;
+  GetTagsErrorState({required this.error});
+}

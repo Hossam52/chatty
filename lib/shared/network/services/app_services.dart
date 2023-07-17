@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'dart:io';
+import 'package:http_parser/http_parser.dart';
+import 'package:dio/dio.dart';
 
 import '../../../constants/constants.dart';
 import '../../../models/message_model.dart';
@@ -21,30 +24,40 @@ class AppServices {
       query: {'chat': chatId},
       token: Constants.token,
     );
-    log(response.data.toString());
     final List messages = response.data['messages'];
-    return messages.reversed
-        .map((e) => MessageModel(
-            msg: e['content'], chatIndex: e['index'], role: e['role']))
-        .toList();
+    return messages.reversed.map((e) => MessageModel.fromJson(e)).toList();
   }
 
   static Future<Map<String, dynamic>> sendMessage(
-      int chatId, int userId, List<MessageModel> chats) async {
+      int chatId, int userId, String prompt, List<MessageModel> chats,
+      {File? file}) async {
     final map = {
       'chat_id': chatId,
-      'messages': chats.map((e) {
+      'prompt': prompt,
+      'last_messages': chats.map((e) {
         final map = e.toMap();
         map['index'] = e.chatIndex;
         return map;
       }).toList(),
     };
-
-    final res = await AppDioHelper.postData(
+    final formData = FormData.fromMap(map);
+    if (file == null && prompt.isEmpty)
+      throw 'You don\'t enter the message yet';
+    if (file != null)
+      formData.files.add(MapEntry(
+        'pdf',
+        await MultipartFile.fromFile(
+          file.path,
+          filename: file.path.split('/').last,
+          contentType: MediaType('application', 'pdf'),
+        ),
+      ));
+    final res = await AppDioHelper.postFormData(
       url: EndPoints.sendMessage,
-      data: map,
+      formData: formData,
       token: Constants.token,
     );
+    log(res.data.toString());
     return res.data;
   }
 
@@ -90,4 +103,21 @@ class AppServices {
         url: EndPoints.adReward, token: Constants.token, data: {});
     return response.data;
   }
+
+  static Future<Map<String, dynamic>> getTags(int chatId) async {
+    final response = await AppDioHelper.getData(
+        url: EndPoints.allTags,
+        token: Constants.token,
+        query: {'chat_id': chatId});
+    return response.data;
+  }
+
+  static Future<Map<String, dynamic>> tagInfo(String tag) async {
+    final response = await AppDioHelper.postData(
+        url: EndPoints.tagInfo, token: Constants.token, data: {'tag': tag});
+    return response.data;
+  }
 }
+/**
+ {chat_id: 9, prompt: h, last_messages: [{content: hello, role: user, index: 0}, {content: hello, role: user, index: 0}, {content: ehello, role: user, index: 0}, {content: hello, role: user, index: 0}, {content: Hello, role: user, index: 0}, {content: h, role: user, index: 0}]}
+ */
