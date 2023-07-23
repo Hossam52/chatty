@@ -136,7 +136,7 @@ class TagsConversationQueryiesCubit extends ConversationCubit {
       isGeneratingAssitantMessage = true;
       emit(SendMessageLoadingState());
       final response = await AppServices.tagInfo(tag);
-      final message = MessageModel.fromJson(response['message']);
+      final message = MessageModel.fromJson(response['message'], isNew: true);
       chat.messages.insert(0, message);
       emit(SendMessageSuccessState(1));
       _tempMessages.clear();

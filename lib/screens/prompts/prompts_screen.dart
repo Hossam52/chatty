@@ -3,20 +3,20 @@ import 'package:chatgpt/models/prompts/prompt_types_interfaces.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:chatgpt/widgets/custom_button.dart';
-import 'package:chatgpt/widgets/prompts/all_prompts_widgets.dart';
+import 'package:chatgpt/screens/prompts/widgets/all_prompts_widgets.dart';
 import 'package:chatgpt/widgets/text_widget.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomPromptDialog extends StatefulWidget {
-  const CustomPromptDialog({super.key});
+class PromptsScreen extends StatefulWidget {
+  const PromptsScreen({super.key});
 
   @override
-  State<CustomPromptDialog> createState() => _CustomPromptDialogState();
+  State<PromptsScreen> createState() => _PromptsScreenState();
 }
 
-class _CustomPromptDialogState extends State<CustomPromptDialog> {
+class _PromptsScreenState extends State<PromptsScreen> {
   BasePromptType? _selected;
 
   @override

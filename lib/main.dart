@@ -16,6 +16,7 @@ import 'constants/constants.dart';
 import 'cubits/ads_cubit/ads_cubit.dart';
 import 'cubits/auth_cubit/auth_cubit.dart';
 import 'cubits/personas_cubit/personas_cubit.dart';
+import 'cubits/prompts_cubit/prompts_cubit.dart';
 import 'providers/chats_provider.dart';
 import 'providers/models_provider.dart';
 import 'screens/home/home_screen.dart';
@@ -87,6 +88,9 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => PersonasCubit(),
+            ),
+            BlocProvider(
+              create: (context) => PromptsCubit(),
             ),
             BlocProvider(
               create: (context) => SubscriptionCubit(),

@@ -1,5 +1,5 @@
-total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3 + 8 +4 +1.5+ 4.5 +10+3 + 2= 113h
-totalmoney = 1000 + 2000 + 2000 + 2000 + 2000 +1500 = 10500
+total = 10 + 6 + 7.5 + 5 + 5.5 + 3.5 + 1 + 9 + 2 + 4.5 + 5.5 +4.5 +14 +3 + 8 +4 +1.5+ 4.5 +10+3 + 2 + 6 +3 = 122h
+totalmoney = 1000 + 2000 + 2000 + 2000 + 2000 +1500 +2000 = 12500
 19/5 at first day make the initial design for chat that integrate with api and make the personas that help in the context of the conversation [takes 10h 19/5 from 9pm to 7am]
 
 20/5 12:30 -> 7:00 6h
@@ -138,3 +138,16 @@ make the UI for chat history and make every chat has its own messages from 4:15 
     - undefined user after login 0.5h
     - authentication error that needs to be relogin
     - make setting item for create custom prompt 0.5h
+
+21/7 6h
+    - make custom prompt screen with backend (08:00pm to 2:00pm) 6h
+    - add column in prompts that indicate its under review 
+    
+22/7 3h
+    - fix the reward ad not load directly when press button(12:00am -> 3)
+    - replace person image in the otp screen
+    
+    - add admin for user to control the prompt editing
+    - the otp not sending in register
+    - when register and required the otp when go back it give me into the app directly without entereing the otp
+    - handle the validate response to throw exception when the status is false

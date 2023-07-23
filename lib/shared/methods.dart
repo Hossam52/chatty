@@ -8,10 +8,11 @@ abstract class Methods {
     return Navigator.push(context, MaterialPageRoute(builder: (_) => widget));
   }
 
-  static void showSnackBar(BuildContext context, String text) {
+  static void showSnackBar(BuildContext context, String text,
+      [int seconds = 2]) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 2),
+        duration: Duration(seconds: seconds),
         content: TextWidget(
           label: text,
         ),
@@ -20,10 +21,11 @@ abstract class Methods {
     );
   }
 
-  static void showSuccessSnackBar(BuildContext context, String text) {
+  static void showSuccessSnackBar(BuildContext context, String text,
+      [int seconds = 2]) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        duration: const Duration(seconds: 2),
+        duration: Duration(seconds: seconds),
         content: TextWidget(
           label: text,
         ),

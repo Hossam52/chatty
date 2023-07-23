@@ -13,6 +13,7 @@ import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/font_manager.dart';
 import 'package:chatgpt/shared/presentation/resourses/styles_manager.dart';
 import 'package:chatgpt/widgets/ads/reward_ads_widget.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class SubscriptionSettingItem extends StatelessWidget {
@@ -61,22 +62,28 @@ class SubscriptionSettingItem extends StatelessWidget {
             },
           ),
           if (user.isFreeSubscription)
-            _SubscriptionItem(
-                user.isFreeSubscription,
-                [
-                  _RowItem(
-                    'Remaining messages',
-                    user.remaining_messages.toString(),
-                  ),
-                ],
-                actionTitle: 'Get more', onAction: () async {
-              await AdsCubit.instance(context)
-                  .showAds(AppCubit.instance(context));
-            }
-                // () async {
-                //   await _showAwardAdDialog(context);
-                // },
-                ),
+            AdsBlocBuilder(
+              builder: (context, state) {
+                return _SubscriptionItem(
+                    user.isFreeSubscription,
+                    [
+                      _RowItem(
+                        'Remaining messages',
+                        user.remaining_messages.toString(),
+                      ),
+                    ],
+                    displayLoadinOnAction:
+                        AdsCubit.instance(context).loadingReward,
+                    actionTitle: 'Get more', onAction: () async {
+                  await AdsCubit.instance(context)
+                      .showAds(AppCubit.instance(context));
+                }
+                    // () async {
+                    //   await _showAwardAdDialog(context);
+                    // },
+                    );
+              },
+            ),
         ]);
       },
     );
@@ -102,11 +109,13 @@ class _SubscriptionItem extends StatelessWidget {
     super.key,
     required this.actionTitle,
     required this.onAction,
+    this.displayLoadinOnAction = false,
   });
   final List<_RowItem> items;
   final bool isFreeSubscription;
   final String actionTitle;
   final VoidCallback onAction;
+  final bool displayLoadinOnAction;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -125,11 +134,13 @@ class _SubscriptionItem extends StatelessWidget {
             if (isFreeSubscription)
               Expanded(
                   flex: 2,
-                  child: SettingItem(
-                    onTap: onAction,
-                    trailing: SizedBox.shrink(),
-                    title: actionTitle,
-                  ))
+                  child: displayLoadinOnAction
+                      ? SpinKitCubeGrid(color: Colors.white, size: 30)
+                      : SettingItem(
+                          onTap: onAction,
+                          trailing: SizedBox.shrink(),
+                          title: actionTitle,
+                        ))
             // CustomButton(
             //   height: double.infinity,
             //   text: actionTitle,

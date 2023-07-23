@@ -98,6 +98,27 @@ class AppServices {
     return response.data;
   }
 
+  static Future<Map<String, dynamic>> addPrompt(
+      {required String promptName,
+      required String prompt,
+      required List<Map<String, dynamic>> userFields}) async {
+    final response = await AppDioHelper.postData(
+        url: EndPoints.addPrompt,
+        token: Constants.token,
+        data: {
+          'prompt_name': promptName,
+          'prompt': prompt,
+          'userFields': userFields,
+        });
+    return response.data;
+  }
+
+  static Future<Map<String, dynamic>> getPromptFieldTypes() async {
+    final response = await AppDioHelper.getData(
+        url: EndPoints.prompt_field_types, token: Constants.token);
+    return response.data;
+  }
+
   static Future<Map<String, dynamic>> claimAdReward() async {
     final response = await AppDioHelper.postData(
         url: EndPoints.adReward, token: Constants.token, data: {});

@@ -1,7 +1,7 @@
 import 'package:chatgpt/cubits/app_cubit/app_cubit.dart';
 import 'package:chatgpt/screens/chat/widgets/create_chat_bottomSheet.dart';
 import 'package:chatgpt/shared/presentation/resourses/color_manager.dart';
-import 'package:chatgpt/widgets/prompts/custom_prompt_dialog.dart';
+import 'package:chatgpt/screens/prompts/prompts_screen.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -112,7 +112,7 @@ abstract class MenuItems {
           MaterialPageRoute(
             builder: (_) => BlocProvider.value(
               value: AppCubit.instance(context),
-              child: const CustomPromptDialog(),
+              child: const PromptsScreen(),
             ),
           ),
         );

@@ -23,7 +23,7 @@ class RewardAdsWidget extends StatelessWidget {
         ),
         AdsBlocConsumer(
           listener: (context, state) {
-            if (state is RewardAdLoadedSuccess) Navigator.pop(context);
+            if (state is RewardAdSuccessState) Navigator.pop(context);
           },
           builder: (context, state) {
             return TextButton(

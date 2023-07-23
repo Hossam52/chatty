@@ -1,3 +1,4 @@
+import 'package:chatgpt/screens/prompts/custom_prompt_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -121,14 +122,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 )));
                       }),
                   SettingItem(
-                      title: 'Custom prompt...(Soon)',
+                      title: 'Custom prompt',
                       icon: Icons.file_copy,
-                      trailing: Icon(
-                        Icons.lock,
-                        color: ColorManager.white,
-                      ),
-                      color: Colors.grey.withOpacity(0.5),
-                      onTap: () {}),
+                      color: Colors.amber.withOpacity(0.7),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => CustomPromptScreen()));
+                      }),
                   SettingItem(
                       title: 'About app',
                       icon: FontAwesomeIcons.circleInfo,

@@ -17,41 +17,45 @@ class AdsCubit extends Cubit<AdsStates> {
       BlocProvider.of<AdsCubit>(context);
 
   //----------------------Rewarded ads-------------------
-  RewardedAd? _rewardedAd;
-  Future<RewardedAd?> get rewardAd async {
-    if (_rewardedAd == null) await _loadRewardedAd();
-    return _rewardedAd;
-  }
-
+  bool _isLoadingReward = false;
+  bool get loadingReward => _isLoadingReward || (state is RewardAdLoadingState);
 //For loading rewarded ads
-  Future<void> _loadRewardedAd() async {
+  Future<void> _loadRewardedAd(AppCubit appCubit) async {
     await RewardedAd.load(
       adUnitId: AdHelper.rewardedAdUnitId,
       request: const AdRequest(),
       rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (ad) {
+        onAdLoaded: (ad) async {
           ad.fullScreenContentCallback = FullScreenContentCallback(
             onAdDismissedFullScreenContent: (ad) {
               ad.dispose();
-              _rewardedAd = null;
-              _loadRewardedAd();
             },
           );
-          _rewardedAd = ad;
-          emit(RewardAdLoadedSuccess());
+          _isLoadingReward = false;
+          emit(RewardAdSuccessState());
+
+          await ad.show(onUserEarnedReward: (_, RewardItem reward) async {
+            await appCubit.claimAdReward();
+            _isLoadingReward = false;
+            emit(RewardAdGrantedState());
+          });
         },
         onAdFailedToLoad: (err) {
           debugPrint('Failed to load a rewarded ad: ${err.message}');
+          emit(RewardAdErrorState(error: err.message));
         },
       ),
     );
   }
 
   Future<void> showAds(AppCubit appCubit) async {
-    final ad = await rewardAd;
-    await ad?.show(onUserEarnedReward: (_, RewardItem reward) async {
-      await appCubit.claimAdReward();
-    });
+    try {
+      _isLoadingReward = true;
+      emit(RewardAdLoadingState());
+      await _loadRewardedAd(appCubit);
+    } catch (e) {
+      emit(RewardAdErrorState(error: e.toString()));
+    }
   }
 
   //-----------------------------------------------

@@ -99,11 +99,13 @@ class _ConfirmPhoneScreenState extends State<ConfirmPhoneScreen> {
             child: ListView(
               children: <Widget>[
                 const SizedBox(height: 30),
-                SizedBox(
+                Container(
                   height: MediaQuery.of(context).size.height / 3,
+                  width: MediaQuery.of(context).size.height / 3,
+                  color: ColorManager.accentColor,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(30),
-                    child: Image.asset('assets/images/person.png'),
+                    child: Image.asset('assets/images/gptiva_vert.png'),
                   ),
                 ),
                 const SizedBox(height: 8),

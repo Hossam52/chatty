@@ -10,6 +10,8 @@ class EndPoints {
   //Prompts
 
   static const String prompts = '/prompts';
+  static const String addPrompt = '/prompts/store';
+  static const String prompt_field_types = '/prompts/field_types';
 
   //App endpoints
   static const String allMessages = '/messages';

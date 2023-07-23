@@ -29,7 +29,7 @@ class AppCubit extends Cubit<AppStates> {
   List<ChatModel> get allChats => _homeModel?.chats ?? [];
   List<ChatModel> get allChatsPrompts => _homeModel?.chats_prompts ?? [];
 
-  final int _showAdsAfter = 5; //Show intersential ads after # messages
+  final int _showAdsAfter = 3; //Show intersential ads after # messages
   int _totalMessagesSent =
       1; //For managing the intersentitial ads after $trails of messags
   bool get showInterstitialAds =>
@@ -86,7 +86,7 @@ class AppCubit extends Cubit<AppStates> {
       final user = currentUser;
       emit(FetchAllChatsLoadingState());
       final response = await AppServices.getAllChats(user.id);
-      log(response.toString());
+      // log(response.toString());
       final _chats = (response['chats'] as List)
           .map((e) => ChatModel.fromJson(e))
           .toList();
